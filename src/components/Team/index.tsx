@@ -35,9 +35,9 @@ const Team = () => {
       <div className="container">
         <div className="mb-[60px]">
           <SectionTitle
-            subtitle="Our Team"
+            // subtitle="Our Team"
             title="Meet Our Team"
-            paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+            paragraph="Our team consists of passionate AI engineers, data scientists and visionaries passionate about revolutionizing healthcare through innovative technology. Leveraging advanced machine learning, data analytics, and cutting-edge technology, we strive to create innovative solutions that enhance patient care and streamline healthcare processes."
             width="640px"
             center
           />
