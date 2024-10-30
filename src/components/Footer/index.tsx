@@ -21,8 +21,8 @@ const Footer = () => {
                 />
               </Link>
               <p className="mb-8 max-w-[270px] text-base text-gray-7">
-                We create digital experiences for brands and companies by using
-                technology.
+                AI Solutions Tailored for HealthTech: From Idea to Deployment in
+                Days | Cheaper than Hiring AI Specialists.
               </p>
               <div className="-mx-3 flex items-center">
                 <a
