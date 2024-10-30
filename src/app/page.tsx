@@ -1,5 +1,5 @@
-import About from "@/components/About";
-import HomeBlogSection from "@/components/Blog/HomeBlogSection";
+// import About from "@/components/About";
+// import HomeBlogSection from "@/components/Blog/HomeBlogSection";
 import CallToAction from "@/components/CallToAction";
 import Clients from "@/components/Clients";
 import ScrollUp from "@/components/Common/ScrollUp";
@@ -26,15 +26,15 @@ export default function Home() {
       <ScrollUp />
       <Hero />
       <Features />
-      <About />
+      {/*<About />*/}
       <CallToAction />
       {/*<Pricing />*/}
       {/*<Testimonials />*/}
       {/*<Faq />*/}
       <Team />
-      <HomeBlogSection posts={posts} />
+      {/*<HomeBlogSection posts={posts} />*/}
       <Contact />
-      <Clients />
+      {/*<Clients />*/}
     </main>
   );
 }
