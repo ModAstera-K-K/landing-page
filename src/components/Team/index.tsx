@@ -15,14 +15,14 @@ const teamData: TeamType[] = [
     name: "Tetsuro Mori",
     designation: "COO",
     image: "/images/team/team-02.png",
-    linkedinLink: "/#",
+    linkedinLink: "https://www.linkedin.com/in/tetsuromori/",
   },
   {
     id: 3,
     name: "Vinyl Chintalapudi",
     designation: "CTO",
     image: "/images/team/team-03.png",
-    linkedinLink: "/#",
+    linkedinLink: "https://www.linkedin.com/in/vinylch/",
   },
 ];
 
