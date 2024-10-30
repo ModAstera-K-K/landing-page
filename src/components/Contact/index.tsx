@@ -1,3 +1,4 @@
+import Link from "next/link";
 const Contact = () => {
   return (
     <section id="contact" className="relative py-20 md:py-[120px]">
@@ -8,12 +9,22 @@ const Contact = () => {
         {/*  <div className="w-full px-4 lg:w-7/12 xl:w-8/12">*/}
         <div className="ud-contact-content-wrapper">
           <div className="ud-contact-title mb-12 lg:mb-[150px]">
-            <span className="mb-6 block text-base font-medium text-dark dark:text-white">
+            <span className="mb-6 block text-center text-base font-medium text-dark dark:text-white md:text-left">
               CONTACT US
             </span>
-            <h2 className="max-w-[260px] text-[35px] font-semibold leading-[1.14] text-dark dark:text-white">
-              Let&#39;s talk about your needs.
-            </h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <h2 className="mx-auto max-w-[260px] text-center text-[35px] font-semibold leading-[1.14] text-dark dark:text-white md:ml-0 md:text-left">
+                Let&#39;s talk about your needs.
+              </h2>
+              <div className="m-auto">
+                <Link
+                  href="https://calendly.com/modastera/30min"
+                  className="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]"
+                >
+                  Talk to Us
+                </Link>
+              </div>
+            </div>
           </div>
           <div className="mb-12 flex flex-wrap justify-between lg:mb-0">
             <div className="mb-8 flex w-[330px] max-w-full">
@@ -71,6 +82,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
+
         {/*</div>*/}
         {/*<div className="w-full px-4 lg:w-5/12 xl:w-4/12">*/}
         {/*  <div*/}

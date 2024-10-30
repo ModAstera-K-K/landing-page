@@ -20,7 +20,7 @@ const CallToAction = () => {
                   HealthTech needs.
                 </p>
                 <Link
-                  href="/"
+                  href="https://calendly.com/modastera/30min"
                   className="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]"
                 >
                   Talk to Us
