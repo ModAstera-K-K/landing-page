@@ -16,14 +16,7 @@ const Contact = () => {
               <h2 className="mx-auto max-w-[260px] text-center text-[35px] font-semibold leading-[1.14] text-dark dark:text-white md:ml-0 md:text-left">
                 Let&#39;s talk about your needs.
               </h2>
-              <div className="m-auto">
-                <Link
-                  href="https://calendly.com/modastera/30min"
-                  className="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]"
-                >
-                  Talk to Us
-                </Link>
-              </div>
+              <div className="m-auto"></div>
             </div>
           </div>
           <div className="mb-12 flex flex-wrap justify-between lg:mb-0">
@@ -68,16 +61,19 @@ const Contact = () => {
                   <path d="M30.5156 0.960938H3.17188C1.42188 0.960938 0 2.38281 0 4.13281V20.9219C0 22.6719 1.42188 24.0938 3.17188 24.0938H30.5156C32.2656 24.0938 33.6875 22.6719 33.6875 20.9219V4.13281C33.6875 2.38281 32.2656 0.960938 30.5156 0.960938ZM30.5156 2.875C30.7891 2.875 31.0078 2.92969 31.2266 3.09375L17.6094 11.3516C17.1172 11.625 16.5703 11.625 16.0781 11.3516L2.46094 3.09375C2.67969 2.98438 2.89844 2.875 3.17188 2.875H30.5156ZM30.5156 22.125H3.17188C2.51562 22.125 1.91406 21.5781 1.91406 20.8672V5.00781L15.0391 12.9922C15.5859 13.3203 16.1875 13.4844 16.7891 13.4844C17.3906 13.4844 17.9922 13.3203 18.5391 12.9922L31.6641 5.00781V20.8672C31.7734 21.5781 31.1719 22.125 30.5156 22.125Z" />
                 </svg>
               </div>
-              <div>
+              <div className="flex flex-col">
                 <h3 className="mb-[18px] text-lg font-semibold text-dark dark:text-white">
                   How Can We Help?
                 </h3>
                 <p className="text-base text-body-color dark:text-dark-6">
                   info@modastera.com
                 </p>
-                {/*<p className="mt-1 text-base text-body-color dark:text-dark-6">*/}
-                {/*  contact@yourdomain.com*/}
-                {/*</p>*/}
+                <Link
+                  href="https://calendly.com/modastera/30min"
+                  className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
+                >
+                  Talk to Us
+                </Link>
               </div>
             </div>
           </div>
