@@ -258,7 +258,7 @@ const Header = () => {
                     )}
                     <div className="flex h-[55px] items-center px-2">
                       <Link
-                        href="https://calendly.com/modastera/30min" // add waitlist link here
+                        href="https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
                         className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-6 py-1 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
                       >
                         Join the waitlist
