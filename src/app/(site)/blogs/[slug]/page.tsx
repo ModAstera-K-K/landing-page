@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props) {
   const authorName = process.env.AUTHOR_NAME || "Your Author Name";
 
   if (post) {
-    const metadata = {
+    return {
       title: `${post.title || "Single Post Page"} | ${siteName}`,
       author: authorName,
       robots: {
@@ -41,9 +41,8 @@ export async function generateMetadata({ params }: Props) {
         },
       },
     };
-
-    return metadata;
-  } else {
+  }
+  else {
     return {
       title: "Not Found",
       description: "No blog article has been found",

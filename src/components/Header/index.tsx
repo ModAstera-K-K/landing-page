@@ -48,7 +48,7 @@ const Header = () => {
       <header
         className={`ud-header left-0 top-0 z-40 flex w-full items-center ${
           sticky
-            ? "shadow-nav fixed z-[999] border-b border-stroke bg-white/80 backdrop-blur-[5px] dark:border-dark-3/20 dark:bg-dark/10"
+            ? "shadow-nav fixed z-[999] border-b border-stroke bg-white/80 backdrop-blur-[15px] dark:border-dark-3/20 dark:bg-dark/50"
             : "absolute bg-transparent"
         }`}
       >
@@ -179,6 +179,7 @@ const Header = () => {
                             </Link>
                           )}
                         </li>
+
                       ) : (
                         <li className="submenu-item group relative" key={index}>
                           {pathUrl !== "/" ? (
@@ -253,8 +254,16 @@ const Header = () => {
                             ))}
                           </div>
                         </li>
-                      ),
+                      )
                     )}
+                    <div className="flex h-[55px] items-center px-2">
+                      <Link
+                        href="https://calendly.com/modastera/30min" // add waitlist link here
+                        className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-6 py-1 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
+                      >
+                        Join the waitlist
+                      </Link>
+                    </div>
                   </ul>
                 </nav>
               </div>

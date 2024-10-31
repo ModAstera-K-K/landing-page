@@ -72,7 +72,7 @@ const Contact = () => {
                   href="https://calendly.com/modastera/30min"
                   className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
                 >
-                  Talk to Us
+                  Talk to us
                 </Link>
               </div>
             </div>
