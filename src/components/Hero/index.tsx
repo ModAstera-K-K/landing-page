@@ -71,6 +71,8 @@ const Hero = () => {
                       href="https://www.antler.co/"
                       className="text-white/100"
                       target="_blank"
+                      rel="noopener"
+                      title="Antler"
                     >
                       <svg
                         width="100"
@@ -92,6 +94,8 @@ const Hero = () => {
                       href="https://www.microsoft.com/en-us/startups"
                       className="text-white/100"
                       target="_blank"
+                      rel="noopener"
+                      title="Microsoft for Startups"
                     >
                       <svg
                         version="1.0"
@@ -136,6 +140,8 @@ const Hero = () => {
                       href="https://aws.amazon.com/startups"
                       className="text-white/100"
                       target="_blank"
+                      rel="noopener"
+                      title="AWS for Startups"
                     >
                       <svg
                         width="150"
