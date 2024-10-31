@@ -64,7 +64,7 @@ const Hero = () => {
                     Powered By
                   </p>
                   <div
-                    className="wow fadeInUp flex items-center justify-center gap-4 text-center"
+                    className="wow fadeInUp flex flex-wrap items-center justify-center gap-4 text-center"
                     data-wow-delay=".3s"
                   >
                     <a
