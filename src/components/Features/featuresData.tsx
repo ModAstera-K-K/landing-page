@@ -33,7 +33,8 @@ const featuresData: Feature[] = [
     paragraph:
       "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
     btn: "Learn More",
-    btnLink: "https://calendly.com/modastera/30min",
+    btnLink:
+      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
   },
   {
     id: 2,
@@ -55,7 +56,8 @@ const featuresData: Feature[] = [
     paragraph:
       "Easily manage healthcare data with confidence. Our platform ensures compliance with global healthcare regulations, including HIPAA, APPI, and GDPR, by incorporating robust data privacy, encryption, and security protocols. This allows users to meet regulatory requirements without additional setup, speeding up deployment and safeguarding patient information.",
     btn: "Learn More",
-    btnLink: "https://calendly.com/modastera/30min",
+    btnLink:
+      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
   },
   {
     id: 1,
@@ -77,7 +79,8 @@ const featuresData: Feature[] = [
     paragraph:
       "Tailor your AI development to any team’s skill level and project requirements with our “no-code to full-code” interface. Whether you’re building models from scratch or adjusting pre-built templates, ModAstera adapts to your workflows, enabling both rapid prototyping for new users and in-depth customization for advanced AI professionals.",
     btn: "Learn More",
-    btnLink: "https://calendly.com/modastera/30min",
+    btnLink:
+      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
   },
 
   {
@@ -132,7 +135,8 @@ const featuresData: Feature[] = [
     paragraph:
       "ModAstera’s all-in-one platform consolidates data annotation, model training, and deployment, significantly reducing the cost and complexity of managing separate tools. By eliminating the need for specialized talent and minimizing infrastructure demands, your team can focus on innovation, not logistics.",
     btn: "Learn More",
-    btnLink: "https://calendly.com/modastera/30min",
+    btnLink:
+      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
   },
 ];
 export default featuresData;
