@@ -37,15 +37,9 @@ const Contact = () => {
                   Our Location
                 </h3>
                 <p className="text-base text-body-color dark:text-dark-6">
-                  〒 103-0025
-                </p>
-                <p className="text-base text-body-color dark:text-dark-6">
-                  FinGATE KAYABA 202,
-                </p>
-                <p className="text-base text-body-color dark:text-dark-6">
-                  1−8−1 Nihonbashikayabacho,
-                </p>
-                <p className="text-base text-body-color dark:text-dark-6">
+                  〒 103-0025 <br />
+                  FinGATE KAYABA 202, <br />
+                  1−8−1 Nihonbashikayabacho, <br />
                   Chuo City, Tokyo
                 </p>
               </div>
