@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists.",
 };
 
-export default function Home() {
+export default async function Home({ params: { lang } }: { params: { lang: string } }) {
   const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
 
   return (

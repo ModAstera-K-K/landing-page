@@ -109,7 +109,7 @@ export default async function Post({ params }: Props) {
                       </div>
                       <p className="text-base font-medium text-white">
                         By{" "}
-                        <Link href="/#" className="text-white hover:opacity-70">
+                        <Link href="/public#" className="text-white hover:opacity-70">
                           {post.author}
                         </Link>
                       </p>
