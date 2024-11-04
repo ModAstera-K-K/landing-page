@@ -11,10 +11,15 @@ import ToasterContext from "@/components/context/ToasetContex";
 import { useEffect, useState } from "react";
 import PreLoader from "@/components/Common/PreLoader";
 
+interface LangParams {
+  lang: string;
+}
+
 export default function RootLayout({
-  children,
+  children, params,
 }: {
   children: React.ReactNode;
+  params: LangParams;
 }) {
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -23,7 +28,7 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html suppressHydrationWarning={true} className="!scroll-smooth" lang="en">
+    <html suppressHydrationWarning={true} className="!scroll-smooth" lang={params.lang}>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
