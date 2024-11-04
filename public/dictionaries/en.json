@@ -34,5 +34,11 @@
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       }
     }
+  },
+  "callToAction": {
+    "title": "What are your HealthTech needs?",
+    "subTitle": "We can help you get started.",
+    "desc": "Schedule an introductory call with us to discuss your HealthTech needs.",
+    "scheduleBtn": "Talk to us"
   }
 }

@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { getDictionary } from "@/app/[lang]/dictionaries";
 
-const CallToAction = () => {
+const CallToAction = async ({ lang }: { lang: string }) => {
+  const t =  await getDictionary(lang);
   return (
     <section className="relative z-10 overflow-hidden bg-primary py-20 lg:py-[115px]">
       <div className="container mx-auto">
@@ -9,21 +11,20 @@ const CallToAction = () => {
             <div className="w-full px-4">
               <div className="mx-auto max-w-[570px] text-center">
                 <h2 className="mb-2.5 text-3xl font-bold text-white md:text-[38px] md:leading-[1.44]">
-                  <span>What are your HealthTech needs?</span>
+                  <span>{t.callToAction.title}</span>
                   <span className="text-3xl font-normal md:text-[40px]">
                     {" "}
-                    We can help you get started.
+                    {t.callToAction.subTitle}
                   </span>
                 </h2>
                 <p className="mx-auto mb-6 max-w-[515px] text-base leading-[1.5] text-white">
-                  Schedule an introductory call with us to discuss your
-                  HealthTech needs.
+                  {t.callToAction.desc}
                 </p>
                 <Link
                   href="https://calendly.com/modastera/30min"
                   className="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]"
                 >
-                  Talk to us
+                  {t.callToAction.scheduleBtn}
                 </Link>
               </div>
             </div>

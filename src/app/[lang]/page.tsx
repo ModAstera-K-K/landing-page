@@ -28,7 +28,7 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
       <Hero  lang={lang}/>
       <Features lang={lang}/>
       {/*<About />*/}
-      <CallToAction />
+      <CallToAction lang={lang}/>
       {/*<Pricing />*/}
       {/*<Testimonials />*/}
       {/*<Faq />*/}
