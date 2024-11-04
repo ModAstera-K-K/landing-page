@@ -5,6 +5,15 @@ import { getDictionary } from "@/app/[lang]/dictionaries";
 
 const Features =  async ({ lang }: { lang: string }) => {
   const t =  await getDictionary(lang);
+
+  // Combine icons with translations
+  const features = featuresData.map((feature, index) => ({
+    ...feature,
+    title: t.features.items[`feature${index + 1}`].title,
+    paragraph: t.features.items[`feature${index + 1}`].paragraph,
+    btn: t.features.items[`feature${index + 1}`].btn,
+    btnLink: t.features.items[`feature${index + 1}`].btnLink
+  }));
   return (
     <section className="pb-8 pt-20 dark:bg-dark lg:pb-[70px] lg:pt-[120px]">
       <div className="container">
@@ -14,7 +23,7 @@ const Features =  async ({ lang }: { lang: string }) => {
           paragraph={t.features.paragraph}
         />
         <div className="-mx-4 mt-12 flex flex-wrap lg:mt-20">
-          {featuresData.map((feature, i) => (
+          {features.map((feature, i) => (
             <SingleFeature key={i} feature={feature} />
           ))}
         </div>

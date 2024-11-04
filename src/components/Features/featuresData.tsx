@@ -2,7 +2,7 @@ import { Feature } from "@/types/feature";
 
 const featuresData: Feature[] = [
   {
-    id: 4,
+    id: 1,
     icon: (
       <svg
         width="37"
@@ -29,12 +29,10 @@ const featuresData: Feature[] = [
         />
       </svg>
     ),
-    title: "Pre-Built HealthTech-specific AI Models",
-    paragraph:
-      "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
-    btn: "Learn More",
-    btnLink:
-      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
+    title: "", // Will be filled from translations
+    paragraph: "", // Will be filled from translations
+    btn: "", // Will be filled from translations
+    btnLink: "" // Will be filled from translations
   },
   {
     id: 2,
@@ -52,15 +50,13 @@ const featuresData: Feature[] = [
         />
       </svg>
     ),
-    title: "Built-In Compliance",
-    paragraph:
-      "Easily manage healthcare data with confidence. Our platform ensures compliance with global healthcare regulations, including HIPAA, APPI, and GDPR, by incorporating robust data privacy, encryption, and security protocols. This allows users to meet regulatory requirements without additional setup, speeding up deployment and safeguarding patient information.",
-    btn: "Learn More",
-    btnLink:
-      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
+    title: "", // Will be filled from translations
+    paragraph: "", // Will be filled from translations
+    btn: "", // Will be filled from translations
+    btnLink: "" // Will be filled from translations
   },
   {
-    id: 1,
+    id: 3,
     icon: (
       <svg
         width="35"
@@ -75,16 +71,14 @@ const featuresData: Feature[] = [
         />
       </svg>
     ),
-    title: "Flexible AI Development",
-    paragraph:
-      "Tailor your AI development to any team’s skill level and project requirements with our “no-code to full-code” interface. Whether you’re building models from scratch or adjusting pre-built templates, ModAstera adapts to your workflows, enabling both rapid prototyping for new users and in-depth customization for advanced AI professionals.",
-    btn: "Learn More",
-    btnLink:
-      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
+    title: "", // Will be filled from translations
+    paragraph: "", // Will be filled from translations
+    btn: "", // Will be filled from translations
+    btnLink: "" // Will be filled from translations
   },
 
   {
-    id: 3,
+    id: 4,
     icon: (
       <svg
         width="37"
@@ -131,12 +125,10 @@ const featuresData: Feature[] = [
         />
       </svg>
     ),
-    title: "Cost-Effective R&D",
-    paragraph:
-      "ModAstera’s all-in-one platform consolidates data annotation, model training, and deployment, significantly reducing the cost and complexity of managing separate tools. By eliminating the need for specialized talent and minimizing infrastructure demands, your team can focus on innovation, not logistics.",
-    btn: "Learn More",
-    btnLink:
-      "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true",
+    title: "", // Will be filled from translations
+    paragraph: "", // Will be filled from translations
+    btn: "", // Will be filled from translations
+    btnLink: "" // Will be filled from translations
   },
 ];
 export default featuresData;
