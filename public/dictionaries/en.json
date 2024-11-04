@@ -39,6 +39,26 @@
     "title": "What are your HealthTech needs?",
     "subTitle": "We can help you get started.",
     "desc": "Schedule an introductory call with us to discuss your HealthTech needs.",
-    "scheduleBtn": "Talk to us"
+    "scheduleBtnText": "Talk to us",
+    "scheduleLink": "https://calendly.com/modastera/30min"
+  },
+  "team": {
+    "title": "Meet Our Team",
+    "desc": "Our team consists of passionate AI engineers, data scientists and visionaries passionate about revolutionizing healthcare through innovative technology. Leveraging advanced machine learning, data analytics, and cutting-edge technology, we strive to create innovative solutions that enhance patient care and streamline healthcare processes."
+  },
+  "contact": {
+    "title": "CONTACT US",
+    "subTitle": "Let&#39;s talk about your needs.",
+    "locationTitle": "Our Location",
+    "address": [
+      "〒 103-0025",
+      "FinGATE KAYABA 202,",
+      "1−8−1 Nihonbashikayabacho,",
+      "Chuo City, Tokyo"
+    ],
+    "emailTitle": "How Can We Help?",
+    "emailAddr": "info@modastera.com",
+    "scheduleBtnText": "Talk to us",
+    "scheduleLink": "https://calendly.com/modastera/30min"
   }
 }

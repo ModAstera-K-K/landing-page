@@ -1,6 +1,7 @@
 import { TeamType } from "@/types/team";
 import SectionTitle from "../Common/SectionTitle";
 import SingleTeam from "./SingleTeam";
+import { getDictionary } from "@/app/[lang]/dictionaries";
 
 const teamData: TeamType[] = [
   {
@@ -26,7 +27,8 @@ const teamData: TeamType[] = [
   },
 ];
 
-const Team = () => {
+const Team = async ({ lang }: { lang: string }) => {
+  const t =  await getDictionary(lang);
   return (
     <section
       id="team"
@@ -36,8 +38,8 @@ const Team = () => {
         <div className="mb-[60px]">
           <SectionTitle
             // subtitle="Our Team"
-            title="Meet Our Team"
-            paragraph="Our team consists of passionate AI engineers, data scientists and visionaries passionate about revolutionizing healthcare through innovative technology. Leveraging advanced machine learning, data analytics, and cutting-edge technology, we strive to create innovative solutions that enhance patient care and streamline healthcare processes."
+            title={t.team.title}
+            paragraph={t.team.desc}
             width="640px"
             center
           />

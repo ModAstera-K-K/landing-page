@@ -32,7 +32,7 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
       {/*<Pricing />*/}
       {/*<Testimonials />*/}
       {/*<Faq />*/}
-      <Team />
+      <Team lang={lang}/>
       {/*<HomeBlogSection posts={posts} />*/}
       <Contact lang={lang}/>
       {/*<Clients />*/}

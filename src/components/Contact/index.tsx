@@ -13,11 +13,11 @@ const Contact  = async ({ lang }: { lang: string }) => {
         <div className="ud-contact-content-wrapper">
           <div className="ud-contact-title mb-12 lg:mb-[150px]">
             <span className="mb-6 block text-center text-base font-medium text-dark dark:text-white md:text-left">
-              CONTACT US
+              {t.contact.title}
             </span>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <h2 className="mx-auto max-w-[260px] text-center text-[35px] font-semibold leading-[1.14] text-dark dark:text-white md:ml-0 md:text-left">
-                Let&#39;s talk about your needs.
+                {t.contact.subTitle}
               </h2>
               <div className="m-auto"></div>
             </div>
@@ -37,13 +37,15 @@ const Contact  = async ({ lang }: { lang: string }) => {
               </div>
               <div>
                 <h3 className="mb-[18px] text-lg font-semibold text-dark dark:text-white">
-                  Our Location
+                  {t.contact.locationTitle}
                 </h3>
                 <p className="text-base text-body-color dark:text-dark-6">
-                  〒 103-0025 <br />
-                  FinGATE KAYABA 202, <br />
-                  1−8−1 Nihonbashikayabacho, <br />
-                  Chuo City, Tokyo
+                  {t.contact.address.map((line: string, index: number) => (
+                    <span key={index}>
+                      {line}
+                      {index < t.contact.address.length - 1 && <br />}
+                    </span>
+                  ))}
                 </p>
               </div>
             </div>
@@ -60,16 +62,16 @@ const Contact  = async ({ lang }: { lang: string }) => {
               </div>
               <div className="flex flex-col">
                 <h3 className="mb-[18px] text-lg font-semibold text-dark dark:text-white">
-                  How Can We Help?
+                  {t.contact.emailTitle}
                 </h3>
                 <p className="text-base text-body-color dark:text-dark-6">
-                  info@modastera.com
+                  {t.contact.emailAddr}
                 </p>
                 <Link
-                  href="https://calendly.com/modastera/30min"
+                  href={t.contact.scheduleLink}
                   className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
                 >
-                  Talk to us
+                  {t.contact.scheduleBtnText}
                 </Link>
               </div>
             </div>

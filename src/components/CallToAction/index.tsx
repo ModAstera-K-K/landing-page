@@ -21,10 +21,10 @@ const CallToAction = async ({ lang }: { lang: string }) => {
                   {t.callToAction.desc}
                 </p>
                 <Link
-                  href="https://calendly.com/modastera/30min"
+                  href={t.callToAction.scheduleLink}
                   className="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]"
                 >
-                  {t.callToAction.scheduleBtn}
+                  {t.callToAction.scheduleBtnText}
                 </Link>
               </div>
             </div>
