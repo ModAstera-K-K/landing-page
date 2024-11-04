@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDictionary } from "@/app/[lang]/dictionaries";
 
-const Hero = () => {
+
+const Hero = async ({ lang }: { lang: string }) => {
+  const t =  await getDictionary(lang);
   return (
     <>
       <section
@@ -16,11 +19,10 @@ const Hero = () => {
                 data-wow-delay=".2s"
               >
                 <h1 className="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
-                  AI Solutions Tailored for HealthTech
+                  {t.mainPage.title}
                 </h1>
                 <p className="mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]">
-                  From Idea to Deployment in Days | Cheaper than Hiring AI
-                  Specialists
+                  {t.mainPage.subTitle}
                 </p>
                 {/*<ul className="mb-10 flex flex-wrap items-center justify-center gap-5">*/}
                 {/*<li>*/}

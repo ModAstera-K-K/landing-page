@@ -25,7 +25,7 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
   return (
     <main>
       <ScrollUp />
-      <Hero />
+      <Hero  lang={lang}/>
       <Features />
       {/*<About />*/}
       <CallToAction />
