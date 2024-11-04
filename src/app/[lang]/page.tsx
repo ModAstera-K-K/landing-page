@@ -26,7 +26,7 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
     <main>
       <ScrollUp />
       <Hero  lang={lang}/>
-      <Features />
+      <Features lang={lang}/>
       {/*<About />*/}
       <CallToAction />
       {/*<Pricing />*/}
@@ -34,7 +34,7 @@ export default async function Home({ params: { lang } }: { params: { lang: strin
       {/*<Faq />*/}
       <Team />
       {/*<HomeBlogSection posts={posts} />*/}
-      <Contact />
+      <Contact lang={lang}/>
       {/*<Clients />*/}
     </main>
   );

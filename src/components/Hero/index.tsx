@@ -63,7 +63,7 @@ const Hero = async ({ lang }: { lang: string }) => {
 
                 <div>
                   <p className="mb-4 text-center text-base font-medium text-white/80">
-                    Powered By
+                    {t.mainPage.byTitle}
                   </p>
                   <div
                     className="wow fadeInUp flex flex-wrap items-center justify-center gap-4 text-center"

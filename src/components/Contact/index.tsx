@@ -1,5 +1,8 @@
 import Link from "next/link";
-const Contact = () => {
+import { getDictionary } from "@/app/[lang]/dictionaries";
+
+const Contact  = async ({ lang }: { lang: string }) => {
+  const t =  await getDictionary(lang);
   return (
     <section id="contact" className="relative py-20 md:py-[120px]">
       <div className="absolute left-0 top-0 -z-[1] h-full w-full dark:bg-dark"></div>

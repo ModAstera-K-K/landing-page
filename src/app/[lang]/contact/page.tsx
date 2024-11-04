@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   description: "This is contact page description",
 };
 
-const ContactPage = () => {
+const ContactPage  = async ({ params }: { params: { lang: string } }) => {
   return (
     <>
       <Breadcrumb pageName="Contact Page" />
-      <Contact />
+      <Contact lang={params.lang} />
     </>
   );
 };

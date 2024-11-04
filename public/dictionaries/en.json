@@ -1,6 +1,12 @@
 {
   "mainPage": {
     "title": "AI Solutions Tailored for HealthTech",
-    "subTitle": "From Idea to Deployment in Days | Cheaper than Hiring AI Specialists"
+    "subTitle": "From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
+    "byTitle": "Powered By"
+  },
+  "features": {
+    "subtitle": "Features",
+    "title": "Made to meet your HealthTech needs",
+    "paragraph": "Our platform is designed to meet the unique needs of health tech companies, Our goal is to help you achieve business goals faster and cheaper."
   }
 }

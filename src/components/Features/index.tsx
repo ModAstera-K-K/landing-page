@@ -1,15 +1,17 @@
 import SectionTitle from "../Common/SectionTitle";
 import SingleFeature from "./SingleFeature";
 import featuresData from "./featuresData";
+import { getDictionary } from "@/app/[lang]/dictionaries";
 
-const Features = () => {
+const Features =  async ({ lang }: { lang: string }) => {
+  const t =  await getDictionary(lang);
   return (
     <section className="pb-8 pt-20 dark:bg-dark lg:pb-[70px] lg:pt-[120px]">
       <div className="container">
         <SectionTitle
-          subtitle="Features"
-          title="Made to meet your HealthTech needs"
-          paragraph="Our platform is designed to meet the unique needs of health tech companies, Our goal is to help you achieve business goals faster and cheaper."
+          subtitle={t.features.subtitle}
+          title={t.features.title}
+          paragraph={t.features.paragraph}
         />
         <div className="-mx-4 mt-12 flex flex-wrap lg:mt-20">
           {featuresData.map((feature, i) => (
