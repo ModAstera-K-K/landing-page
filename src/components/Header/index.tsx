@@ -59,7 +59,8 @@ const Header = ({ lang }: { lang: string }) => {
         className={`ud-header left-0 top-0 z-40 flex w-full items-center ${
           sticky
             ? "shadow-nav fixed z-[999] border-b border-stroke bg-white/80 backdrop-blur-[15px] dark:border-dark-3/20 dark:bg-dark/50"
-            : "absolute bg-transparent"
+            // : "absolute bg-transparent"
+            : "fixed z-[999] bg-white/80 backdrop-blur-[15px] dark:bg-dark/50"
         }`}
       >
         <div className="container">
