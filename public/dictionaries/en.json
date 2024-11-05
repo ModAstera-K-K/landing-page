@@ -60,5 +60,9 @@
     "emailAddr": "info@modastera.com",
     "scheduleBtnText": "Talk to us",
     "scheduleLink": "https://calendly.com/modastera/30min"
-  }
+  },
+  "header": {
+    "waitlistBtnTitle": "Join the waitlist"
+  },
+
 }

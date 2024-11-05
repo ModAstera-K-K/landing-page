@@ -45,7 +45,7 @@ export default function RootLayout({
               defaultTheme="light"
             >
               <ToasterContext />
-              <Header />
+              <Header lang={params.lang} />
               {children}
               <Footer />
               <ScrollToTop />

@@ -7,7 +7,19 @@ import { useEffect, useState } from "react";
 
 import menuData from "./menuData";
 
-const Header = () => {
+const Header = ({ lang }: { lang: string }) => {
+
+  // Add dictionary state
+  const [dictionary, setDictionary] = useState<any>({});
+
+  // Load dictionary on component mount
+  useEffect(() => {
+    const loadDictionary = async () => {
+      const dict = await import(`../../../public/dictionaries/${lang}.json`);
+      setDictionary(dict.default);
+    };
+    loadDictionary();
+  }, [lang]);
 
   const pathUrl = usePathname();
   // Navbar toggle
@@ -259,7 +271,7 @@ const Header = () => {
                         href="https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
                         className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-6 py-1 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
                       >
-                        Join the waitlist
+                        {dictionary?.header?.waitlistBtnTitle}
                       </Link>
                     </div>
                   </ul>
