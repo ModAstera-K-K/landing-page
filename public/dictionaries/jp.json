@@ -1,70 +1,69 @@
 {
   "mainPage": {
-    "title": "AI Solutions Tailored for HealthTech",
-    "subTitle": "From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
-    "byTitle": "Powered By"
+    "title": "ヘルステック向けにカスタマイズされたAIソリューション",
+    "subTitle": "アイデアから導入まで数日で完了 | AIスペシャリストを雇うよりも安価",
+    "byTitle": "提供"
   },
   "features": {
-    "subtitle": "Features",
-    "title": "Made to meet your HealthTech needs",
-    "paragraph": "Our platform is designed to meet the unique needs of health tech companies, Our goal is to help you achieve business goals faster and cheaper.",
+    "subtitle": "特徴",
+    "title": "ヘルステックのニーズに応える",
+    "paragraph": "私たちのプラットフォームは、ヘルステック企業特有のニーズに応えるよう設計されています。より迅速かつ低コストでビジネス目標を達成できるようサポートいたします。",
     "items": {
       "feature1": {
-        "title": "Pre-Built HealthTech-specific AI Models",
-        "paragraph": "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
-        "btn": "Learn More",
+        "title": "ヘルステック専用の事前構築AIモデル",
+        "paragraph": "診断、患者モニタリング、画像分析など、一般的なユースケースに特化したヘルスケア専用モデルのライブラリで、AIプロジェクトを迅速に開始できます。これらのモデルは、お客様固有のニーズに合わせて素早く適応でき、構想から導入までの時間を短縮します。",
+        "btn": "詳細を見る",
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       },
       "feature2": {
-        "title": "Built-In Compliance",
-        "paragraph": "Easily manage healthcare data with confidence. Our platform ensures compliance with global healthcare regulations, including HIPAA, APPI, and GDPR, by incorporating robust data privacy, encryption, and security protocols. This allows users to meet regulatory requirements without additional setup, speeding up deployment and safeguarding patient information.",
-        "btn": "Learn More",
+        "title": "コンプライアンス対応済み",
+        "paragraph": "医療データを安心して簡単に管理できます。当社のプラットフォームは、堅牢なデータプライバシー、暗号化、セキュリティプロトコルを組み込むことで、HIPAA、APPI、GDPRなどのグローバルな医療規制に準拠しています。追加設定なしで規制要件を満たし、導入を迅速化し、患者情報を保護します。",
+        "btn": "詳細を見る",
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       },
       "feature3": {
-        "title": "Flexible AI Development",
-        "paragraph": "Tailor your AI development to any team's skill level and project requirements with our \"no-code to full-code\" interface. Whether you're building models from scratch or adjusting pre-built templates, ModAstera adapts to your workflows, enabling both rapid prototyping for new users and in-depth customization for advanced AI professionals.",
-        "btn": "Learn More",
+        "title": "柔軟なAI開発",
+        "paragraph": "「ノーコードからフルコードまで」のインターフェースで、チームのスキルレベルやプロジェクト要件に合わせてAI開発をカスタマイズできます。モデルを一から構築する場合でも、既存のテンプレートを調整する場合でも、ModAsteraはワークフローに適応し、新規ユーザーの迅速なプロトタイピングから、上級AIプロフェッショナルの詳細なカスタマイズまで対応します。",
+        "btn": "詳細を見る",
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       },
       "feature4": {
-        "title": "Cost-Effective R&D",
-        "paragraph": "ModAstera's all-in-one platform consolidates data annotation, model training, and deployment, significantly reducing the cost and complexity of managing separate tools. By eliminating the need for specialized talent and minimizing infrastructure demands, your team can focus on innovation, not logistics.",
-        "btn": "Learn More",
+        "title": "コスト効率の高い研究開発",
+        "paragraph": "ModAsteraのオールインワンプラットフォームは、データアノテーション、モデルトレーニング、デプロイメントを統合し、個別ツールの管理コストと複雑さを大幅に削減します。専門人材の必要性を排除し、インフラ要件を最小限に抑えることで、チームはロジスティクスではなくイノベーションに集中できます。",
+        "btn": "詳細を見る",
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       }
     }
   },
   "callToAction": {
-    "title": "What are your HealthTech needs?",
-    "subTitle": "We can help you get started.",
-    "desc": "Schedule an introductory call with us to discuss your HealthTech needs.",
-    "scheduleBtnText": "Talk to us",
+    "title": "ヘルステックに関するご要望をお聞かせください",
+    "subTitle": "私たちがサポートいたします。",
+    "desc": "ヘルステックに関するニーズについて話し合うための初回相談をスケジュールしてください。",
+    "scheduleBtnText": "お問い合わせ",
     "scheduleLink": "https://calendly.com/modastera/30min"
   },
   "team": {
-    "title": "Meet Our Team",
-    "desc": "Our team consists of passionate AI engineers, data scientists and visionaries passionate about revolutionizing healthcare through innovative technology. Leveraging advanced machine learning, data analytics, and cutting-edge technology, we strive to create innovative solutions that enhance patient care and streamline healthcare processes."
+    "title": "チームの紹介",
+    "desc": "私たちのチームは、革新的な技術を通じてヘルスケアに革命を起こすことに情熱を持つAIエンジニア、データサイエンティスト、ビジョナリーで構成されています。高度な機械学習、データ分析、最先端技術を活用して、患者ケアを向上させ、ヘルスケアプロセスを効率化する革新的なソリューションの創造に取り組んでいます。"
   },
   "contact": {
-    "title": "CONTACT US",
-    "subTitle": "Let's talk about your needs.",
-    "locationTitle": "Our Location",
+    "title": "お問い合わせ",
+    "subTitle": "ご要望についてご相談ください。",
+    "locationTitle": "所在地",
     "address": [
-      "〒 103-0025",
-      "FinGATE KAYABA 202,",
-      "1−8−1 Nihonbashikayabacho,",
-      "Chuo City, Tokyo"
+      "〒103-0025",
+      "東京都中央区日本橋茅場町1-8-1",
+      "FinGATE KAYABA 202"
     ],
-    "emailTitle": "How Can We Help?",
+    "emailTitle": "お手伝いできること",
     "emailAddr": "info@modastera.com",
-    "scheduleBtnText": "Talk to us",
+    "scheduleBtnText": "お問い合わせ",
     "scheduleLink": "https://calendly.com/modastera/30min"
   },
   "header": {
-    "waitlistBtnTitle": "Join the waitlist"
+    "waitlistBtnTitle": "ウェイトリストに参加"
   },
   "footer": {
-    "title": "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists"
+    "title": "ヘルステック向けにカスタマイズされたAIソリューション：アイデアから導入まで数日で完了 | AIスペシャリストを雇うよりも安価"
   }
 }
