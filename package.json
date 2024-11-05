@@ -13,6 +13,7 @@
     "@types/negotiator": "^0.6.3",
     "axios": "^1.6.2",
     "bcrypt": "^5.0.1",
+    "cookies-next": "^4.3.0",
     "date-fns": "^3.4.0",
     "gray-matter": "^4.0.3",
     "negotiator": "^1.0.0",

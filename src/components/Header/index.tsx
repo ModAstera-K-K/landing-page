@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 import menuData from "./menuData";
 
@@ -279,12 +280,16 @@ const Header = ({ lang }: { lang: string }) => {
                 </nav>
               </div>
               <div className="hidden items-center justify-end pr-16 sm:flex lg:pr-0">
-                {/* theme toggler */}
-                <button
-                  aria-label="theme toggler"
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="flex h-8 w-8 items-center justify-center text-body-color duration-300 dark:text-white"
-                >
+                <div>
+                  <LanguageSwitcher currentLang={lang} />
+                </div>
+                <div>
+                  {/* theme toggler */}
+                  <button
+                    aria-label="theme toggler"
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    className="flex h-8 w-8 items-center justify-center text-body-color duration-300 dark:text-white"
+                  >
                   <span>
                     <svg
                       viewBox="0 0 16 16"
@@ -304,7 +309,8 @@ const Header = ({ lang }: { lang: string }) => {
                       </g>
                     </svg>
                   </span>
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
