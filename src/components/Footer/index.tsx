@@ -1,7 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const Footer = () => {
+const Footer = ({ lang }: { lang: string }) => {
+  // Add dictionary state
+  const [dictionary, setDictionary] = useState<any>({});
+
+  // Load dictionary on component mount
+  useEffect(() => {
+    const loadDictionary = async () => {
+      const t = await import(`../../../public/dictionaries/${lang}.json`);
+      setDictionary(t.default);
+    };
+    loadDictionary();
+  }, [lang]);
+
   return (
     <footer
       className="wow fadeInUp relative z-10 bg-[#090E34] pt-20 lg:pt-[100px]"
@@ -21,8 +34,7 @@ const Footer = () => {
                 />
               </Link>
               <p className="mb-8 max-w-[270px] text-base text-gray-7">
-                AI Solutions Tailored for HealthTech: From Idea to Deployment in
-                Days | Cheaper than Hiring AI Specialists.
+                {dictionary?.footer?.title}
               </p>
               <div className="-mx-3 flex items-center">
                 {/*<a*/}

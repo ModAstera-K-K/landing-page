@@ -15,8 +15,8 @@ const Header = ({ lang }: { lang: string }) => {
   // Load dictionary on component mount
   useEffect(() => {
     const loadDictionary = async () => {
-      const dict = await import(`../../../public/dictionaries/${lang}.json`);
-      setDictionary(dict.default);
+      const t = await import(`../../../public/dictionaries/${lang}.json`);
+      setDictionary(t.default);
     };
     loadDictionary();
   }, [lang]);
