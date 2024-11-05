@@ -1,6 +1,70 @@
 {
   "mainPage": {
     "title": "AI Solutions Tailored for HealthTech",
-    "subTitle": "From Idea to Deployment in Days. | Cheaper than Hiring AI Specialists."
+    "subTitle": "From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
+    "byTitle": "Powered By"
+  },
+  "features": {
+    "subtitle": "Features",
+    "title": "Made to meet your HealthTech needs",
+    "paragraph": "Our platform is designed to meet the unique needs of health tech companies, Our goal is to help you achieve business goals faster and cheaper.",
+    "items": {
+      "feature1": {
+        "title": "Pre-Built HealthTech-specific AI Models",
+        "paragraph": "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
+        "btn": "Learn More",
+        "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
+      },
+      "feature2": {
+        "title": "Built-In Compliance",
+        "paragraph": "Easily manage healthcare data with confidence. Our platform ensures compliance with global healthcare regulations, including HIPAA, APPI, and GDPR, by incorporating robust data privacy, encryption, and security protocols. This allows users to meet regulatory requirements without additional setup, speeding up deployment and safeguarding patient information.",
+        "btn": "Learn More",
+        "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
+      },
+      "feature3": {
+        "title": "Flexible AI Development",
+        "paragraph": "Tailor your AI development to any team's skill level and project requirements with our \"no-code to full-code\" interface. Whether you're building models from scratch or adjusting pre-built templates, ModAstera adapts to your workflows, enabling both rapid prototyping for new users and in-depth customization for advanced AI professionals.",
+        "btn": "Learn More",
+        "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
+      },
+      "feature4": {
+        "title": "Cost-Effective R&D",
+        "paragraph": "ModAstera's all-in-one platform consolidates data annotation, model training, and deployment, significantly reducing the cost and complexity of managing separate tools. By eliminating the need for specialized talent and minimizing infrastructure demands, your team can focus on innovation, not logistics.",
+        "btn": "Learn More",
+        "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
+      }
+    }
+  },
+  "callToAction": {
+    "title": "What are your HealthTech needs?",
+    "subTitle": "We can help you get started.",
+    "desc": "Schedule an introductory call with us to discuss your HealthTech needs.",
+    "scheduleBtnText": "Talk to us",
+    "scheduleLink": "https://calendly.com/modastera/30min"
+  },
+  "team": {
+    "title": "Meet Our Team",
+    "desc": "Our team consists of passionate AI engineers, data scientists and visionaries passionate about revolutionizing healthcare through innovative technology. Leveraging advanced machine learning, data analytics, and cutting-edge technology, we strive to create innovative solutions that enhance patient care and streamline healthcare processes."
+  },
+  "contact": {
+    "title": "CONTACT US",
+    "subTitle": "Let's talk about your needs.",
+    "locationTitle": "Our Location",
+    "address": [
+      "〒 103-0025",
+      "FinGATE KAYABA 202,",
+      "1−8−1 Nihonbashikayabacho,",
+      "Chuo City, Tokyo"
+    ],
+    "emailTitle": "How Can We Help?",
+    "emailAddr": "info@modastera.com",
+    "scheduleBtnText": "Talk to us",
+    "scheduleLink": "https://calendly.com/modastera/30min"
+  },
+  "header": {
+    "waitlistBtnTitle": "Join the waitlist"
+  },
+  "footer": {
+    "title": "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists"
   }
 }
