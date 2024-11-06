@@ -6,18 +6,37 @@ const locales = ["en", "jp"];
 const defaultLocale = "en";
 const cookieName = "i18nlang";
 
-// Get the preferred locale, similar to the above or using a library
 function getLocale(request: NextRequest): string {
-  // Get locale from cookie
-  if (request.cookies.has(cookieName))
+  // 1. Check if there's a language cookie set
+  if (request.cookies.has(cookieName)) {
     return request.cookies.get(cookieName)!.value;
-  // Get accept language from HTTP headers
-  const acceptLang = request.headers.get("Accept-Language");
-  if (!acceptLang) return defaultLocale;
-  // Get match locale
-  const headers = { "accept-language": acceptLang };
+  }
+
+  // 2. Get accept-language header
+  const acceptLanguage = request.headers.get("Accept-Language");
+  if (!acceptLanguage) return defaultLocale;
+
+  // 3. Parse accept-language header
+  const headers = { "accept-language": acceptLanguage };
   const languages = new Negotiator({ headers }).languages();
-  return match(languages, locales, defaultLocale);
+
+  // 4. Match language preference
+  try {
+    // First try to match exact language codes
+    const exactMatch = languages.find(lang => 
+      lang.toLowerCase().startsWith('ja') || // Match Japanese
+      lang.toLowerCase().startsWith('jp') // Match alternative Japanese code
+    );
+    
+    if (exactMatch) {
+      return 'jp';
+    }
+
+    // If no exact match, use intl-localematcher
+    return match(languages, locales, defaultLocale);
+  } catch (e) {
+    return defaultLocale;
+  }
 }
 
 export function middleware(request: NextRequest) {
@@ -34,9 +53,8 @@ export function middleware(request: NextRequest) {
   // Redirect if there is no locale
   const locale = getLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
-  // e.g. incoming request is /products
-  // The new URL is now /en-US/products
   const response = NextResponse.redirect(request.nextUrl);
+  
   // Set locale to cookie
   response.cookies.set(cookieName, locale);
   return response;
