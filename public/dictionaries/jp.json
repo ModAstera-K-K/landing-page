@@ -1,13 +1,13 @@
 {
   "mainPage": {
-    "title": "ヘルステック向けに最適化されたAIソリューション",
-    "subTitle": "アイデアから導入まで数日で完了 | AIスペシャリストを雇うよりも安価",
+    "title": "ヘルステックに特化したAI自動生成サービス",
+    "subTitle": "アイデアから導入まで数日でAI完成 | AIスペシャリストを雇うよりも安価",
     "byTitle": "提供"
   },
   "features": {
     "subtitle": "特徴",
     "title": "ヘルステックのニーズに応える",
-    "paragraph": "私たちのプラットフォームは、ヘルステック企業特有のニーズに応えるよう設計されています。より迅速かつ低コストでビジネス目標を達成できるようサポートいたします。",
+    "paragraph": "私たちのプラットフォームは、ヘルステック特有のニーズに応えるよう設計されています。より迅速かつ低コストでビジネス目標を達成できるようサポートいたします。",
     "items": {
       "feature1": {
         "title": "ヘルステック専用の事前構築AIモデル",
@@ -28,7 +28,7 @@
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
       },
       "feature4": {
-        "title": "コスト効率の高い研究開発",
+        "title": "高コスパの研究開発",
         "paragraph": "ModAsteraのオールインワンプラットフォームは、データアノテーション、モデルトレーニング、デプロイメントを統合し、個別ツールの管理コストと複雑さを大幅に削減します。専門人材の必要性を排除し、インフラ要件を最小限に抑えることで、チームはロジスティクスではなくイノベーションに集中できます。",
         "btn": "詳細を見る",
         "btnLink": "https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
@@ -61,9 +61,9 @@
     "scheduleLink": "https://calendly.com/modastera/30min"
   },
   "header": {
-    "waitlistBtnTitle": "ウェイトリストに参加"
+    "waitlistBtnTitle": "ウェイトリストに登録"
   },
   "footer": {
-    "title": "ヘルステック向けにカスタマイズされたAIソリューション：アイデアから導入まで数日で完了 | AIスペシャリストを雇うよりも安価"
+    "title": "ヘルステックに特化したAI自動生成サービス：アイデアから導入まで数日でAI完成 | AIスペシャリストを雇うよりも安価"
   }
 }
