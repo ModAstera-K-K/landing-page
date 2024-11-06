@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: "This is About page description",
 };
 
-const AboutPage = () => {
+const AboutPage = async ({ params }: { params: { lang: string } }) => {
   return (
     <main>
       <Breadcrumb pageName="About Us Page" />
       <About />
-      <Team />
+      <Team lang={params.lang}/>
     </main>
   );
 };
