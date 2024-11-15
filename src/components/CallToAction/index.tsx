@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDictionary } from "@/app/[lang]/dictionaries";
+import { getDictionary } from "@/app/[lang]/(landing)/dictionaries";
 
 const CallToAction = async ({ lang }: { lang: string }) => {
   const t =  await getDictionary(lang);

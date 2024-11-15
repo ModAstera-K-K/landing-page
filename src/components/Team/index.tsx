@@ -1,7 +1,7 @@
 import { TeamType } from "@/types/team";
 import SectionTitle from "../Common/SectionTitle";
 import SingleTeam from "./SingleTeam";
-import { getDictionary } from "@/app/[lang]/dictionaries";
+import { getDictionary } from "@/app/[lang]/(landing)/dictionaries";
 
 const teamData: TeamType[] = [
   {
@@ -28,7 +28,7 @@ const teamData: TeamType[] = [
 ];
 
 const Team = async ({ lang }: { lang: string }) => {
-  const t =  await getDictionary(lang);
+  const t = await getDictionary(lang);
   return (
     <section
       id="team"

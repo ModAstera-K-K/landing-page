@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getDictionary } from "@/app/[lang]/dictionaries";
-
+import { getDictionary } from "@/app/[lang]/(landing)/dictionaries";
 
 const Hero = async ({ lang }: { lang: string }) => {
-  const t =  await getDictionary(lang);
+  const t = await getDictionary(lang);
   return (
     <>
       <section

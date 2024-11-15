@@ -4,8 +4,7 @@ import Team from "@/components/Team";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "About Us | Play SaaS Starter Kit and Boilerplate for Next.js",
+  title: "About Us | ModAstera",
   description: "This is About page description",
 };
 
