@@ -4,6 +4,7 @@ import React from "react";
 import { Line, Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import PlatformNavigation from "@/components/PlatformNavigation";
+import Link from "next/link";
 
 // Sample data object
 const data = {
@@ -30,7 +31,7 @@ const data = {
   },
   performance: {
     labels: ["2024-10-01", "2024-10-03", "2024-10-05", "2024-10-07"],
-    accuracy: [0.75, 0.78, 0.8, 0.82],
+    accuracy: [75, 78, 80, 82],
     latency: [90, 100, 95, 110],
   },
   apiUsage: {
@@ -44,18 +45,18 @@ const performanceOptions = {
   responsive: true,
   scales: {
     y1: {
-      type: 'linear' as const,
-      position: 'left' as const,
+      type: "linear" as const,
+      position: "left" as const,
       beginAtZero: true,
-      max: 100
+      max: 100,
     },
     y2: {
-      type: 'linear' as const,
-      position: 'right' as const,
+      type: "linear" as const,
+      position: "right" as const,
       beginAtZero: true,
-      suggestedMax: 100
-    }
-  }
+      suggestedMax: 100,
+    },
+  },
 };
 
 export default function DeploymentDashboard() {
@@ -167,9 +168,12 @@ export default function DeploymentDashboard() {
             ))}
           </tbody>
         </table>
-        <button className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+        <Link
+          href="/platform/dataset"
+          className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+        >
           Deploy New Model
-        </button>
+        </Link>
       </div>
 
       {/* Charts Section */}

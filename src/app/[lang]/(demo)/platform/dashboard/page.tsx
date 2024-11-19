@@ -1,6 +1,6 @@
 import React from "react";
 import PlatformNavigation from "@/components/PlatformNavigation";
-
+import Link from "next/link";
 // Sample data object for datasets and models
 const data = {
   datasets: [
@@ -88,9 +88,13 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
-          <button className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+
+          <Link
+            href="/platform/dataset"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
             Upload New Dataset
-          </button>
+          </Link>
         </div>
 
         {/* Models Table */}
@@ -116,9 +120,12 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
-          <button className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+          <Link
+            href="/platform/dataset"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
             Train New Model
-          </button>
+          </Link>
         </div>
       </div>
     </div>

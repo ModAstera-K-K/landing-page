@@ -34,7 +34,12 @@ const chartOptions = {
       beginAtZero: true,
       max: 100,
       ticks: {
-        callback: function(this: any, value: number | string, index: number, ticks: any[]): string {
+        callback: function (
+          this: any,
+          value: number | string,
+          index: number,
+          ticks: any[],
+        ): string {
           return value + "%";
         },
       },
@@ -108,9 +113,12 @@ export default function TrainingDetail() {
               ))}
             </tbody>
           </table>
-          <button className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+          <Link
+            href="/platform/deployment"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+          >
             Deploy Model
-          </button>
+          </Link>
         </div>
       </div>
     </div>

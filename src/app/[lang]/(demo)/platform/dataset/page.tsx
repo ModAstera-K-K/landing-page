@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import PlatformNavigation from "@/components/PlatformNavigation";
+import Link from "next/link";
 
 // Sample data object for models
 const data = {
@@ -135,9 +136,12 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <button className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+          <Link
+            href="/platform/dashboard"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+          >
             Continue
-          </button>
+          </Link>
         </div>
 
         {/* Models Table */}
@@ -163,9 +167,12 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
-          <button className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+          <Link
+            href="/platform/dataset"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+          >
             Train New Model
-          </button>
+          </Link>
         </div>
       </div>
     </div>
