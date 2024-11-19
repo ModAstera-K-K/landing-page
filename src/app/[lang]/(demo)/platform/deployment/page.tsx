@@ -92,63 +92,78 @@ export default function DeploymentDashboard() {
   };
 
   return (
-    <div className="min-h-screen space-y-6 bg-gray-50 p-8">
+    <div className="min-h-screen space-y-6 bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
       {/* Key Metrics */}
       <div className="grid grid-cols-3 gap-6">
-        <div className="rounded-lg bg-white p-6 text-center shadow">
-          <h3 className="text-sm font-semibold text-gray-600">
+        <div className="rounded-lg bg-white p-6 text-center shadow dark:bg-gray-800">
+          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400">
             Total API Calls (Last 7 Days)
           </h3>
-          <p className="mt-2 text-2xl font-bold text-gray-800">
+          <p className="mt-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
             {data.metrics.apiCalls}
           </p>
         </div>
-        <div className="rounded-lg bg-white p-6 text-center shadow">
-          <h3 className="text-sm font-semibold text-gray-600">
+        <div className="rounded-lg bg-white p-6 text-center shadow dark:bg-gray-800">
+          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400">
             Average Accuracy
           </h3>
-          <p className="mt-2 text-2xl font-bold text-gray-800">
+          <p className="mt-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
             {data.metrics.averageAccuracy}
           </p>
         </div>
-        <div className="rounded-lg bg-white p-6 text-center shadow">
-          <h3 className="text-sm font-semibold text-gray-600">Active Models</h3>
-          <p className="mt-2 text-2xl font-bold text-gray-800">
+        <div className="rounded-lg bg-white p-6 text-center shadow dark:bg-gray-800">
+          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+            Active Models
+          </h3>
+          <p className="mt-2 text-2xl font-bold text-gray-800 dark:text-gray-200">
             {data.metrics.activeModels}
           </p>
         </div>
       </div>
       {/* Deployed Models Table */}
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-lg font-semibold">Deployed Models</h2>
+      <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+          Deployed Models
+        </h2>
         <table className="w-full text-left">
           <thead>
             <tr>
-              <th className="pb-2 text-gray-600">Name</th>
-              <th className="pb-2 text-gray-600">Status</th>
-              <th className="pb-2 text-gray-600">Version</th>
-              <th className="pb-2 text-gray-600">Deployed</th>
-              <th className="pb-2 text-gray-600">Actions</th>
+              <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
+              <th className="pb-2 text-gray-600 dark:text-gray-400">Status</th>
+              <th className="pb-2 text-gray-600 dark:text-gray-400">Version</th>
+              <th className="pb-2 text-gray-600 dark:text-gray-400">
+                Deployed
+              </th>
+              <th className="pb-2 text-gray-600 dark:text-gray-400">Actions</th>
             </tr>
           </thead>
           <tbody>
             {data.models.map((model, index) => (
-              <tr key={index} className="border-t">
-                <td className="py-2">{model.name}</td>
+              <tr
+                key={index}
+                className="border-t border-gray-300 dark:border-gray-600"
+              >
+                <td className="py-2 text-gray-800 dark:text-gray-200">
+                  {model.name}
+                </td>
                 <td className="py-2">
                   <span
                     className={`rounded-full px-2 py-1 text-sm font-medium ${
                       model.status === "Active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-100 text-gray-600"
+                        ? "bg-green-100 text-green-600 dark:bg-green-200 dark:text-green-800"
+                        : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
                     }`}
                   >
                     {model.status}
                   </span>
                 </td>
-                <td className="py-2">{model.version}</td>
-                <td className="py-2">{model.deployedDate}</td>
+                <td className="py-2 text-gray-800 dark:text-gray-200">
+                  {model.version}
+                </td>
+                <td className="py-2 text-gray-800 dark:text-gray-200">
+                  {model.deployedDate}
+                </td>
                 <td className="py-2">
                   <div className="flex items-center space-x-2">
                     <label className="sr-only">
@@ -159,7 +174,7 @@ export default function DeploymentDashboard() {
                         defaultChecked={model.isChecked}
                       />
                     </label>
-                    <button className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50">
+                    <button className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900">
                       Update
                     </button>
                   </div>
@@ -170,7 +185,7 @@ export default function DeploymentDashboard() {
         </table>
         <Link
           href="/platform/dataset"
-          className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+          className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           Deploy New Model
         </Link>
@@ -179,14 +194,18 @@ export default function DeploymentDashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-2 gap-6">
         {/* Model Performance Chart */}
-        <div className="max-h-[512px]rounded-lg bg-white p-6 shadow">
-          <h3 className="mb-4 text-lg font-semibold">Model Performance</h3>
+        <div className="max-h-[512px] rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Model Performance
+          </h3>
           <Line data={performanceData} options={performanceOptions} />
         </div>
 
         {/* API Usage Chart */}
-        <div className="max-h-[512px] rounded-lg bg-white p-6 shadow">
-          <h3 className="mb-4 text-lg font-semibold">API Usage</h3>
+        <div className="max-h-[512px] rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            API Usage
+          </h3>
           <Bar
             data={apiUsageData}
             options={{ responsive: true, maintainAspectRatio: false }}

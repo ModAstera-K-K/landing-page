@@ -43,24 +43,34 @@ const data = {
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
 
       {/* Stats */}
       <div className="mb-8 grid grid-cols-3 gap-6">
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="text-xl font-semibold text-gray-800">
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
             Total Datasets
           </h2>
-          <p className="text-3xl font-bold">{data.datasets.length}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {data.datasets.length}
+          </p>
         </div>
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="text-xl font-semibold text-gray-800">Total Models</h2>
-          <p className="text-3xl font-bold">{data.models.length}</p>
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+            Total Models
+          </h2>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {data.models.length}
+          </p>
         </div>
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="text-xl font-semibold text-gray-800">Active Jobs</h2>
-          <p className="text-3xl font-bold">3</p>{" "}
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+            Active Jobs
+          </h2>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            3
+          </p>{" "}
           {/* This would come from a job tracking source */}
         </div>
       </div>
@@ -68,22 +78,35 @@ export default function Dashboard() {
       {/* Tables */}
       <div className="grid grid-cols-2 gap-6">
         {/* Datasets Table */}
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-lg font-semibold">Datasets</h2>
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Datasets
+          </h2>
           <table className="w-full text-left">
             <thead>
               <tr>
-                <th className="pb-2 text-gray-600">Name</th>
-                <th className="pb-2 text-gray-600">Size</th>
-                <th className="pb-2 text-gray-600">Last Updated</th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">Size</th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">
+                  Last Updated
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.datasets.map((dataset, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2">{dataset.name}</td>
-                  <td className="py-2">{dataset.size}</td>
-                  <td className="py-2">{dataset.lastUpdated}</td>
+                <tr
+                  key={index}
+                  className="border-t border-gray-200 dark:border-gray-700"
+                >
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {dataset.name}
+                  </td>
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {dataset.size}
+                  </td>
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {dataset.lastUpdated}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -91,38 +114,57 @@ export default function Dashboard() {
 
           <Link
             href="/platform/dataset"
-            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             Upload New Dataset
           </Link>
         </div>
 
         {/* Models Table */}
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-lg font-semibold">Models</h2>
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Models
+          </h2>
           <table className="w-full text-left">
             <thead>
               <tr>
-                <th className="pb-2 text-gray-600">Name</th>
-                <th className="pb-2 text-gray-600">Status</th>
-                <th className="pb-2 text-gray-600">Accuracy</th>
-                <th className="pb-2 text-gray-600">Last Updated</th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">
+                  Status
+                </th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">
+                  Accuracy
+                </th>
+                <th className="pb-2 text-gray-600 dark:text-gray-400">
+                  Last Updated
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.models.map((model, index) => (
-                <tr key={index} className="border-t">
-                  <td className="py-2">{model.name}</td>
-                  <td className="py-2">{model.status}</td>
-                  <td className="py-2">{model.accuracy}</td>
-                  <td className="py-2">{model.lastUpdated}</td>
+                <tr
+                  key={index}
+                  className="border-t border-gray-200 dark:border-gray-700"
+                >
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {model.name}
+                  </td>
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {model.status}
+                  </td>
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {model.accuracy}
+                  </td>
+                  <td className="py-2 text-gray-800 dark:text-gray-200">
+                    {model.lastUpdated}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <Link
             href="/platform/dataset"
-            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             Train New Model
           </Link>

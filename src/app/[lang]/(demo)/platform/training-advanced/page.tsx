@@ -80,8 +80,10 @@ interface NodeContentProps {
 function NodeContent({ title, details }: NodeContentProps) {
   return (
     <div className="text-center">
-      <h3 className="font-semibold">{title}</h3>
-      <ul className="mt-2 space-y-1 text-sm text-gray-600">
+      <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+        {title}
+      </h3>
+      <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
         {details.map((detail, index) => (
           <li key={index}>{detail}</li>
         ))}
@@ -95,11 +97,13 @@ export default function AdvancedView() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   return (
-    <div className="relative min-h-screen bg-gray-50 p-8">
+    <div className="relative min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
       {/* Instructions Box */}
-      <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md">
-        <h3 className="font-semibold">Instructions</h3>
+      <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-300">
+        <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+          Instructions
+        </h3>
         <p className="mt-2">
           Train multiple models and select the best one to predict Sepsis early
           detection from the uploaded images.
@@ -107,7 +111,7 @@ export default function AdvancedView() {
       </div>
 
       {/* React Flow Canvas */}
-      <div className="mt-4 h-[640px] w-full rounded-lg bg-white shadow-md">
+      <div className="mt-4 h-[640px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
         <ReactFlow
           nodes={nodes}
           edges={edges}
