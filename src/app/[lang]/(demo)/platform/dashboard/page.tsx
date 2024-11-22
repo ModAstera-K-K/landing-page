@@ -192,42 +192,6 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="mb-4">
-              <label className="mb-2 block text-gray-600 dark:text-gray-400">
-                Training Instructions
-              </label>
-              <textarea
-                value={trainingInstructions}
-                onChange={(e) => setTrainingInstructions(e.target.value)}
-                placeholder="Provide detailed instructions for training your model"
-                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="evalMetric"
-                className="mb-2 block text-gray-600 dark:text-gray-400"
-              >
-                Evaluation Metrics
-              </label>
-              <select
-                id="evalMetric"
-                value={evaluationMetric}
-                onChange={(e) => setEvaluationMetric(e.target.value)}
-                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-              >
-                <option>Auto</option>
-                <option>Accuracy</option>
-                <option>Precision</option>
-                <option>Recall</option>
-              </select>
-              <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-                Manually select the evaluation metrics or let AI automatically
-                choose for you.
-              </p>
-            </div>
-
             <Link
               href="#"
               onClick={handleContinueClick}
@@ -297,6 +261,43 @@ export default function Dashboard() {
                 ))}
               </select>
             </div>
+            
+            <div className="mb-4">
+              <label className="mb-2 block text-gray-600 dark:text-gray-400">
+                Training Instructions
+              </label>
+              <textarea
+                value={trainingInstructions}
+                onChange={(e) => setTrainingInstructions(e.target.value)}
+                placeholder="Provide detailed instructions for training your model"
+                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="evalMetric"
+                className="mb-2 block text-gray-600 dark:text-gray-400"
+              >
+                Evaluation Metrics
+              </label>
+              <select
+                id="evalMetric"
+                value={evaluationMetric}
+                onChange={(e) => setEvaluationMetric(e.target.value)}
+                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              >
+                <option>Auto</option>
+                <option>Accuracy</option>
+                <option>Precision</option>
+                <option>Recall</option>
+              </select>
+              <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
+                Manually select the evaluation metrics or let AI automatically
+                choose for you.
+              </p>
+            </div>
+            
             <div className="flex justify-between">
               <Link
                 href="#"
