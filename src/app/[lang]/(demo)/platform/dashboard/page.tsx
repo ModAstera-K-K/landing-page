@@ -12,9 +12,11 @@ export default function Dashboard() {
   const [trainingInstructions, setTrainingInstructions] = useState("");
   const [evaluationMetric, setEvaluationMetric] = useState("Auto");
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [isTrainingModel, setIsTrainingModel] = useState(false); // New state to track if training model block is shown
 
   const handleUploadClick = () => {
     setShowUploadForm(true);
+    setIsTrainingModel(false); // Reset training model state
   };
 
   const handleContinueClick = () => {
@@ -44,6 +46,17 @@ export default function Dashboard() {
   useEffect(() => {
     // This will ensure the component re-renders when datasetsData changes
   }, [datasetsData]);
+
+  // New function to handle training model click
+  const handleTrainModelClick = () => {
+    setIsTrainingModel(true);
+    setShowUploadForm(false); // Hide upload form
+  };
+
+  // New function to handle cancel action
+  const handleCancelClick = () => {
+    setIsTrainingModel(false); // Go back to models view
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
@@ -267,49 +280,86 @@ export default function Dashboard() {
           </div>
         )}
         
-        {/* Models Table */}
-        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-          <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Models
-          </h2>
-          <table className="w-full text-left">
-            <thead>
-              <tr>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Status</th>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Accuracy</th>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Last Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {modelsData.map((model, index) => (
-                <tr
-                  key={index}
-                  className="border-t border-gray-200 dark:border-gray-700"
-                >
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {model.name}
-                  </td>
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {model.status}
-                  </td>
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {model.accuracy}
-                  </td>
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {model.lastUpdated}
-                  </td>
+        {isTrainingModel ? ( // Conditional rendering for Train Model block
+          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Train New Model
+            </h2>
+            <div className="mb-4">
+              <label className="mb-2 block text-gray-600 dark:text-gray-400">
+                Select Dataset
+              </label>
+              <select className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                {datasetsData.map((dataset, index) => (
+                  <option key={index} value={dataset.name}>
+                    {dataset.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-between">
+              <Link
+                href="#"
+                onClick={() => {/* Handle continue logic here */}}
+                className="mt-4 mr-2 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+              >
+                Continue
+              </Link>
+              <Link
+                href="#"
+                onClick={handleCancelClick}
+                className="mt-4 rounded bg-gray-400 px-4 py-2 font-semibold text-white hover:bg-gray-500"
+              >
+                Cancel
+              </Link>
+            </div>
+          </div>
+        ) : (
+          // Existing Models Table rendering
+          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Models
+            </h2>
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Status</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Accuracy</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Last Updated</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <Link
-            href="/platform/dataset"
-            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-          >
-            Train New Model
-          </Link>
-        </div>
+              </thead>
+              <tbody>
+                {modelsData.map((model, index) => (
+                  <tr
+                    key={index}
+                    className="border-t border-gray-200 dark:border-gray-700"
+                  >
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {model.name}
+                    </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {model.status}
+                    </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {model.accuracy}
+                    </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {model.lastUpdated}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Link
+              href="#"
+              onClick={handleTrainModelClick} // Update to handle training model click
+              className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              Train New Model
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
