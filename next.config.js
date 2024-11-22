@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config) => {
-    config.externals = [...config.externals, { canvas: "canvas" }];
+    config.module.rules.push({
+      test: /\.(mp4|webm|ogg)$/i,
+      type: 'asset/resource',
+    });
     return config;
   },
 };

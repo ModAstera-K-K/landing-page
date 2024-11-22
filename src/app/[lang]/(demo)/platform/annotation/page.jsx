@@ -12,7 +12,28 @@ export default function AnnotationPage() {
   const [annotations, setAnnotations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const [totalFrames, setTotalFrames] = useState(0);
+  const [isVideo, setIsVideo] = useState(false);
+  const [mediaUrl, setMediaUrl] = useState(
+    "/images/examples/chest-x-ray-29.jpg",
+  );
   const [hoveredTool, setHoveredTool] = useState(null);
+
+  // Load media metadata
+  useEffect(() => {
+    if (mediaUrl.match(/\.(mp4|webm|ogg)$/i)) {
+      setIsVideo(true);
+      const video = document.createElement("video");
+      video.src = mediaUrl;
+      video.addEventListener("loadedmetadata", () => {
+        setTotalFrames(Math.floor(video.duration * video.frameRate || 30));
+      });
+    } else {
+      setIsVideo(false);
+      setTotalFrames(0);
+    }
+  }, [mediaUrl]);
 
   const handleMouseMove = (coords) => {
     setMouseCoords(coords);
@@ -28,8 +49,8 @@ export default function AnnotationPage() {
 
   return (
     <div className="flex h-screen flex-col">
+      <div className="mt-10"></div>
       {/* Top toolbar */}
-      <div className="mt-8"></div>
       <div className="flex items-center space-x-2 border-b border-gray-300 bg-gray-100 p-2">
         <button className="rounded p-2 hover:bg-gray-200" title="Menu">
           <svg
@@ -47,55 +68,74 @@ export default function AnnotationPage() {
           </svg>
         </button>
 
-        <div className="flex space-x-2 border-l border-r border-gray-300 px-2">
-          <button className="rounded p-2 hover:bg-gray-200" title="First Frame">
-            ⏮
-          </button>
-          <button
-            className="rounded p-2 hover:bg-gray-200"
-            title="Previous Frame"
-          >
-            ⏪
-          </button>
-          <button className="rounded p-2 hover:bg-gray-200" title="Play/Pause">
-            ▶
-          </button>
-          <button className="rounded p-2 hover:bg-gray-200" title="Next Frame">
-            ⏩
-          </button>
-          <button className="rounded p-2 hover:bg-gray-200" title="Last Frame">
-            ⏭
-          </button>
-        </div>
+        {isVideo && (
+          <>
+            <div className="flex space-x-2 border-l border-r border-gray-300 px-2">
+              <button
+                className="rounded p-2 hover:bg-gray-200"
+                onClick={() => setCurrentFrame(0)}
+                title="First Frame"
+              >
+                ⏮
+              </button>
+              <button
+                className="rounded p-2 hover:bg-gray-200"
+                onClick={() => setCurrentFrame(Math.max(0, currentFrame - 1))}
+                title="Previous Frame"
+              >
+                ⏪
+              </button>
+              <button
+                className="rounded p-2 hover:bg-gray-200"
+                onClick={() =>
+                  setCurrentFrame(Math.min(totalFrames - 1, currentFrame + 1))
+                }
+                title="Next Frame"
+              >
+                ⏩
+              </button>
+              <button
+                className="rounded p-2 hover:bg-gray-200"
+                onClick={() => setCurrentFrame(totalFrames - 1)}
+                title="Last Frame"
+              >
+                ⏭
+              </button>
+            </div>
 
-        <input
-          type="range"
-          className="w-96"
-          min="0"
-          max="100"
-          defaultValue="0"
-          title="Timeline"
-        />
-        <span className="text-sm text-gray-600">0</span>
+            <input
+              type="range"
+              className="w-96"
+              min="0"
+              max={totalFrames - 1}
+              value={currentFrame}
+              onChange={(e) => setCurrentFrame(parseInt(e.target.value))}
+              title="Timeline"
+            />
+            <span className="text-sm text-gray-600">
+              Frame: {currentFrame + 1} / {totalFrames}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Main content */}
       <div className="flex flex-1">
         {/* Left toolbar */}
-        <div className="w-12 bg-gray-100 border-r border-gray-300">
-          <div className="flex flex-col items-center py-2 space-y-2">
+        <div className="w-12 border-r border-gray-300 bg-gray-100">
+          <div className="flex flex-col items-center space-y-2 py-2">
             {tools.map((tool) => (
-              <div 
-                key={tool.name} 
+              <div
+                key={tool.name}
                 className="relative"
                 onMouseEnter={() => setHoveredTool(tool.name)}
                 onMouseLeave={() => setHoveredTool(null)}
               >
-                <button className="p-2 hover:bg-gray-200 rounded">
+                <button className="rounded p-2 hover:bg-gray-200">
                   {tool.icon}
                 </button>
                 {hoveredTool === tool.name && (
-                  <div className="absolute left-14 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded text-sm whitespace-nowrap z-50">
+                  <div className="absolute left-14 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-sm text-white">
                     {tool.name}
                   </div>
                 )}
@@ -112,6 +152,9 @@ export default function AnnotationPage() {
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             onMouseMove={handleMouseMove}
+            mediaUrl={mediaUrl}
+            currentFrame={currentFrame}
+            isVideo={isVideo}
           />
         </div>
 
