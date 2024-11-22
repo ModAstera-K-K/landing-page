@@ -112,9 +112,30 @@ export default function Dashboard() {
               }}
             />
             {uploadedFile ? (
-              <p className="text-gray-600 dark:text-gray-400">
-                Uploaded File: {uploadedFile}
-              </p>
+              <div className="flex items-center">
+                <p className="text-gray-600 dark:text-gray-400">
+                  Uploaded File: {uploadedFile}
+                </p>
+                <div
+                  onClick={() => setUploadedFile(null)}
+                  className="ml-2 cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={3}
+                    stroke="red"
+                    className="h-5 w-5 text-red-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+              </div>
             ) : (
               <>
                 <div
