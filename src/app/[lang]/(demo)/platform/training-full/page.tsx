@@ -70,7 +70,7 @@ export default function TrainingFullDetail() {
       <PlatformNavigation />
       {/* Training Progress */}
       <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <svg
               onClick={toggleDetails}
@@ -104,7 +104,7 @@ export default function TrainingFullDetail() {
 
         {/* Training Steps Checklist - Conditionally rendered */}
         {showDetails && (
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             {trainingSteps.map((step, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <div className="flex h-4 w-4 items-center justify-center">
