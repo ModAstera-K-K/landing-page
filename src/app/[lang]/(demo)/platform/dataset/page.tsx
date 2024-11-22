@@ -22,7 +22,7 @@ export default function Dashboard() {
             Total Datasets
           </h2>
           <p className="text-3xl font-bold text-gray-800 dark:text-gray-200">
-            1
+            2
           </p>
         </div>
         <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
