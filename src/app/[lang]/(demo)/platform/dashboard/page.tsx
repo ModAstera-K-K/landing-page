@@ -191,13 +191,19 @@ export default function Dashboard() {
                 className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
               />
             </div>
-
             <Link
               href="#"
               onClick={handleContinueClick}
               className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
             >
               Continue
+            </Link>
+            <Link
+              href="#"
+              onClick={() => setShowUploadForm(false)}
+              className="mt-4 ml-2 rounded bg-gray-400 px-4 py-2 font-semibold text-white hover:bg-gray-500"
+            >
+              Cancel
             </Link>
           </div>
         ) : (
@@ -234,6 +240,7 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
+            <div className="mb-4" />
             <Link
               href="#"
               onClick={handleUploadClick}
@@ -298,7 +305,7 @@ export default function Dashboard() {
               </p>
             </div>
             
-            <div className="flex justify-between">
+            <div className="flex justify-start">
               <Link
                 href="#"
                 onClick={() => {/* Handle continue logic here */}}
@@ -352,6 +359,7 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
+            <div className="mb-4" />
             <Link
               href="#"
               onClick={handleTrainModelClick} // Update to handle training model click
