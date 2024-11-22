@@ -3,42 +3,7 @@
 import React, { useState } from "react";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
-
-// Sample data object for models
-const data = {
-  models: [
-    {
-      name: "Sepsis Early Detection 2",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-04",
-    },
-    {
-      name: "Sleep Apnea Detection",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-03",
-    },
-    {
-      name: "Pneumonia Predictor v2",
-      status: "Evaluating",
-      accuracy: "-",
-      lastUpdated: "2024-11-02",
-    },
-    {
-      name: "Pneumonia Predictor v1",
-      status: "Trained",
-      accuracy: "87.53%",
-      lastUpdated: "2024-10-30",
-    },
-    {
-      name: "Sepsis Early Detection",
-      status: "Trained",
-      accuracy: "89.22%",
-      lastUpdated: "2024-10-15",
-    },
-  ],
-};
+import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared data
 
 export default function Dashboard() {
   // State for form fields
@@ -65,7 +30,7 @@ export default function Dashboard() {
             Total Models
           </h2>
           <p className="text-3xl font-bold text-gray-800 dark:text-gray-200">
-            {data.models.length}
+            {modelsData.length} {/* Use the imported models data */}
           </p>
         </div>
         <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
@@ -245,7 +210,7 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {data.models.map((model, index) => (
+              {modelsData.map((model, index) => (
                 <tr
                   key={index}
                   className="border-t border-gray-300 dark:border-gray-600"

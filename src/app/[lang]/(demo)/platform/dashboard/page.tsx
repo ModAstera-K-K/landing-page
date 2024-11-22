@@ -1,51 +1,20 @@
 import React from "react";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
-// Sample data object for datasets and models
+import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared data
+
 const data = {
   datasets: [
     { name: "Chest X-Ray Data", size: "6.3 GB", lastUpdated: "2024-10-29" },
     { name: "Patient Vitals Data", size: "0.5GB", lastUpdated: "2024-10-15" },
   ],
-  models: [
-    {
-      name: "Sepsis Early Detection 2",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-04",
-    },
-    {
-      name: "Sleep Apnea Detection",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-03",
-    },
-    {
-      name: "Pneumonia Predictor v2",
-      status: "Evaluating",
-      accuracy: "-",
-      lastUpdated: "2024-11-02",
-    },
-    {
-      name: "Pneumonia Predictor v1",
-      status: "Trained",
-      accuracy: "87.53%",
-      lastUpdated: "2024-10-30",
-    },
-    {
-      name: "Sepsis Early Detection",
-      status: "Trained",
-      accuracy: "89.22%",
-      lastUpdated: "2024-10-15",
-    },
-  ],
+  models: modelsData, // Use the imported models data
 };
 
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
-
       {/* Stats */}
       <div className="mb-8 grid grid-cols-3 gap-6">
         <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
@@ -70,11 +39,9 @@ export default function Dashboard() {
           </h2>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             3
-          </p>{" "}
-          {/* This would come from a job tracking source */}
+          </p>
         </div>
       </div>
-
       {/* Tables */}
       <div className="grid grid-cols-2 gap-6">
         {/* Datasets Table */}
@@ -111,7 +78,6 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
-
           <Link
             href="/platform/dataset"
             className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
@@ -119,7 +85,6 @@ export default function Dashboard() {
             Upload New Dataset
           </Link>
         </div>
-
         {/* Models Table */}
         <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
           <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
