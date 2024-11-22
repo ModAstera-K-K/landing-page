@@ -17,12 +17,18 @@ const metrics = [
 
 // Sample data for line chart
 const chartData = {
-  labels: [1, 2, 3, 4, 5, 6, 7],
+  labels: [20, 40, 60, 80, 100, 120, 140],
   datasets: [
     {
-      label: "Accuracy",
+      label: "Training",
       data: [20, 50, 60, 70, 85, 88, 89.22],
       borderColor: "#2563eb",
+      fill: false,
+    },
+    {
+      label: "Validation",
+      data: [15, 45, 55, 65, 80, 83.5, 84],
+      borderColor: "#f97316",
       fill: false,
     },
   ],
@@ -72,7 +78,7 @@ export default function TrainingDetail() {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200" style={{ whiteSpace: 'nowrap' }}>
             Sepsis Early Detection - Trained
           </h2>
         </div>
@@ -82,28 +88,22 @@ export default function TrainingDetail() {
             style={{ width: "100%" }}
           ></div>
         </div>
-        <div className="font-semibold text-gray-700 dark:text-gray-300">
+        <div className="font-semibold text-gray-700 dark:text-gray-300" style={{ whiteSpace: 'nowrap' }}>
           100% Complete
         </div>
       </Link>
 
       <div className="grid grid-cols-2 gap-6">
         {/* Training & Validation Accuracy Charts */}
-        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Training
-          </h3>
-          <Line data={chartData} options={chartOptions} />
-        </div>
-        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Validation
+            Training / Validation Accuracy
           </h3>
           <Line data={chartData} options={chartOptions} />
         </div>
 
-        {/* Metrics Result Table */}
-        <div className="col-span-2 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        {/* Metrics Result Table - Moved to the right */}
+        <div className="col-span-1 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
             Metrics Result
           </h3>
@@ -132,6 +132,7 @@ export default function TrainingDetail() {
               ))}
             </tbody>
           </table>
+          <div className="mb-4"></div>
           <Link
             href="/platform/deployment"
             className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
