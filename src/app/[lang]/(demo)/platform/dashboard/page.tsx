@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
@@ -18,13 +18,32 @@ export default function Dashboard() {
   };
 
   const handleContinueClick = () => {
+    // Check if a file is uploaded and a dataset name is provided
+    if (!uploadedFile || !datasetName) {
+        return; // Do nothing if conditions are not met
+    }
+    
     setShowUploadForm(false);
     // Reset the form fields if needed
     setDatasetName("");
     setTrainingInstructions("");
     setEvaluationMetric("Auto");
     setUploadedFile(null);
+
+    // Append new dataset to datasetsData at the top
+    const newDataset = {
+        name: datasetName,
+        size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
+        lastUpdated: new Date().toISOString().split('T')[0], // Current date
+    };
+    datasetsData.unshift(newDataset); // Update datasetsData to add at the top
+    // Trigger a re-render or state update if necessary
   };
+
+  // Update the datasets display to reflect the new data
+  useEffect(() => {
+    // This will ensure the component re-renders when datasetsData changes
+  }, [datasetsData]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
