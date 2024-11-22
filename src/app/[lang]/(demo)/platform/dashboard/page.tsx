@@ -9,6 +9,24 @@ const data = {
   ],
   models: [
     {
+      name: "Sepsis Early Detection 2",
+      status: "Training",
+      accuracy: "-",
+      lastUpdated: "2024-11-04",
+    },
+    {
+      name: "Sleep Apnea Detection",
+      status: "Training",
+      accuracy: "-",
+      lastUpdated: "2024-11-03",
+    },
+    {
+      name: "Pneumonia Predictor v2",
+      status: "Evaluating",
+      accuracy: "-",
+      lastUpdated: "2024-11-02",
+    },
+    {
       name: "Pneumonia Predictor v1",
       status: "Trained",
       accuracy: "87.53%",
@@ -19,24 +37,6 @@ const data = {
       status: "Trained",
       accuracy: "89.22%",
       lastUpdated: "2024-10-15",
-    },
-    {
-      name: "Pneumonia Predictor v2",
-      status: "Evaluating",
-      accuracy: "-",
-      lastUpdated: "2024-11-02",
-    },
-    {
-      name: "Sleep Apnea Detection",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-03",
-    },
-    {
-      name: "Sepsis Early Detection 2",
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: "2024-11-04",
     },
   ],
 };
