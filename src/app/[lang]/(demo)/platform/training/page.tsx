@@ -1,42 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import PlatformNavigation from "@/components/PlatformNavigation";
-
-// Sample data object for models with training progress
-const data = {
-  models: [
-    {
-      name: "Sepsis Early Detection 2",
-      status: "Training",
-      progress: 78,
-      color: "bg-blue-500",
-    },
-    {
-      name: "Sleep Apnea Detection",
-      status: "Training",
-      progress: 67,
-      color: "bg-blue-500",
-    },
-    {
-      name: "Pneumonia Predictor V2",
-      status: "Evaluating",
-      progress: 80,
-      color: "bg-yellow-500",
-    },
-    {
-      name: "Pneumonia Predictor V2",
-      status: "Trained",
-      progress: 100,
-      color: "bg-green-500",
-    },
-    {
-      name: "Sepsis Early Detection",
-      status: "Trained",
-      progress: 100,
-      color: "bg-green-500",
-    },
-  ],
-};
+import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
 
 export default function Training() {
   return (
@@ -45,7 +10,7 @@ export default function Training() {
 
       {/* Training Progress */}
       <div className="space-y-6">
-        {data.models.map((model, index) => (
+        {modelsData.map((model, index) => (
           <Link
             key={index}
             href="/platform/training-detail"
