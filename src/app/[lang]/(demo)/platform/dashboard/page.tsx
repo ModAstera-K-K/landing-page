@@ -268,6 +268,16 @@ export default function Dashboard() {
                 ))}
               </select>
             </div>
+            <div className="mb-4">
+              <label className="mb-2 block text-gray-600 dark:text-gray-400">
+                Model Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter a name for your model"
+                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              />
+            </div>
             
             <div className="mb-4">
               <label className="mb-2 block text-gray-600 dark:text-gray-400">
