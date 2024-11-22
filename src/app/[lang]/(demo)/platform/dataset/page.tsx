@@ -100,31 +100,47 @@ export default function Dashboard() {
               }
             }}
           >
+            <input
+              id="fileInput"
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  setUploadedFile(files[0].name); // Set the uploaded file name
+                }
+              }}
+            />
             {uploadedFile ? (
               <p className="text-gray-600 dark:text-gray-400">
                 Uploaded File: {uploadedFile}
               </p>
             ) : (
               <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="mb-2 h-12 w-12 text-gray-400 dark:text-gray-500"
+                <div
+                  onClick={() => document.getElementById('fileInput')?.click()}
+                  className="cursor-pointer"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="mb-2 h-12 w-12 text-gray-400 dark:text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </div>
                 <p className="text-gray-600 dark:text-gray-400">
                   Drag and drop your dataset here
                 </p>
                 <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-                  or click to select files (images, CSV, JSON)
+                  or click the plus icon to select files (images, CSV, JSON)
                 </p>
               </>
             )}
