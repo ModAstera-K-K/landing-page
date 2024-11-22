@@ -45,6 +45,7 @@ export default function Dashboard() {
   const [datasetName, setDatasetName] = useState("");
   const [trainingInstructions, setTrainingInstructions] = useState("");
   const [evaluationMetric, setEvaluationMetric] = useState("Auto");
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
@@ -84,27 +85,49 @@ export default function Dashboard() {
           <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
             Upload Dataset
           </h2>
-          <div className="mb-4 flex flex-col items-center rounded-lg border-2 border-dashed border-gray-300 p-8 dark:border-gray-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="mb-2 h-12 w-12 text-gray-400 dark:text-gray-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            <p className="text-gray-600 dark:text-gray-400">
-              Drag and drop your dataset here
-            </p>
-            <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-              or click to select files (images, CSV, JSON)
-            </p>
+          <div
+            className="mb-4 flex flex-col items-center rounded-lg border-2 border-dashed border-gray-300 p-8 dark:border-gray-600"
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const files = Array.from(e.dataTransfer.files);
+              if (files.length > 0) {
+                setUploadedFile(files[0].name); // Set the uploaded file name
+              }
+            }}
+          >
+            {uploadedFile ? (
+              <p className="text-gray-600 dark:text-gray-400">
+                Uploaded File: {uploadedFile}
+              </p>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="mb-2 h-12 w-12 text-gray-400 dark:text-gray-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Drag and drop your dataset here
+                </p>
+                <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
+                  or click to select files (images, CSV, JSON)
+                </p>
+              </>
+            )}
           </div>
 
           <div className="mb-4">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -95,6 +95,33 @@ function NodeContent({ title, details }: NodeContentProps) {
 export default function AdvancedView() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [showCode, setShowCode] = useState(false);
+  const codePopupRef = useRef(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+
+  const handleNodeClick = (event, node) => {
+    if (node.id === "2") {
+      setShowCode(true);
+      setPopupPosition({ top: 100, left: 400 });
+    }
+  };
+
+  const handleClickOutside = (event) => {
+    if (codePopupRef.current && !codePopupRef.current.contains(event.target)) {
+      setShowCode(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleEditClick = () => {
+    console.log("Edit button clicked");
+  };
 
   return (
     <div className="relative min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
@@ -119,12 +146,44 @@ export default function AdvancedView() {
           onEdgesChange={onEdgesChange}
           fitView
           style={{ width: "100%", height: "100%" }}
+          onNodeClick={handleNodeClick}
         >
           <MiniMap />
           <Controls />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </div>
+
+      {/* Code Display */}
+      {showCode && (
+        <div
+          ref={codePopupRef}
+          className="absolute bg-gray-900 text-gray-200 p-4 rounded shadow-md"
+          style={{ top: 100, left: 400 }}
+        >
+          <pre className="overflow-x-auto">
+            {`import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import cv2
+from util import *
+
+class DetectionLayer(nn.Module):
+    def __init__(self, anchors):
+        super(DetectionLayer, self).__init__()
+
+# ... rest of the code ...`}
+          </pre>
+          <button
+            onClick={handleEditClick}
+            className="mt-4 bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700"
+            style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+          >
+            Edit
+          </button>
+        </div>
+      )}
     </div>
   );
 }

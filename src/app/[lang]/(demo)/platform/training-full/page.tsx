@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import Link from "next/link";
@@ -50,6 +50,26 @@ const chartOptions = {
 };
 
 export default function TrainingFullDetail() {
+  const [completionWidth, setCompletionWidth] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<boolean[]>(new Array(trainingSteps.length).fill(false));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCompletionWidth((prev) => {
+        if (prev < 100) {
+          const newWidth = prev + 1;
+          const newCompletedSteps = trainingSteps.map((_, index) => newWidth >= (index + 1) * (100 / trainingSteps.length));
+          setCompletedSteps(newCompletedSteps);
+          return newWidth;
+        }
+        clearInterval(interval);
+        return prev;
+      });
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen space-y-6 bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
@@ -78,7 +98,7 @@ export default function TrainingFullDetail() {
           <div className="mx-4 h-4 w-full rounded-full bg-gray-200 dark:bg-gray-700">
             <div
               className="h-4 rounded-full bg-green-500"
-              style={{ width: "100%" }}
+              style={{ width: `${completionWidth}%` }}
             ></div>
           </div>
           <div className="font-semibold text-gray-700 dark:text-gray-300">
@@ -91,7 +111,7 @@ export default function TrainingFullDetail() {
           {trainingSteps.map((step, index) => (
             <div key={index} className="flex items-center space-x-2">
               <div className="flex h-4 w-4 items-center justify-center">
-                {step.completed ? (
+                {completedSteps[index] ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -138,53 +158,56 @@ export default function TrainingFullDetail() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Training Accuracy Chart */}
-        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Training
-          </h3>
-          <Line data={chartData} options={chartOptions} />
-        </div>
+      {/* Conditionally render Training and Metrics Result blocks */}
+      {completionWidth === 100 && (
+        <div className="grid grid-cols-2 gap-6">
+          {/* Training Accuracy Chart */}
+          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Training
+            </h3>
+            <Line data={chartData} options={chartOptions} />
+          </div>
 
-        {/* Metrics Result Table */}
-        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Metrics Result
-          </h3>
-          <table className="w-full text-left">
-            <thead>
-              <tr>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">
-                  Metric
-                </th>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {metrics.map((metric, index) => (
-                <tr
-                  key={index}
-                  className="border-t border-gray-300 dark:border-gray-600"
-                >
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {metric.metric}
-                  </td>
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {metric.value}
-                  </td>
+          {/* Metrics Result Table */}
+          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Metrics Result
+            </h3>
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Metric
+                  </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Value</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <Link
-            href="/platform/deployment"
-            className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-          >
-            Deploy Model
-          </Link>
+              </thead>
+              <tbody>
+                {metrics.map((metric, index) => (
+                  <tr
+                    key={index}
+                    className="border-t border-gray-300 dark:border-gray-600"
+                  >
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {metric.metric}
+                    </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {metric.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Link
+              href="/platform/deployment"
+              className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              Deploy Model
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

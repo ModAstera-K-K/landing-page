@@ -4,8 +4,8 @@ import Team from "@/components/Team";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | ModAstera",
-  description: "This is About page description",
+  title: "About us | ModAstera - AI Solutions Tailored for HealthTech",
+  description: "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
 };
 
 const AboutPage = async ({ params }: { params: { lang: string } }) => {

@@ -16,7 +16,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "ModAstera - AI Solutions Tailored for HealthTech",
   description:
-    "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists.",
+    "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
 };
 
 export default async function Home({ params: { lang } }: { params: { lang: string } }) {

@@ -5,8 +5,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Pricing Page | Play SaaS Starter Kit and Boilerplate for Next.js",
-  description: "This is pricing page description",
+    "Pricing Page | ModAstera - AI Solutions Tailored for HealthTech",
+  description: "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
 };
 
 const PricingPage = () => {

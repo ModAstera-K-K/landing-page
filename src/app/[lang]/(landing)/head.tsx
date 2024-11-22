@@ -5,7 +5,7 @@ export default function Head() {
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <meta
         name="description"
-        content="ModAstera is a HealthTech company that uses AI to solve problems in healthcare."
+        content="ModAstera - AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists"
       />
       <link rel="icon" href="/images/favicon.ico" />
     </>
