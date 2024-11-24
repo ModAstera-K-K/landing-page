@@ -35,7 +35,7 @@ const chartData = {
     },
     {
       label: "Validation",
-      data: [15, 45, 55, 65, 80, 83.5, 84],
+      data: [1, 30, 55, 65, 80, 83.5, 84],
       borderColor: "#f97316",
       fill: false,
     },
