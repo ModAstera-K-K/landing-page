@@ -154,49 +154,33 @@ def generate_loader(opt):
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'yolov4':
         from det_model.yolov4.utils.dataloader import YoloDataset, yolo_dataset_collate
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'yolov5':
         from det_model.yolov5.utils.dataloader import YoloDataset, yolo_dataset_collate
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'rtmdet':
         from det_model.rtmdet.utils.dataloader import YoloDataset, yolo_dataset_collate
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'yolov7':
         from det_model.yolov7.utils.dataloader import YoloDataset, yolo_dataset_collate
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, opt.anchors, opt.anchors_mask, epoch_length=opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'yolov8':
         from det_model.yolov8.utils.dataloader import YoloDataset, yolo_dataset_collate
-        # train_dataset   = YoloDataset(train_lines, input_shape, num_classes, epoch_length=UnFreeze_Epoch, \
-        #                                 mosaic=mosaic, mixup=mixup, mosaic_prob=mosaic_prob, mixup_prob=mixup_prob, train=True, special_aug_ratio=special_aug_ratio)
-        # val_dataset     = YoloDataset(val_lines, input_shape, num_classes, epoch_length=UnFreeze_Epoch, \
-        #                                 mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length=opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length=opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length=opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
     elif opt.net == 'yolox':
         from det_model.yolox.utils.dataloader import YoloDataset, yolo_dataset_collate
-        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, \
-                                        mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
-        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, \
-                                        mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
+        train_dataset   = YoloDataset(opt.train_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, mosaic=opt.mosaic, mixup=opt.mixup, mosaic_prob=opt.mosaic_prob, mixup_prob=opt.mixup_prob, train=True, special_aug_ratio=opt.special_aug_ratio)
+        val_dataset     = YoloDataset(opt.val_lines, opt.input_shape, opt.num_classes, epoch_length = opt.UnFreeze_Epoch, mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         dataset_collate = yolo_dataset_collate
 
     batch_size      = opt.batch_size
@@ -210,10 +194,8 @@ def generate_loader(opt):
         val_sampler     = None
         shuffle         = True
 
-    gen             = torch.utils.data.DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = opt.num_workers, pin_memory=True,
-                                    drop_last=True, collate_fn=dataset_collate, sampler=train_sampler)
-    gen_val         = torch.utils.data.DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = opt.num_workers, pin_memory=True, 
-                                    drop_last=True, collate_fn=dataset_collate, sampler=val_sampler) 
+    gen             = torch.utils.data.DataLoader(train_dataset, shuffle = shuffle, batch_size = batch_size, num_workers = opt.num_workers, pin_memory=True, drop_last=True, collate_fn=dataset_collate, sampler=train_sampler)
+    gen_val         = torch.utils.data.DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = opt.num_workers, pin_memory=True, drop_last=True, collate_fn=dataset_collate, sampler=val_sampler) 
     return gen, gen_val
 `;
 
