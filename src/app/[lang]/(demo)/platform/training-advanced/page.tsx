@@ -4,11 +4,11 @@ import ReactFlow, {
   MiniMap,
   Controls,
   Background,
-  addEdge,
   useNodesState,
   useEdgesState,
 } from "react-flow-renderer";
 import PlatformNavigation from "@/components/PlatformNavigation";
+import modelCode from "@/app/[lang]/(demo)/platform/modelCode";
 
 // Sample data for nodes and edges
 const initialNodes = [
@@ -96,6 +96,7 @@ export default function AdvancedView() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showCode, setShowCode] = useState(false);
+  const [pythonCode, setPythonCode] = useState(modelCode);
   const codePopupRef = useRef(null);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -162,18 +163,7 @@ export default function AdvancedView() {
           style={{ top: 100, left: 400 }}
         >
           <pre className="overflow-x-auto">
-            {`import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
-import cv2
-from util import *
-
-class DetectionLayer(nn.Module):
-    def __init__(self, anchors):
-        super(DetectionLayer, self).__init__()
-
-# ... rest of the code ...`}
+            {pythonCode}
           </pre>
           <button
             onClick={handleEditClick}

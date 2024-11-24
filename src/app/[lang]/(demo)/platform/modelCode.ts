@@ -1,3 +1,4 @@
+const modelCode = `
 import torch
 import torch.nn as nn
 
@@ -214,3 +215,6 @@ def generate_loader(opt):
     gen_val         = torch.utils.data.DataLoader(val_dataset  , shuffle = shuffle, batch_size = batch_size, num_workers = opt.num_workers, pin_memory=True, 
                                     drop_last=True, collate_fn=dataset_collate, sampler=val_sampler) 
     return gen, gen_val
+`;
+
+export default modelCode;
