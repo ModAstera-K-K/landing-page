@@ -79,11 +79,11 @@ interface NodeContentProps {
 
 function NodeContent({ title, details }: NodeContentProps) {
   return (
-    <div className="text-center">
-      <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+    <div className="text-center transform scale-60">
+      <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-xs">
         {title}
       </h3>
-      <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+      <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-gray-400">
         {details.map((detail, index) => (
           <li key={index}>{detail}</li>
         ))}
@@ -97,31 +97,11 @@ export default function AdvancedView() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showCode, setShowCode] = useState(false);
   const [pythonCode, setPythonCode] = useState(modelCode);
-  const codePopupRef = useRef(null);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const handleNodeClick = (event, node) => {
     if (node.id === "2") {
-      setShowCode(true);
-      setPopupPosition({ top: 100, left: 400 });
+      setShowCode((prev) => !prev);
     }
-  };
-
-  const handleClickOutside = (event) => {
-    if (codePopupRef.current && !codePopupRef.current.contains(event.target)) {
-      setShowCode(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleEditClick = () => {
-    console.log("Edit button clicked");
   };
 
   return (
@@ -139,7 +119,7 @@ export default function AdvancedView() {
       </div>
 
       {/* React Flow Canvas */}
-      <div className="mt-4 h-[640px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
+      <div className="mt-4 h-[377px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -157,21 +137,8 @@ export default function AdvancedView() {
 
       {/* Code Display */}
       {showCode && (
-        <div
-          ref={codePopupRef}
-          className="absolute bg-gray-900 text-gray-200 p-4 rounded shadow-md"
-          style={{ top: 100, left: 400 }}
-        >
-          <pre className="overflow-x-auto">
-            {pythonCode}
-          </pre>
-          <button
-            onClick={handleEditClick}
-            className="mt-4 bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700"
-            style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-          >
-            Edit
-          </button>
+        <div className="mt-4 bg-gray-900 text-gray-200 p-4 rounded shadow-md">
+          <pre className="overflow-x-auto">{pythonCode}</pre>
         </div>
       )}
     </div>
