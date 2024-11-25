@@ -98,11 +98,20 @@ export default function AdvancedView() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showCode, setShowCode] = useState(false);
   const [pythonCode, setPythonCode] = useState(modelCode);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleNodeClick = (event: any, node: { id: string; }) => {
     if (node.id === "2") {
       setShowCode((prev) => !prev);
     }
+  };
+
+  const handleEditClick = () => {
+    setIsEditing((prev) => !prev);
+  };
+
+  const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPythonCode(event.target.value);
   };
 
   return (
@@ -144,28 +153,40 @@ export default function AdvancedView() {
         {showCode && (
           <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px]">
             <div className="flex justify-end mb-2">
-              <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                Edit
+              <button
+                className="bg-blue-500 text-white px-2 py-1 rounded"
+                onClick={handleEditClick}
+              >
+                {isEditing ? "Save" : "Edit"}
               </button>
             </div>
             <div className="overflow-y-auto flex-grow">
-              <Highlight
-                theme={themes.nightOwl}
-                code={pythonCode}
-                language="python"
-              >
-                {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                  <pre className="overflow-x-auto">
-                    {tokens.map((line, i) => (
-                      <div key={i} {...getLineProps({ line })}>
-                        {line.map((token, key) => (
-                          <span key={key} {...getTokenProps({ token })} />
-                        ))}
-                      </div>
-                    ))}
-                  </pre>
-                )}
-              </Highlight>
+              {isEditing ? (
+                <textarea
+                  className="w-full h-full p-2 bg-gray-800 text-gray-200 rounded"
+                  value={pythonCode}
+                  onChange={handleCodeChange}
+                  spellCheck={false}
+                />
+              ) : (
+                <Highlight
+                  theme={themes.nightOwl}
+                  code={pythonCode}
+                  language="python"
+                >
+                  {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                    <pre className="overflow-x-auto">
+                      {tokens.map((line, i) => (
+                        <div key={i} {...getLineProps({ line })}>
+                          {line.map((token, key) => (
+                            <span key={key} {...getTokenProps({ token })} />
+                          ))}
+                        </div>
+                      ))}
+                    </pre>
+                  )}
+                </Highlight>
+              )}
             </div>
           </div>
         )}
