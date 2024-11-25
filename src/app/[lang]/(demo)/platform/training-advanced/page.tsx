@@ -81,10 +81,10 @@ interface NodeContentProps {
 function NodeContent({ title, details }: NodeContentProps) {
   return (
     <div className="text-center transform scale-60">
-      <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-xs">
+      <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-xs">
         {title}
       </h3>
-      <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-gray-400">
+      <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-gray-300">
         {details.map((detail, index) => (
           <li key={index}>{detail}</li>
         ))}
@@ -120,8 +120,8 @@ export default function AdvancedView() {
       <div className={`flex ${showCode ? "flex-row" : "flex-col"}`}>
         <div className={`${showCode ? "w-2/5" : "w-full"} p-4`}>
           {/* Instructions Box */}
-          <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-300">
-            <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+          <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-200">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-100">
               Instructions
             </h3>
             <p className="mt-2">
@@ -131,7 +131,7 @@ export default function AdvancedView() {
           </div>
 
           {/* React Flow Canvas */}
-          <div className="mt-4 h-[452px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
+          <div className="mt-4 h-[452px] w-full rounded-lg bg-white shadow-md dark:bg-gray-700">
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -151,10 +151,10 @@ export default function AdvancedView() {
 
         {/* Code Display */}
         {showCode && (
-          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px]">
+          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px] dark:bg-gray-800">
             <div className="flex justify-end mb-2">
               <button
-                className="bg-blue-500 text-white px-2 py-1 rounded"
+                className="bg-blue-500 text-white px-2 py-1 rounded dark:bg-blue-700"
                 onClick={handleEditClick}
               >
                 {isEditing ? "Save" : "Edit"}
@@ -163,7 +163,7 @@ export default function AdvancedView() {
             <div className="overflow-y-auto flex-grow">
               {isEditing ? (
                 <textarea
-                  className="w-full h-full p-2 bg-gray-800 text-gray-200 rounded"
+                  className="w-full h-full p-2 bg-gray-800 text-gray-200 rounded dark:bg-gray-700 dark:text-gray-100"
                   value={pythonCode}
                   onChange={handleCodeChange}
                   spellCheck={false}
