@@ -1,7 +1,7 @@
 "use client";
 
 import { Stage, Layer, Rect, Image } from "react-konva";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import useImage from "use-image";
 
 export default function KonvaCanvas({
@@ -31,7 +31,31 @@ export default function KonvaCanvas({
     }
   }, [staticImage, isVideo]);
 
-  // Handle video frame extraction
+  // 1. First define updateVideoFrame
+  const updateVideoFrame = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    video.currentTime = currentFrame;
+
+    video.addEventListener(
+      "seeked",
+      () => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frameImage = new Image();
+        frameImage.src = canvas.toDataURL();
+        frameImage.onload = () => {
+          setCurrentImage(frameImage);
+        };
+      },
+      { once: true }
+    );
+  }, [currentFrame]);
+
+  // 2. Then use it in useEffect hooks
   useEffect(() => {
     if (!isVideo || !mediaUrl) return;
 
@@ -40,49 +64,19 @@ export default function KonvaCanvas({
     videoRef.current = video;
 
     video.addEventListener("loadeddata", () => {
-      // Create canvas for frame extraction
       const canvas = document.createElement("canvas");
       canvasRef.current = canvas;
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      // Update frame when currentFrame changes
       updateVideoFrame();
     });
-  }, [mediaUrl, isVideo]);
+  }, [mediaUrl, isVideo, updateVideoFrame]);
 
   useEffect(() => {
     if (!isVideo || !videoRef.current) return;
     updateVideoFrame();
-  }, [currentFrame]);
-
-  const updateVideoFrame = () => {
-    if (!videoRef.current || !canvasRef.current) return;
-
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-
-    // Set video to current frame
-    video.currentTime = currentFrame;
-
-    // When the video is ready at the new time
-    video.addEventListener(
-      "seeked",
-      () => {
-        // Draw the current frame
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Convert canvas to image
-        const frameImage = new Image();
-        frameImage.src = canvas.toDataURL();
-        frameImage.onload = () => {
-          setCurrentImage(frameImage);
-        };
-      },
-      { once: true },
-    );
-  };
+  }, [currentFrame, isVideo, updateVideoFrame]);
 
   useEffect(() => {
     const updateSize = () => {
@@ -227,6 +221,7 @@ export default function KonvaCanvas({
             y={position.y}
             width={currentImage.width}
             height={currentImage.height}
+            alt=""
           />
         )}
         {annotations.map((anno) => (

@@ -96,18 +96,18 @@ export default function AdvancedView() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showCode, setShowCode] = useState(false);
-  const codePopupRef = useRef(null);
+  const codePopupRef = useRef<HTMLDivElement>(null);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
-  const handleNodeClick = (event, node) => {
+  const handleNodeClick = (event: React.MouseEvent, node: any) => {
     if (node.id === "2") {
       setShowCode(true);
       setPopupPosition({ top: 100, left: 400 });
     }
   };
 
-  const handleClickOutside = (event) => {
-    if (codePopupRef.current && !codePopupRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (codePopupRef.current && !codePopupRef.current.contains(event.target as HTMLElement)) {
       setShowCode(false);
     }
   };
