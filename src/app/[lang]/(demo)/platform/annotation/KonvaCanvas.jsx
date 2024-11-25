@@ -232,7 +232,7 @@ export default function KonvaCanvas({
             width={anno.width * scale}
             height={anno.height * scale}
             fill="rgba(0,0,255,0.2)"
-            stroke="blue"
+            stroke={anno.color || '#00ff00'}
             strokeWidth={2}
             draggable
             onClick={() => setSelectedId(anno.id)}

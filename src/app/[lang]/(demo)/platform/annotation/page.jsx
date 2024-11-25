@@ -20,6 +20,9 @@ export default function AnnotationPage() {
     "/images/examples/chest-x-ray-29.jpg",
   );
   const [hoveredTool, setHoveredTool] = useState(null);
+  const [labels, setLabels] = useState([]);
+  const [activeTab, setActiveTab] = useState('objects'); // 'objects' | 'labels' | 'issues'
+  const [newLabel, setNewLabel] = useState('');
 
   // Load media metadata
   useEffect(() => {
@@ -47,6 +50,14 @@ export default function AnnotationPage() {
     { icon: "✏️", name: "Draw Rectangle" },
     { icon: "⬚", name: "Select Region" },
   ];
+
+  const generateRandomColor = () => {
+    const colors = [
+      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
+      '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
 
   return (
     <div className="flex h-screen flex-col">
@@ -164,19 +175,28 @@ export default function AnnotationPage() {
           <div className="border-b border-gray-300">
             <div className="flex">
               <button
-                className="flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium"
+                className={`flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium ${
+                  activeTab === 'objects' ? 'bg-gray-200' : ''
+                }`}
+                onClick={() => setActiveTab('objects')}
                 title="View and edit objects"
               >
                 Objects
               </button>
               <button
-                className="flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium"
+                className={`flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium ${
+                  activeTab === 'labels' ? 'bg-gray-200' : ''
+                }`}
+                onClick={() => setActiveTab('labels')}
                 title="Manage labels"
               >
                 Labels
               </button>
               <button
-                className="flex-1 px-4 py-2 text-sm font-medium"
+                className={`flex-1 px-4 py-2 text-sm font-medium ${
+                  activeTab === 'issues' ? 'bg-gray-200' : ''
+                }`}
+                onClick={() => setActiveTab('issues')}
                 title="View issues"
               >
                 Issues
@@ -202,39 +222,141 @@ export default function AnnotationPage() {
           </div>
 
           <div className="p-4">
-            {annotations.map((anno) => (
-              <div
-                key={anno.id}
-                className={`mb-2 flex items-center justify-between rounded border p-2 ${
-                  selectedId === anno.id ? "border-blue-500" : "border-gray-300"
-                }`}
-                onClick={() => setSelectedId(anno.id)}
-              >
-                <input
-                  type="text"
-                  value={anno.label}
-                  onChange={(e) =>
-                    setAnnotations(
-                      annotations.map((a) =>
-                        a.id === anno.id ? { ...a, label: e.target.value } : a,
-                      ),
-                    )
-                  }
-                  placeholder="Label"
-                  className="w-full border-none focus:ring-0"
-                  title="Enter label text"
-                />
-                <button
-                  className="ml-2 text-red-500"
-                  title="Delete annotation"
-                  onClick={() =>
-                    setAnnotations(annotations.filter((a) => a.id !== anno.id))
-                  }
-                >
-                  ✕
-                </button>
+            {activeTab === 'objects' && (
+              <div>
+                {annotations.map((anno) => (
+                  <div
+                    key={anno.id}
+                    className={`mb-2 flex items-center justify-between rounded border p-2 ${
+                      selectedId === anno.id ? 'border-blue-500' : 'border-gray-300'
+                    }`}
+                    onClick={() => setSelectedId(anno.id)}
+                  >
+                    <div className="flex items-center space-x-2 flex-1">
+                      {anno.label && (
+                        <div
+                          className="w-4 h-4 rounded-full"
+                          style={{ 
+                            backgroundColor: labels.find(l => l.name === anno.label)?.color 
+                          }}
+                        />
+                      )}
+                      <select
+                        value={anno.label || ''}
+                        onChange={(e) => {
+                          const selectedLabel = labels.find(l => l.name === e.target.value);
+                          setAnnotations(
+                            annotations.map((a) =>
+                              a.id === anno.id 
+                                ? { 
+                                    ...a, 
+                                    label: e.target.value,
+                                    color: selectedLabel?.color 
+                                  } 
+                                : a
+                            )
+                          );
+                        }}
+                        className="w-full border-none focus:ring-0"
+                      >
+                        <option value="">Select a label</option>
+                        {labels.map((label) => (
+                          <option key={label.name} value={label.name}>
+                            {label.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      className="ml-2 text-red-500"
+                      title="Delete annotation"
+                      onClick={() =>
+                        setAnnotations(annotations.filter((a) => a.id !== anno.id))
+                      }
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {activeTab === 'labels' && (
+              <div>
+                <div className="mb-4 flex space-x-2">
+                  <input
+                    type="text"
+                    value={newLabel}
+                    onChange={(e) => setNewLabel(e.target.value)}
+                    placeholder="Enter new label"
+                    className="flex-1 rounded border border-gray-300 px-2 py-1"
+                  />
+                  <button
+                    onClick={() => {
+                      if (newLabel.trim() && !labels.find(l => l.name === newLabel.trim())) {
+                        setLabels([
+                          ...labels,
+                          { 
+                            name: newLabel.trim(), 
+                            color: generateRandomColor() 
+                          }
+                        ]);
+                        setNewLabel('');
+                      }
+                    }}
+                    className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {labels.map((label) => (
+                    <div
+                      key={label.name}
+                      className="flex items-center justify-between rounded border border-gray-300 p-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="color"
+                          value={label.color}
+                          onChange={(e) => {
+                            setLabels(labels.map(l => 
+                              l.name === label.name 
+                                ? { ...l, color: e.target.value }
+                                : l
+                            ));
+                            setAnnotations(annotations.map(a => 
+                              a.label === label.name 
+                                ? { ...a, color: e.target.value }
+                                : a
+                            ));
+                          }}
+                          className="h-6 w-6 cursor-pointer"
+                        />
+                        <span>{label.name}</span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setLabels(labels.filter((l) => l.name !== label.name));
+                          setAnnotations(
+                            annotations.map((a) =>
+                              a.label === label.name ? { ...a, label: '' } : a
+                            )
+                          );
+                        }}
+                        className="text-red-500"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'issues' && (
+              <div className="text-center text-gray-500">No issues found</div>
+            )}
           </div>
         </div>
       </div>
