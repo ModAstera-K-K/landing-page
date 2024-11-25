@@ -98,7 +98,7 @@ export default function AdvancedView() {
   const [showCode, setShowCode] = useState(false);
   const [pythonCode, setPythonCode] = useState(modelCode);
 
-  const handleNodeClick = (event, node) => {
+  const handleNodeClick = (event: any, node: { id: string; }) => {
     if (node.id === "2") {
       setShowCode((prev) => !prev);
     }
