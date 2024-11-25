@@ -142,7 +142,7 @@ export default function AdvancedView() {
               style={{ width: "100%", height: "100%" }}
               onNodeClick={handleNodeClick}
             >
-              <MiniMap />
+              {!showCode && <MiniMap />}
               <Controls />
               <Background color="#aaa" gap={16} />
             </ReactFlow>
