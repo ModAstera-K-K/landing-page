@@ -323,7 +323,7 @@ export default function KonvaCanvas({
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full bg-gray-100 dark:bg-gray-800">
       <Stage
         width={stageSize.width}
         height={stageSize.height}
@@ -332,7 +332,7 @@ export default function KonvaCanvas({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         scale={{ x: scale, y: scale }}
-        className={`bg-gray-800 ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
+        className={`bg-gray-100 dark:bg-gray-800 ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
       >
         <Layer>
           {currentImage && (
