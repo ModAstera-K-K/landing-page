@@ -127,6 +127,7 @@ export default function AdvancedView() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           fitView
+          fitViewOptions={{ padding: 0.3 }} // Adjust zoom level
           style={{ width: "100%", height: "100%" }}
           onNodeClick={handleNodeClick}
         >
