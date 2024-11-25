@@ -219,6 +219,7 @@ export default function Dashboard() {
                   <th className="pb-2 text-gray-600 dark:text-gray-400">
                     Last Updated
                   </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Annotations</th> {/* Updated column name */}
                 </tr>
               </thead>
               <tbody>
@@ -236,6 +237,11 @@ export default function Dashboard() {
                     <td className="py-2 text-gray-800 dark:text-gray-200">
                       {dataset.lastUpdated}
                     </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      <button className="rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 text-sm">
+                        Update
+                      </button>
+                    </td> {/* New button */}
                   </tr>
                 ))}
               </tbody>
