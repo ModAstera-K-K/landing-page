@@ -142,13 +142,13 @@ export default function AdvancedView() {
 
         {/* Code Display */}
         {showCode && (
-          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md max-h-[624px]">
+          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px]">
             <div className="flex justify-end mb-2">
               <button className="bg-blue-500 text-white px-2 py-1 rounded">
                 Edit
               </button>
             </div>
-            <div className="overflow-y-auto max-h-[600px]">
+            <div className="overflow-y-auto flex-grow">
               <Highlight
                 theme={themes.nightOwl}
                 code={pythonCode}
