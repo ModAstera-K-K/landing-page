@@ -10,14 +10,44 @@ const ANCHOR_SIZE = 8;
 
 const getAnchors = (box) => {
   return [
-    { x: box.x, y: box.y, cursor: 'nw-resize', name: 'top-left' },
-    { x: box.x + box.width, y: box.y, cursor: 'ne-resize', name: 'top-right' },
-    { x: box.x, y: box.y + box.height, cursor: 'sw-resize', name: 'bottom-left' },
-    { x: box.x + box.width, y: box.y + box.height, cursor: 'se-resize', name: 'bottom-right' },
-    { x: box.x + box.width / 2, y: box.y, cursor: 'n-resize', name: 'top-center' },
-    { x: box.x + box.width / 2, y: box.y + box.height, cursor: 's-resize', name: 'bottom-center' },
-    { x: box.x, y: box.y + box.height / 2, cursor: 'w-resize', name: 'middle-left' },
-    { x: box.x + box.width, y: box.y + box.height / 2, cursor: 'e-resize', name: 'middle-right' }
+    { x: box.x, y: box.y, cursor: "nw-resize", name: "top-left" },
+    { x: box.x + box.width, y: box.y, cursor: "ne-resize", name: "top-right" },
+    {
+      x: box.x,
+      y: box.y + box.height,
+      cursor: "sw-resize",
+      name: "bottom-left",
+    },
+    {
+      x: box.x + box.width,
+      y: box.y + box.height,
+      cursor: "se-resize",
+      name: "bottom-right",
+    },
+    {
+      x: box.x + box.width / 2,
+      y: box.y,
+      cursor: "n-resize",
+      name: "top-center",
+    },
+    {
+      x: box.x + box.width / 2,
+      y: box.y + box.height,
+      cursor: "s-resize",
+      name: "bottom-center",
+    },
+    {
+      x: box.x,
+      y: box.y + box.height / 2,
+      cursor: "w-resize",
+      name: "middle-left",
+    },
+    {
+      x: box.x + box.width,
+      y: box.y + box.height / 2,
+      cursor: "e-resize",
+      name: "middle-right",
+    },
   ];
 };
 
@@ -33,38 +63,38 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
     let newBox = { ...box };
 
     switch (anchorName) {
-      case 'top-left':
+      case "top-left":
         newBox.width += newBox.x - pos.x;
         newBox.height += newBox.y - pos.y;
         newBox.x = pos.x;
         newBox.y = pos.y;
         break;
-      case 'top-right':
+      case "top-right":
         newBox.width = pos.x - newBox.x;
         newBox.height += newBox.y - pos.y;
         newBox.y = pos.y;
         break;
-      case 'bottom-left':
+      case "bottom-left":
         newBox.width += newBox.x - pos.x;
         newBox.height = pos.y - newBox.y;
         newBox.x = pos.x;
         break;
-      case 'bottom-right':
+      case "bottom-right":
         newBox.width = pos.x - newBox.x;
         newBox.height = pos.y - newBox.y;
         break;
-      case 'top-center':
+      case "top-center":
         newBox.height += newBox.y - pos.y;
         newBox.y = pos.y;
         break;
-      case 'bottom-center':
+      case "bottom-center":
         newBox.height = pos.y - newBox.y;
         break;
-      case 'middle-left':
+      case "middle-left":
         newBox.width += newBox.x - pos.x;
         newBox.x = pos.x;
         break;
-      case 'middle-right':
+      case "middle-right":
         newBox.width = pos.x - newBox.x;
         break;
     }
@@ -82,7 +112,7 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
         y={annotation.y}
         width={annotation.width}
         height={annotation.height}
-        stroke={annotation.color || '#00ff00'}
+        stroke={annotation.color || "#00ff00"}
         strokeWidth={2}
         onClick={() => onSelect(annotation.id)}
         onTap={() => onSelect(annotation.id)}
@@ -95,32 +125,33 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
           });
         }}
       />
-      
+
       {/* Render anchors only for selected annotation */}
-      {isSelected && getAnchors(annotation).map((anchor, index) => (
-        <Rect
-          key={index}
-          x={anchor.x - ANCHOR_SIZE / 2}
-          y={anchor.y - ANCHOR_SIZE / 2}
-          width={ANCHOR_SIZE}
-          height={ANCHOR_SIZE}
-          fill={ANCHOR_FILL_COLOR}
-          stroke={ANCHOR_STROKE_COLOR}
-          strokeWidth={1}
-          draggable
-          onDragMove={(e) => handleAnchorDragMove(e, anchor.name)}
-          onDragStart={() => setIsResizing(true)}
-          onDragEnd={() => setIsResizing(false)}
-          onMouseEnter={(e) => {
-            const stage = e.target.getStage();
-            stage.container().style.cursor = anchor.cursor;
-          }}
-          onMouseLeave={(e) => {
-            const stage = e.target.getStage();
-            stage.container().style.cursor = 'default';
-          }}
-        />
-      ))}
+      {isSelected &&
+        getAnchors(annotation).map((anchor, index) => (
+          <Rect
+            key={index}
+            x={anchor.x - ANCHOR_SIZE / 2}
+            y={anchor.y - ANCHOR_SIZE / 2}
+            width={ANCHOR_SIZE}
+            height={ANCHOR_SIZE}
+            fill={ANCHOR_FILL_COLOR}
+            stroke={ANCHOR_STROKE_COLOR}
+            strokeWidth={1}
+            draggable
+            onDragMove={(e) => handleAnchorDragMove(e, anchor.name)}
+            onDragStart={() => setIsResizing(true)}
+            onDragEnd={() => setIsResizing(false)}
+            onMouseEnter={(e) => {
+              const stage = e.target.getStage();
+              stage.container().style.cursor = anchor.cursor;
+            }}
+            onMouseLeave={(e) => {
+              const stage = e.target.getStage();
+              stage.container().style.cursor = "default";
+            }}
+          />
+        ))}
     </>
   );
 };
@@ -175,7 +206,7 @@ export default function KonvaCanvas({
           setCurrentImage(frameImage);
         };
       },
-      { once: true }
+      { once: true },
     );
   }, [currentFrame]);
 
@@ -243,7 +274,7 @@ export default function KonvaCanvas({
 
   const handleMouseDown = (e) => {
     if (selectedId || !e.target.getStage()) return;
-    
+
     const pos = getRelativePointerPosition(e.target.getStage());
     if (!pos) return;
 
@@ -253,31 +284,31 @@ export default function KonvaCanvas({
       x: pos.x,
       y: pos.y,
       width: 0,
-      height: 0
+      height: 0,
     });
   };
 
   const handleMouseMove = (e) => {
     if (!isDrawing || !e.target.getStage()) return;
-    
+
     const pos = getRelativePointerPosition(e.target.getStage());
     if (!pos) return;
 
     setMousePos(pos);
-    
+
     if (newRect) {
       setNewRect({
         x: Math.min(startPos.x, pos.x),
         y: Math.min(startPos.y, pos.y),
         width: Math.abs(pos.x - startPos.x),
-        height: Math.abs(pos.y - startPos.y)
+        height: Math.abs(pos.y - startPos.y),
       });
     }
   };
 
   const handleMouseUp = (e) => {
     if (!isDrawing) return;
-    
+
     setIsDrawing(false);
     if (newRect && newRect.width > 5 && newRect.height > 5) {
       const annotation = {
@@ -292,7 +323,7 @@ export default function KonvaCanvas({
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative h-full w-full">
       <Stage
         width={stageSize.width}
         height={stageSize.height}
@@ -301,7 +332,7 @@ export default function KonvaCanvas({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         scale={{ x: scale, y: scale }}
-        className={`bg-gray-800 ${selectedId ? 'cursor-default' : 'cursor-crosshair'}`}
+        className={`bg-gray-800 ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
       >
         <Layer>
           {currentImage && (
@@ -322,8 +353,8 @@ export default function KonvaCanvas({
               onChange={(newBox) => {
                 setAnnotations(
                   annotations.map((a) =>
-                    a.id === annotation.id ? { ...a, ...newBox } : a
-                  )
+                    a.id === annotation.id ? { ...a, ...newBox } : a,
+                  ),
                 );
               }}
               onSelect={setSelectedId}
