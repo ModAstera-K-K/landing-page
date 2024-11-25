@@ -81,10 +81,10 @@ interface NodeContentProps {
 function NodeContent({ title, details }: NodeContentProps) {
   return (
     <div className="text-center transform scale-60">
-      <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-xs">
+      <h3 className="font-semibold text-gray-800 dark:text-black text-xs">
         {title}
       </h3>
-      <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-gray-300">
+      <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-black">
         {details.map((detail, index) => (
           <li key={index}>{detail}</li>
         ))}
