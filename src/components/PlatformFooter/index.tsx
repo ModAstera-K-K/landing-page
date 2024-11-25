@@ -32,7 +32,7 @@ const Footer = ({ lang }: { lang: string }) => {
                     target="_blank"
                     className="text-gray-1 hover:underline"
                   >
-                    ModAstera K. K.
+                    ModAstera Inc.
                   </a>
                 </p>
               </div>
