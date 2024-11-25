@@ -6,6 +6,7 @@ const modelsData = [
     lastUpdated: "2024-11-04",
     progress: 78,
     color: "bg-blue-500",
+    link: "/platform/training/",
   },
   {
     name: "Sleep Apnea Detection",
@@ -14,6 +15,7 @@ const modelsData = [
     lastUpdated: "2024-11-03",
     progress: 67,
     color: "bg-blue-500",
+    link: "/platform/training/",
   },
   {
     name: "Pneumonia Predictor v2",
@@ -22,6 +24,7 @@ const modelsData = [
     lastUpdated: "2024-11-02",
     progress: 80,
     color: "bg-yellow-500",
+    link: "/platform/training/",
   },
   {
     name: "Pneumonia Predictor v1",
@@ -30,6 +33,7 @@ const modelsData = [
     lastUpdated: "2024-10-30",
     progress: 100,
     color: "bg-green-500",
+    link: "/platform/training/",
   },
   {
     name: "Sepsis Early Detection",
@@ -38,6 +42,7 @@ const modelsData = [
     lastUpdated: "2024-10-15",
     progress: 100,
     color: "bg-green-500",
+    link: "/platform/training-full",
   },
 ];
 
