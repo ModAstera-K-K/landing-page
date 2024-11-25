@@ -37,6 +37,7 @@ export default function Dashboard() {
         name: datasetName,
         size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
         lastUpdated: new Date().toISOString().split('T')[0], // Current date
+        annotationPath: "/platform/dashboard"
     };
     datasetsData.unshift(newDataset); // Update datasetsData to add at the top
     // Trigger a re-render or state update if necessary
@@ -238,10 +239,13 @@ export default function Dashboard() {
                       {dataset.lastUpdated}
                     </td>
                     <td className="py-2 text-gray-800 dark:text-gray-200">
-                      <button className="rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 text-sm">
+                      <Link
+                        href={dataset.annotationPath || '#'}
+                        className="rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 text-sm"
+                      >
                         Update
-                      </button>
-                    </td> {/* New button */}
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
