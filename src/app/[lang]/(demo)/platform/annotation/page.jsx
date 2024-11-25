@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 
 const KonvaCanvas = dynamic(() => import("./KonvaCanvas"), {
   ssr: false,
@@ -184,6 +185,14 @@ export default function AnnotationPage() {
           </div>
 
           {/* Coordinates display */}
+          <div className="flex justify-center border-t border-gray-300 bg-gray-100 p-4">
+            <Link
+              href="/platform/dashboard"
+              className="rounded-md bg-blue-500 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-600"
+            >
+              Continue
+            </Link>
+          </div>
           <div className="border-b border-gray-300 p-2 text-sm">
             <p className="mb-1 font-medium">Mouse Position:</p>
             <div className="flex space-x-4">

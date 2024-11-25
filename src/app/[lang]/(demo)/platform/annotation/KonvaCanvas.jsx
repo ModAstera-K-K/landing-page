@@ -113,56 +113,98 @@ export default function KonvaCanvas({
     }
   }, [currentImage, stageSize]);
 
+  const getRelativePointerPosition = (stage) => {
+    const pointerPosition = stage.getPointerPosition();
+    if (!pointerPosition || !currentImage) return null;
+
+    // Calculate coordinates relative to the image
+    const x = (pointerPosition.x - position.x) / scale;
+    const y = (pointerPosition.y - position.y) / scale;
+
+    // Check if the point is within image bounds
+    if (x < 0 || x > currentImage.width || y < 0 || y > currentImage.height) {
+      return null;
+    }
+
+    return { x, y };
+  };
+
   const handleMouseDown = (e) => {
     if (newRect) return;
+    
     const stage = e.target.getStage();
     if (!stage) return;
-
-    const pointerPosition = stage.getPointerPosition();
-    if (!pointerPosition) return;
-
-    // Call the callback with coordinates
-    onMouseMove({
-      x: Math.round(pointerPosition.x / scale),
-      y: Math.round(pointerPosition.y / scale),
-    });
+    
+    const pos = getRelativePointerPosition(stage);
+    if (!pos) return; // Don't start drawing if outside image
 
     setNewRect({
-      x: pointerPosition.x,
-      y: pointerPosition.y,
+      x: pos.x,
+      y: pos.y,
       width: 0,
       height: 0,
     });
   };
 
-  const handleStageMouseMove = (e) => {
+  const handleMouseMove = (e) => {
     const stage = e.target.getStage();
-    if (!stage) return;
+    if (!stage || !currentImage) return;
 
-    const pointerPosition = stage.getPointerPosition();
-    if (!pointerPosition) return;
+    // Update mouse coordinates for display
+    const pos = getRelativePointerPosition(stage);
+    if (pos) {
+      onMouseMove({
+        x: Math.round(pos.x),
+        y: Math.round(pos.y)
+      });
+    }
 
-    // Adjust coordinates to account for image position and scale
-    onMouseMove({
-      x: Math.round((pointerPosition.x - position.x) / scale),
-      y: Math.round((pointerPosition.y - position.y) / scale),
-    });
-
+    // Handle rectangle drawing
     if (newRect) {
+      const pointerPos = stage.getPointerPosition();
+      if (!pointerPos) return;
+
+      // Calculate new width and height
+      let newWidth = (pointerPos.x - position.x) / scale - newRect.x;
+      let newHeight = (pointerPos.y - position.y) / scale - newRect.y;
+
+      // Constrain rectangle within image bounds
+      if (newRect.x + newWidth > currentImage.width) {
+        newWidth = currentImage.width - newRect.x;
+      }
+      if (newRect.y + newHeight > currentImage.height) {
+        newHeight = currentImage.height - newRect.y;
+      }
+      if (newRect.x + newWidth < 0) {
+        newWidth = -newRect.x;
+      }
+      if (newRect.y + newHeight < 0) {
+        newHeight = -newRect.y;
+      }
+
       setNewRect({
         ...newRect,
-        width: pointerPosition.x - newRect.x,
-        height: pointerPosition.y - newRect.y,
+        width: newWidth,
+        height: newHeight,
       });
     }
   };
 
   const handleMouseUp = () => {
     if (newRect) {
-      setAnnotations([
-        ...annotations,
-        { ...newRect, id: Date.now(), label: "" },
-      ]);
+      // Only add annotation if it has positive dimensions
+      if (Math.abs(newRect.width) > 1 && Math.abs(newRect.height) > 1) {
+        // Normalize rectangle coordinates (handle negative width/height)
+        const normalizedRect = {
+          x: newRect.width < 0 ? newRect.x + newRect.width : newRect.x,
+          y: newRect.height < 0 ? newRect.y + newRect.height : newRect.y,
+          width: Math.abs(newRect.width),
+          height: Math.abs(newRect.height),
+          id: Date.now(),
+          label: "",
+        };
+        setAnnotations([...annotations, normalizedRect]);
+      }
       setNewRect(null);
     }
   };
@@ -172,7 +214,7 @@ export default function KonvaCanvas({
       width={stageSize.width}
       height={stageSize.height}
       onMouseDown={handleMouseDown}
-      onMouseMove={handleStageMouseMove}
+      onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       scale={{ x: scale, y: scale }}
       className="bg-gray-800"
@@ -187,26 +229,43 @@ export default function KonvaCanvas({
             height={currentImage.height}
           />
         )}
-        {/* Annotations need to be adjusted for image position */}
         {annotations.map((anno) => (
           <Rect
             key={anno.id}
             x={position.x + anno.x * scale}
             y={position.y + anno.y * scale}
-            width={anno.width}
-            height={anno.height}
+            width={anno.width * scale}
+            height={anno.height * scale}
             fill="rgba(0,0,255,0.2)"
             stroke="blue"
             strokeWidth={2}
             draggable
             onClick={() => setSelectedId(anno.id)}
+            onDragMove={(e) => {
+              // Constrain drag within image bounds
+              const rect = e.target;
+              const x = (rect.x() - position.x) / scale;
+              const y = (rect.y() - position.y) / scale;
+              
+              if (x < 0) rect.x(position.x);
+              if (y < 0) rect.y(position.y);
+              if (x + anno.width > currentImage.width) {
+                rect.x(position.x + (currentImage.width - anno.width) * scale);
+              }
+              if (y + anno.height > currentImage.height) {
+                rect.y(position.y + (currentImage.height - anno.height) * scale);
+              }
+            }}
             onDragEnd={(e) => {
+              const x = (e.target.x() - position.x) / scale;
+              const y = (e.target.y() - position.y) / scale;
+              
               const index = annotations.findIndex((a) => a.id === anno.id);
               const newAnnotations = [...annotations];
               newAnnotations[index] = {
                 ...newAnnotations[index],
-                x: (e.target.x() - position.x) / scale,
-                y: (e.target.y() - position.y) / scale,
+                x: Math.max(0, Math.min(x, currentImage.width - anno.width)),
+                y: Math.max(0, Math.min(y, currentImage.height - anno.height)),
               };
               setAnnotations(newAnnotations);
             }}
@@ -214,10 +273,10 @@ export default function KonvaCanvas({
         ))}
         {newRect && (
           <Rect
-            x={newRect.x}
-            y={newRect.y}
-            width={newRect.width}
-            height={newRect.height}
+            x={position.x + newRect.x * scale}
+            y={position.y + newRect.y * scale}
+            width={newRect.width * scale}
+            height={newRect.height * scale}
             fill="rgba(0,255,0,0.2)"
             stroke="green"
             strokeWidth={2}
