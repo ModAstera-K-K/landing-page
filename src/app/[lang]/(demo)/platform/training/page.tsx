@@ -13,7 +13,7 @@ export default function Training() {
         {modelsData.map((model, index) => (
           <Link
             key={index}
-            href="/platform/training-full"
+            href={model.link}
             className="flex cursor-pointer items-center justify-between rounded-lg bg-white p-6 shadow dark:bg-gray-800"
           >
             {/* Model Information */}
