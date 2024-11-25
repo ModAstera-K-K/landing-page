@@ -9,6 +9,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import modelCode from "@/app/[lang]/(demo)/platform/modelCode";
+import { Highlight, themes } from "prism-react-renderer";
 
 // Sample data for nodes and edges
 const initialNodes = [
@@ -138,7 +139,23 @@ export default function AdvancedView() {
       {/* Code Display */}
       {showCode && (
         <div className="mt-4 bg-gray-900 text-gray-200 p-4 rounded shadow-md">
-          <pre className="overflow-x-auto">{pythonCode}</pre>
+          <Highlight
+            theme={themes.nightOwl}
+            code={pythonCode}
+            language="python"
+          >
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre className="overflow-x-auto">
+                {tokens.map((line, i) => (
+                  <div key={i} {...getLineProps({ line })}>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token })} />
+                    ))}
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
         </div>
       )}
     </div>
