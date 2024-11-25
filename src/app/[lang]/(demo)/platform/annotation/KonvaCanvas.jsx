@@ -4,6 +4,127 @@ import { Stage, Layer, Rect, Image } from "react-konva";
 import { useState, useEffect, useRef, useCallback } from "react";
 import useImage from "use-image";
 
+const ANCHOR_STROKE_COLOR = "#666";
+const ANCHOR_FILL_COLOR = "#fff";
+const ANCHOR_SIZE = 8;
+
+const getAnchors = (box) => {
+  return [
+    { x: box.x, y: box.y, cursor: 'nw-resize', name: 'top-left' },
+    { x: box.x + box.width, y: box.y, cursor: 'ne-resize', name: 'top-right' },
+    { x: box.x, y: box.y + box.height, cursor: 'sw-resize', name: 'bottom-left' },
+    { x: box.x + box.width, y: box.y + box.height, cursor: 'se-resize', name: 'bottom-right' },
+    { x: box.x + box.width / 2, y: box.y, cursor: 'n-resize', name: 'top-center' },
+    { x: box.x + box.width / 2, y: box.y + box.height, cursor: 's-resize', name: 'bottom-center' },
+    { x: box.x, y: box.y + box.height / 2, cursor: 'w-resize', name: 'middle-left' },
+    { x: box.x + box.width, y: box.y + box.height / 2, cursor: 'e-resize', name: 'middle-right' }
+  ];
+};
+
+const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
+  const [isResizing, setIsResizing] = useState(false);
+
+  const handleAnchorDragMove = (e, anchorName) => {
+    e.cancelBubble = true;
+    const stage = e.target.getStage();
+    const box = annotation;
+    const pos = stage.getPointerPosition();
+
+    let newBox = { ...box };
+
+    switch (anchorName) {
+      case 'top-left':
+        newBox.width += newBox.x - pos.x;
+        newBox.height += newBox.y - pos.y;
+        newBox.x = pos.x;
+        newBox.y = pos.y;
+        break;
+      case 'top-right':
+        newBox.width = pos.x - newBox.x;
+        newBox.height += newBox.y - pos.y;
+        newBox.y = pos.y;
+        break;
+      case 'bottom-left':
+        newBox.width += newBox.x - pos.x;
+        newBox.height = pos.y - newBox.y;
+        newBox.x = pos.x;
+        break;
+      case 'bottom-right':
+        newBox.width = pos.x - newBox.x;
+        newBox.height = pos.y - newBox.y;
+        break;
+      case 'top-center':
+        newBox.height += newBox.y - pos.y;
+        newBox.y = pos.y;
+        break;
+      case 'bottom-center':
+        newBox.height = pos.y - newBox.y;
+        break;
+      case 'middle-left':
+        newBox.width += newBox.x - pos.x;
+        newBox.x = pos.x;
+        break;
+      case 'middle-right':
+        newBox.width = pos.x - newBox.x;
+        break;
+    }
+
+    // Ensure minimum size
+    if (newBox.width < 5 || newBox.height < 5) return;
+
+    onChange(newBox);
+  };
+
+  return (
+    <>
+      <Rect
+        x={annotation.x}
+        y={annotation.y}
+        width={annotation.width}
+        height={annotation.height}
+        stroke={annotation.color || '#00ff00'}
+        strokeWidth={2}
+        onClick={() => onSelect(annotation.id)}
+        onTap={() => onSelect(annotation.id)}
+        draggable
+        onDragMove={(e) => {
+          onChange({
+            ...annotation,
+            x: e.target.x(),
+            y: e.target.y(),
+          });
+        }}
+      />
+      
+      {/* Render anchors only for selected annotation */}
+      {isSelected && getAnchors(annotation).map((anchor, index) => (
+        <Rect
+          key={index}
+          x={anchor.x - ANCHOR_SIZE / 2}
+          y={anchor.y - ANCHOR_SIZE / 2}
+          width={ANCHOR_SIZE}
+          height={ANCHOR_SIZE}
+          fill={ANCHOR_FILL_COLOR}
+          stroke={ANCHOR_STROKE_COLOR}
+          strokeWidth={1}
+          draggable
+          onDragMove={(e) => handleAnchorDragMove(e, anchor.name)}
+          onDragStart={() => setIsResizing(true)}
+          onDragEnd={() => setIsResizing(false)}
+          onMouseEnter={(e) => {
+            const stage = e.target.getStage();
+            stage.container().style.cursor = anchor.cursor;
+          }}
+          onMouseLeave={(e) => {
+            const stage = e.target.getStage();
+            stage.container().style.cursor = 'default';
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 export default function KonvaCanvas({
   annotations,
   setAnnotations,
@@ -14,6 +135,9 @@ export default function KonvaCanvas({
   currentFrame,
   isVideo,
 }) {
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [startPos, setStartPos] = useState(null);
+  const [mousePos, setMousePos] = useState(null);
   const [newRect, setNewRect] = useState(null);
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   const [scale, setScale] = useState(1);
@@ -108,176 +232,116 @@ export default function KonvaCanvas({
   }, [currentImage, stageSize]);
 
   const getRelativePointerPosition = (stage) => {
-    const pointerPosition = stage.getPointerPosition();
-    if (!pointerPosition || !currentImage) return null;
-
-    // Calculate coordinates relative to the image
-    const x = (pointerPosition.x - position.x) / scale;
-    const y = (pointerPosition.y - position.y) / scale;
-
-    // Check if the point is within image bounds
-    if (x < 0 || x > currentImage.width || y < 0 || y > currentImage.height) {
-      return null;
-    }
-
-    return { x, y };
+    const transform = stage.getAbsoluteTransform().copy();
+    // Invert the transform to account for scale and position
+    transform.invert();
+    const pos = stage.getPointerPosition();
+    if (!pos) return null;
+    // Return transformed point
+    return transform.point(pos);
   };
 
   const handleMouseDown = (e) => {
-    if (newRect) return;
+    if (selectedId || !e.target.getStage()) return;
     
-    const stage = e.target.getStage();
-    if (!stage) return;
-    
-    const pos = getRelativePointerPosition(stage);
-    if (!pos) return; // Don't start drawing if outside image
+    const pos = getRelativePointerPosition(e.target.getStage());
+    if (!pos) return;
 
+    setIsDrawing(true);
+    setStartPos(pos);
     setNewRect({
       x: pos.x,
       y: pos.y,
       width: 0,
-      height: 0,
+      height: 0
     });
   };
 
   const handleMouseMove = (e) => {
-    const stage = e.target.getStage();
-    if (!stage || !currentImage) return;
+    if (!isDrawing || !e.target.getStage()) return;
+    
+    const pos = getRelativePointerPosition(e.target.getStage());
+    if (!pos) return;
 
-    // Update mouse coordinates for display
-    const pos = getRelativePointerPosition(stage);
-    if (pos) {
-      onMouseMove({
-        x: Math.round(pos.x),
-        y: Math.round(pos.y)
-      });
-    }
-
-    // Handle rectangle drawing
+    setMousePos(pos);
+    
     if (newRect) {
-      const pointerPos = stage.getPointerPosition();
-      if (!pointerPos) return;
-
-      // Calculate new width and height
-      let newWidth = (pointerPos.x - position.x) / scale - newRect.x;
-      let newHeight = (pointerPos.y - position.y) / scale - newRect.y;
-
-      // Constrain rectangle within image bounds
-      if (newRect.x + newWidth > currentImage.width) {
-        newWidth = currentImage.width - newRect.x;
-      }
-      if (newRect.y + newHeight > currentImage.height) {
-        newHeight = currentImage.height - newRect.y;
-      }
-      if (newRect.x + newWidth < 0) {
-        newWidth = -newRect.x;
-      }
-      if (newRect.y + newHeight < 0) {
-        newHeight = -newRect.y;
-      }
-
       setNewRect({
-        ...newRect,
-        width: newWidth,
-        height: newHeight,
+        x: Math.min(startPos.x, pos.x),
+        y: Math.min(startPos.y, pos.y),
+        width: Math.abs(pos.x - startPos.x),
+        height: Math.abs(pos.y - startPos.y)
       });
     }
   };
 
-  const handleMouseUp = () => {
-    if (newRect) {
-      // Only add annotation if it has positive dimensions
-      if (Math.abs(newRect.width) > 1 && Math.abs(newRect.height) > 1) {
-        // Normalize rectangle coordinates (handle negative width/height)
-        const normalizedRect = {
-          x: newRect.width < 0 ? newRect.x + newRect.width : newRect.x,
-          y: newRect.height < 0 ? newRect.y + newRect.height : newRect.y,
-          width: Math.abs(newRect.width),
-          height: Math.abs(newRect.height),
-          id: Date.now(),
-          label: "",
-        };
-        setAnnotations([...annotations, normalizedRect]);
-      }
-      setNewRect(null);
+  const handleMouseUp = (e) => {
+    if (!isDrawing) return;
+    
+    setIsDrawing(false);
+    if (newRect && newRect.width > 5 && newRect.height > 5) {
+      const annotation = {
+        ...newRect,
+        id: Date.now().toString(),
+      };
+      setAnnotations([...annotations, annotation]);
     }
+    setNewRect(null);
+    setStartPos(null);
+    setMousePos(null);
   };
 
   return (
-    <Stage
-      width={stageSize.width}
-      height={stageSize.height}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      scale={{ x: scale, y: scale }}
-      className="bg-gray-800"
-    >
-      <Layer>
-        {currentImage && (
-          <Image
-            image={currentImage}
-            x={position.x}
-            y={position.y}
-            width={currentImage.width}
-            height={currentImage.height}
-            alt=""
-          />
-        )}
-        {annotations.map((anno) => (
-          <Rect
-            key={anno.id}
-            x={position.x + anno.x * scale}
-            y={position.y + anno.y * scale}
-            width={anno.width * scale}
-            height={anno.height * scale}
-            fill="rgba(0,0,255,0.2)"
-            stroke={anno.color || '#00ff00'}
-            strokeWidth={2}
-            draggable
-            onClick={() => setSelectedId(anno.id)}
-            onDragMove={(e) => {
-              // Constrain drag within image bounds
-              const rect = e.target;
-              const x = (rect.x() - position.x) / scale;
-              const y = (rect.y() - position.y) / scale;
-              
-              if (x < 0) rect.x(position.x);
-              if (y < 0) rect.y(position.y);
-              if (x + anno.width > currentImage.width) {
-                rect.x(position.x + (currentImage.width - anno.width) * scale);
-              }
-              if (y + anno.height > currentImage.height) {
-                rect.y(position.y + (currentImage.height - anno.height) * scale);
-              }
-            }}
-            onDragEnd={(e) => {
-              const x = (e.target.x() - position.x) / scale;
-              const y = (e.target.y() - position.y) / scale;
-              
-              const index = annotations.findIndex((a) => a.id === anno.id);
-              const newAnnotations = [...annotations];
-              newAnnotations[index] = {
-                ...newAnnotations[index],
-                x: Math.max(0, Math.min(x, currentImage.width - anno.width)),
-                y: Math.max(0, Math.min(y, currentImage.height - anno.height)),
-              };
-              setAnnotations(newAnnotations);
-            }}
-          />
-        ))}
-        {newRect && (
-          <Rect
-            x={position.x + newRect.x * scale}
-            y={position.y + newRect.y * scale}
-            width={newRect.width * scale}
-            height={newRect.height * scale}
-            fill="rgba(0,255,0,0.2)"
-            stroke="green"
-            strokeWidth={2}
-          />
-        )}
-      </Layer>
-    </Stage>
+    <div className="relative w-full h-full">
+      <Stage
+        width={stageSize.width}
+        height={stageSize.height}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        scale={{ x: scale, y: scale }}
+        className={`bg-gray-800 ${selectedId ? 'cursor-default' : 'cursor-crosshair'}`}
+      >
+        <Layer>
+          {currentImage && (
+            <Image
+              image={currentImage}
+              x={position.x}
+              y={position.y}
+              width={currentImage.width}
+              height={currentImage.height}
+              alt=""
+            />
+          )}
+          {annotations.map((annotation) => (
+            <AnnotationRect
+              key={annotation.id}
+              annotation={annotation}
+              isSelected={selectedId === annotation.id}
+              onChange={(newBox) => {
+                setAnnotations(
+                  annotations.map((a) =>
+                    a.id === annotation.id ? { ...a, ...newBox } : a
+                  )
+                );
+              }}
+              onSelect={setSelectedId}
+            />
+          ))}
+          {newRect && (
+            <Rect
+              x={newRect.x}
+              y={newRect.y}
+              width={newRect.width}
+              height={newRect.height}
+              stroke="#00ff00"
+              strokeWidth={2}
+              dash={[5, 5]}
+            />
+          )}
+        </Layer>
+      </Stage>
+    </div>
   );
 }

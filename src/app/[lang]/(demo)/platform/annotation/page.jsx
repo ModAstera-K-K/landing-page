@@ -227,8 +227,10 @@ export default function AnnotationPage() {
                 {annotations.map((anno) => (
                   <div
                     key={anno.id}
-                    className={`mb-2 flex items-center justify-between rounded border p-2 ${
-                      selectedId === anno.id ? 'border-blue-500' : 'border-gray-300'
+                    className={`mb-2 flex items-center justify-between rounded border p-2 cursor-pointer ${
+                      selectedId === anno.id 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-300 hover:bg-gray-50'
                     }`}
                     onClick={() => setSelectedId(anno.id)}
                   >
@@ -258,6 +260,7 @@ export default function AnnotationPage() {
                           );
                         }}
                         className="w-full border-none focus:ring-0"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <option value="">Select a label</option>
                         {labels.map((label) => (
@@ -268,16 +271,29 @@ export default function AnnotationPage() {
                       </select>
                     </div>
                     <button
-                      className="ml-2 text-red-500"
+                      className="ml-2 text-red-500 hover:text-red-700"
                       title="Delete annotation"
-                      onClick={() =>
-                        setAnnotations(annotations.filter((a) => a.id !== anno.id))
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (selectedId === anno.id) {
+                          setSelectedId(null);
+                        }
+                        setAnnotations(annotations.filter((a) => a.id !== anno.id));
+                      }}
                     >
                       ✕
                     </button>
                   </div>
                 ))}
+                
+                {selectedId && (
+                  <button
+                    onClick={() => setSelectedId(null)}
+                    className="mt-4 w-full rounded bg-gray-200 px-3 py-2 text-sm hover:bg-gray-300"
+                  >
+                    Clear Selection
+                  </button>
+                )}
               </div>
             )}
 
