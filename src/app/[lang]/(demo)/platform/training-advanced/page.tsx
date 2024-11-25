@@ -108,57 +108,68 @@ export default function AdvancedView() {
   return (
     <div className="relative min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
-      {/* Instructions Box */}
-      <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-300">
-        <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-          Instructions
-        </h3>
-        <p className="mt-2">
-          Train multiple models and select the best one to predict Sepsis early
-          detection from the uploaded images.
-        </p>
-      </div>
+      <div className={`flex ${showCode ? "flex-row" : "flex-col"}`}>
+        <div className={`${showCode ? "w-2/5" : "w-full"} p-4`}>
+          {/* Instructions Box */}
+          <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-300">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+              Instructions
+            </h3>
+            <p className="mt-2">
+              Train multiple models and select the best one to predict Sepsis early
+              detection from the uploaded images.
+            </p>
+          </div>
 
-      {/* React Flow Canvas */}
-      <div className="mt-4 h-[377px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          fitView
-          fitViewOptions={{ padding: 0.3 }} // Adjust zoom level
-          style={{ width: "100%", height: "100%" }}
-          onNodeClick={handleNodeClick}
-        >
-          <MiniMap />
-          <Controls />
-          <Background color="#aaa" gap={16} />
-        </ReactFlow>
-      </div>
-
-      {/* Code Display */}
-      {showCode && (
-        <div className="mt-4 bg-gray-900 text-gray-200 p-4 rounded shadow-md">
-          <Highlight
-            theme={themes.nightOwl}
-            code={pythonCode}
-            language="python"
-          >
-            {({ className, style, tokens, getLineProps, getTokenProps }) => (
-              <pre className="overflow-x-auto">
-                {tokens.map((line, i) => (
-                  <div key={i} {...getLineProps({ line })}>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token })} />
-                    ))}
-                  </div>
-                ))}
-              </pre>
-            )}
-          </Highlight>
+          {/* React Flow Canvas */}
+          <div className="mt-4 h-[452px] w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              fitView
+              fitViewOptions={{ padding: 0.3 }} // Adjust zoom level
+              style={{ width: "100%", height: "100%" }}
+              onNodeClick={handleNodeClick}
+            >
+              <MiniMap />
+              <Controls />
+              <Background color="#aaa" gap={16} />
+            </ReactFlow>
+          </div>
         </div>
-      )}
+
+        {/* Code Display */}
+        {showCode && (
+          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md max-h-[624px]">
+            <div className="flex justify-end mb-2">
+              <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                Edit
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[600px]">
+              <Highlight
+                theme={themes.nightOwl}
+                code={pythonCode}
+                language="python"
+              >
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  <pre className="overflow-x-auto">
+                    {tokens.map((line, i) => (
+                      <div key={i} {...getLineProps({ line })}>
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token })} />
+                        ))}
+                      </div>
+                    ))}
+                  </pre>
+                )}
+              </Highlight>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
