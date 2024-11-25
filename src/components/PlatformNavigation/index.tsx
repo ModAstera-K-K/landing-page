@@ -13,8 +13,8 @@ const NavigationMenu = () => {
           <span
             className={
               currentPath.includes("/platform/dashboard")
-                ? "font-semibold text-gray-800"
-                : "text-gray-500"
+                ? "font-semibold text-gray-800 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400"
             }
           >
             Dashboard
@@ -24,8 +24,8 @@ const NavigationMenu = () => {
           <span
             className={
               currentPath.includes("/platform/training")
-                ? "font-semibold text-gray-800"
-                : "text-gray-500"
+                ? "font-semibold text-gray-800 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400"
             }
           >
             Training
@@ -35,8 +35,8 @@ const NavigationMenu = () => {
           <span
             className={
               currentPath.includes("/platform/deployment")
-                ? "font-semibold text-gray-800"
-                : "text-gray-500"
+                ? "font-semibold text-gray-800 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400"
             }
           >
             Deployment
