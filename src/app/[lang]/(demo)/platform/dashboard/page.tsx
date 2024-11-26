@@ -68,15 +68,19 @@ export default function Dashboard() {
     const newModel = {
       name: modelName,
       status: "Training",
-      progress: 0,
-      accuracy: "N/A",
+      accuracy: "-",
       lastUpdated: new Date().toISOString().split('T')[0],
+      progress: 0,
       color: "bg-blue-500",
       link: "/platform/training"
     };
     modelsData.unshift(newModel);
-    // Redirect to training page
-    window.location.href = "/platform/training";
+    
+    // Reset form and close training model view
+    setModelName("");
+    setTrainingInstructions("");
+    setEvaluationMetric("Auto");
+    setIsTrainingModel(false);
   };
 
   return (
