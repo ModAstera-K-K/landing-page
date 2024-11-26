@@ -100,6 +100,7 @@ export default function AdvancedView() {
   const [showCode, setShowCode] = useState(false);
   const [pythonCode, setPythonCode] = useState(modelCode);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCodeModified, setIsCodeModified] = useState(false);
   const flowInstance = useRef<ReactFlowInstance | null>(null);
 
   const onInit = useCallback((instance: ReactFlowInstance) => {
@@ -124,11 +125,22 @@ export default function AdvancedView() {
   };
 
   const handleEditClick = () => {
-    setIsEditing((prev) => !prev);
+    setIsEditing((prev) => {
+      if (prev) {
+        // When saving (switching from edit to view mode)
+        setIsCodeModified(pythonCode !== modelCode);
+      }
+      return !prev;
+    });
   };
 
   const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPythonCode(event.target.value);
+  };
+
+  const handleRetrain = () => {
+    // Add your retraining logic here
+    console.log('Retraining with modified code...');
   };
 
   return (
@@ -170,7 +182,15 @@ export default function AdvancedView() {
         {/* Code Display */}
         {showCode && (
           <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px] dark:bg-gray-800">
-            <div className="flex justify-end mb-2">
+            <div className="flex justify-end mb-2 gap-2">
+              {isCodeModified && !isEditing && (
+                <button
+                  className="bg-green-500 text-white px-2 py-1 rounded dark:bg-green-700"
+                  onClick={handleRetrain}
+                >
+                  Retrain
+                </button>
+              )}
               <button
                 className="bg-blue-500 text-white px-2 py-1 rounded dark:bg-blue-700"
                 onClick={handleEditClick}
