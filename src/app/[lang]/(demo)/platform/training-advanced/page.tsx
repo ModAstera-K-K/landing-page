@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
   useNodesState,
   useEdgesState,
+  ReactFlowInstance,
 } from "react-flow-renderer";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import modelCode from "@/app/[lang]/(demo)/platform/modelCode";
@@ -99,6 +100,22 @@ export default function AdvancedView() {
   const [showCode, setShowCode] = useState(false);
   const [pythonCode, setPythonCode] = useState(modelCode);
   const [isEditing, setIsEditing] = useState(false);
+  const flowInstance = useRef<ReactFlowInstance | null>(null);
+
+  const onInit = useCallback((instance: ReactFlowInstance) => {
+    flowInstance.current = instance;
+  }, []);
+
+  useEffect(() => {
+    if (flowInstance.current) {
+      const zoom = showCode ? 0.6 : 1;
+      flowInstance.current.setViewport({ x: 0, y: 0, zoom });
+      // Add a small delay before fitting view to ensure smooth transition
+      setTimeout(() => {
+        flowInstance.current?.fitView({ padding: 0.3, duration: 200 });
+      }, 50);
+    }
+  }, [showCode]);
 
   const handleNodeClick = (event: any, node: { id: string; }) => {
     if (node.id === "2") {
@@ -137,6 +154,7 @@ export default function AdvancedView() {
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
+              onInit={onInit}
               fitView
               fitViewOptions={{ padding: 0.3 }} // Adjust zoom level
               style={{ width: "100%", height: "100%" }}
