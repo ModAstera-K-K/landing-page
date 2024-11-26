@@ -6,6 +6,7 @@ import Link from "next/link";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import { useTheme } from "next-themes";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
+import { updateModelStatus } from "@/app/[lang]/(demo)/platform/modelsData";
 
 // Reusing the metrics and training steps from training-full page
 const metrics = [
@@ -48,17 +49,12 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
       setForceUpdate({});
       const updatedModel = modelsData.find(m => m.name.toLowerCase().replace(/\s+/g, '-') === params.modelId);
       
-      // Update accuracy when training completes
       if (updatedModel && updatedModel.progress === 100) {
-        // Find and update the model in modelsData
-        const modelIndex = modelsData.findIndex(m => m.name === updatedModel.name);
-        if (modelIndex !== -1) {
-          modelsData[modelIndex] = {
-            ...modelsData[modelIndex],
-            accuracy: metrics[0].value, // Use the first metric (Accuracy) value
-            status: "Trained"  // Changed from "Completed" to "Trained"
-          };
-        }
+        // Update model status through the central update function
+        updateModelStatus(updatedModel.name, {
+          accuracy: metrics[0].value,
+          status: "Trained"
+        });
       }
       
       setModel(updatedModel);

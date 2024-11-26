@@ -58,34 +58,52 @@ const modelsData: ModelData[] = [
   },
 ];
 
-export function startModelTraining(model: ModelData) {
-  if (model.progress === 0 && !model.startTime) {
-    model.startTime = Date.now();
-    model.status = "Training";
-    model.color = "bg-blue-500";
-    
-    const intervalId = setInterval(() => {
-      const elapsed = Date.now() - model.startTime!;
-      const duration = 10000; // 10 seconds
-      const progress = Math.min((elapsed / duration) * 100, 100);
-      
-      model.progress = progress;
+let modelUpdateCallbacks: (() => void)[] = [];
 
-      // Update status and color based on progress
-      if (progress >= 80 && progress < 100) {
-        model.status = "Evaluating";
-        model.color = "bg-yellow-500";
-      } else if (progress === 100) {
-        model.status = "Trained";
-        model.color = "bg-green-500";
-        clearInterval(intervalId);
-        model.intervalId = undefined;
-        model.startTime = undefined;
-      }
-    }, 50);
+export function subscribeToModelUpdates(callback: () => void) {
+  modelUpdateCallbacks.push(callback);
+  return () => {
+    modelUpdateCallbacks = modelUpdateCallbacks.filter(cb => cb !== callback);
+  };
+}
 
-    model.intervalId = intervalId;
+export function updateModelStatus(modelName: string, updates: Partial<typeof modelsData[0]>) {
+  const modelIndex = modelsData.findIndex(m => m.name === modelName);
+  if (modelIndex !== -1) {
+    modelsData[modelIndex] = {
+      ...modelsData[modelIndex],
+      ...updates
+    };
+    // Notify all subscribers of the update
+    modelUpdateCallbacks.forEach(callback => callback());
   }
+}
+
+export function startModelTraining(model: typeof modelsData[0]) {
+  let progress = 0;
+  const intervalId = setInterval(() => {
+    progress += 1;
+    
+    // Update status based on progress
+    let status = "Training";
+    if (progress >= 80) status = "Evaluating";
+    if (progress >= 100) {
+      status = "Trained";
+      clearInterval(intervalId);
+    }
+
+    // Generate random accuracy when training completes
+    const accuracy = progress === 100 ? 
+      `${(Math.random() * (89 - 86) + 86).toFixed(2)}%` : 
+      "-";
+
+    updateModelStatus(model.name, {
+      progress,
+      status,
+      accuracy,
+      color: "bg-blue-500"
+    });
+  }, 50);
 }
 
 export default modelsData;

@@ -5,7 +5,7 @@ import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 import datasetsData from "@/app/[lang]/(demo)/platform/datasetsData"; // Import the datasets data
-import { startModelTraining } from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
+import { startModelTraining, subscribeToModelUpdates } from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 
 export default function Dashboard() {
   const [showUploadForm, setShowUploadForm] = useState(false);
@@ -15,6 +15,15 @@ export default function Dashboard() {
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [isTrainingModel, setIsTrainingModel] = useState(false); // New state to track if training model block is shown
   const [modelName, setModelName] = useState(""); // Add new state for model name
+  const [, forceUpdate] = useState({});
+
+  // Subscribe to model updates
+  useEffect(() => {
+    const unsubscribe = subscribeToModelUpdates(() => {
+      forceUpdate({});
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleUploadClick = () => {
     setShowUploadForm(true);
