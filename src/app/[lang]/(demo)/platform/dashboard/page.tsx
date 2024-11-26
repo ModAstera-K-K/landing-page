@@ -241,7 +241,7 @@ export default function Dashboard() {
                     <td className="py-2 text-gray-800 dark:text-gray-200">
                       <Link
                         href={dataset.annotationPath || '#'}
-                        className="rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 text-sm"
+                        className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
                       >
                         Update
                       </Link>
