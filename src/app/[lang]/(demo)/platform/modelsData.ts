@@ -58,37 +58,34 @@ const modelsData: ModelData[] = [
   },
 ];
 
-export const updateModelAccuracy = (modelName: string, accuracy: string) => {
-  const modelIndex = modelsData.findIndex(m => m.name === modelName);
-  if (modelIndex !== -1) {
-    modelsData[modelIndex] = {
-      ...modelsData[modelIndex],
-      accuracy: accuracy,
-      status: "Trained"
-    };
-  }
-};
+export function startModelTraining(model: ModelData) {
+  if (model.progress === 0 && !model.startTime) {
+    model.startTime = Date.now();
+    model.status = "Training";
+    model.color = "bg-blue-500";
+    
+    const intervalId = setInterval(() => {
+      const elapsed = Date.now() - model.startTime!;
+      const duration = 10000; // 10 seconds
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      
+      model.progress = progress;
 
-export const startModelTraining = (model: any) => {
-  const intervalId = setInterval(() => {
-    const modelIndex = modelsData.findIndex(m => m.name === model.name);
-    if (modelIndex !== -1) {
-      const currentProgress = modelsData[modelIndex].progress || 0;
-      if (currentProgress < 100) {
-        modelsData[modelIndex] = {
-          ...modelsData[modelIndex],
-          progress: currentProgress + 1
-        };
-      } else {
-        // When training completes, update accuracy
-        const randomAccuracy = `${(Math.random() * (89 - 86) + 86).toFixed(2)}%`;
-        updateModelAccuracy(model.name, randomAccuracy);
+      // Update status and color based on progress
+      if (progress >= 80 && progress < 100) {
+        model.status = "Evaluating";
+        model.color = "bg-yellow-500";
+      } else if (progress === 100) {
+        model.status = "Trained";
+        model.color = "bg-green-500";
         clearInterval(intervalId);
+        model.intervalId = undefined;
+        model.startTime = undefined;
       }
-    } else {
-      clearInterval(intervalId);
-    }
-  }, 50);
-};
+    }, 50);
+
+    model.intervalId = intervalId;
+  }
+}
 
 export default modelsData;

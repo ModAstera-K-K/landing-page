@@ -15,7 +15,6 @@ export default function Dashboard() {
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [isTrainingModel, setIsTrainingModel] = useState(false); // New state to track if training model block is shown
   const [modelName, setModelName] = useState(""); // Add new state for model name
-  const [forceUpdate, setForceUpdate] = useState({}); // Add new state to force re-render
 
   const handleUploadClick = () => {
     setShowUploadForm(true);
@@ -85,16 +84,6 @@ export default function Dashboard() {
     setEvaluationMetric("Auto");
     setIsTrainingModel(false);
   };
-
-  // Add this effect to watch for model updates
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Force re-render to reflect model updates
-      setForceUpdate({});
-    }, 100);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
