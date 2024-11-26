@@ -165,7 +165,7 @@ export default function AnnotationPage() {
         </div>
 
         {/* Canvas area */}
-        <div className="relative flex-1 bg-white dark:bg-gray-900">
+        <div className="relative flex-1 bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
           <KonvaCanvas
             annotations={annotations}
             setAnnotations={setAnnotations}

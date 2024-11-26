@@ -235,9 +235,13 @@ export default function KonvaCanvas({
 
   useEffect(() => {
     const updateSize = () => {
+      // Calculate available space
+      const containerWidth = window.innerWidth * 0.75;
+      const containerHeight = window.innerHeight - 50;
+      
       setStageSize({
-        width: window.innerWidth * 0.75,
-        height: window.innerHeight - 50, // Account for top toolbar
+        width: containerWidth,
+        height: containerHeight
       });
     };
 
@@ -246,18 +250,19 @@ export default function KonvaCanvas({
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // Center image when it loads
+  // Improved centering logic
   useEffect(() => {
     if (currentImage && stageSize.width && stageSize.height) {
-      // Calculate center position
-      const x = (stageSize.width - currentImage.width) / 2;
-      const y = (stageSize.height - currentImage.height) / 2;
-      setPosition({ x, y });
-
-      // Optional: Calculate scale to fit image
+      // Calculate scale to fit image properly
       const scaleX = stageSize.width / currentImage.width;
       const scaleY = stageSize.height / currentImage.height;
-      const newScale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down if needed
+      const newScale = Math.min(scaleX, scaleY, 1);
+
+      // Calculate center position with the new scale
+      const x = (stageSize.width - (currentImage.width * newScale)) / 2;
+      const y = (stageSize.height - (currentImage.height * newScale)) / 2;
+
+      setPosition({ x, y });
       setScale(newScale);
     }
   }, [currentImage, stageSize]);
@@ -323,7 +328,7 @@ export default function KonvaCanvas({
   };
 
   return (
-    <div className="relative h-full w-full bg-gray-100 dark:bg-gray-800">
+    <div className="relative w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
       <Stage
         width={stageSize.width}
         height={stageSize.height}
@@ -332,7 +337,7 @@ export default function KonvaCanvas({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         scale={{ x: scale, y: scale }}
-        className={`bg-gray-100 dark:bg-gray-800 ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
+        className={`bg-transparent ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
       >
         <Layer>
           {currentImage && (
