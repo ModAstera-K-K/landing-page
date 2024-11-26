@@ -240,26 +240,32 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
           <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
             Metrics Result
           </h3>
-          <table className="w-full text-left">
-            <thead>
-              <tr>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Metric</th>
-                <th className="pb-2 text-gray-600 dark:text-gray-400">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {metrics.map((metric, index) => (
-                <tr key={index} className="border-t border-gray-300 dark:border-gray-600">
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {metric.metric}
-                  </td>
-                  <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {metric.value}
-                  </td>
+          {model.progress === 100 ? (
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Metric</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">Value</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {metrics.map((metric, index) => (
+                  <tr key={index} className="border-t border-gray-300 dark:border-gray-600">
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {metric.metric}
+                    </td>
+                    <td className="py-2 text-gray-800 dark:text-gray-200">
+                      {metric.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400">
+              Metrics will be available once training is complete.
+            </p>
+          )}
           
           <div className="my-4"></div>
           
