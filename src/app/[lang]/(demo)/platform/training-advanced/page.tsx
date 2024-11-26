@@ -139,7 +139,7 @@ export default function AdvancedView() {
           {/* Instructions Box */}
           <div className="w-64 rounded-lg bg-white p-4 text-sm text-gray-700 shadow-md dark:bg-gray-800 dark:text-gray-200">
             <h3 className="font-semibold text-gray-800 dark:text-gray-100">
-              Instructions
+              User Instructions
             </h3>
             <p className="mt-2">
               Train multiple models and select the best one to predict Sepsis early
