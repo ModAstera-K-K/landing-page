@@ -54,21 +54,41 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
     datasets: [
       {
         label: "Training",
-        data: [20, 50, 60, 70, 85, 88, (model?.progress || 0) * 0.8922],
+        data: Array(7).fill(null).map((_, i) => {
+          const progressThreshold = (i / 6) * 80; // Map index to 0-80% range
+          return (model?.progress || 0) >= progressThreshold 
+            ? [20, 50, 60, 70, 85, 88, 89.22][i]
+            : null;
+        }),
         borderColor: "#2563eb",
         fill: false,
+        spanGaps: true, // Connects points across null values
       },
       {
         label: "Validation",
-        data: [1, 30, 55, 65, 80, 83.5, (model?.progress || 0) * 0.84],
+        data: Array(7).fill(null).map((_, i) => {
+          const progressThreshold = (i / 6) * 80; // Map index to 0-80% range
+          return (model?.progress || 0) >= progressThreshold 
+            ? [1, 30, 55, 65, 80, 83.5, 84][i]
+            : null;
+        }),
         borderColor: "#f97316",
         fill: false,
+        spanGaps: true, // Connects points across null values
       },
     ],
   };
 
   const chartOptions = {
     responsive: true,
+    animation: {
+      x: {
+        duration: 0 // Disable x-axis animation
+      },
+      y: {
+        duration: 0 // Disable y-axis animation
+      }
+    },
     scales: {
       y: {
         beginAtZero: true,
