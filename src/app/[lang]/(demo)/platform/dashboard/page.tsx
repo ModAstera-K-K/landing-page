@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [evaluationMetric, setEvaluationMetric] = useState("Auto");
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [isTrainingModel, setIsTrainingModel] = useState(false); // New state to track if training model block is shown
+  const [modelName, setModelName] = useState(""); // Add new state for model name
 
   const handleUploadClick = () => {
     setShowUploadForm(true);
@@ -57,6 +58,25 @@ export default function Dashboard() {
   // New function to handle cancel action
   const handleCancelClick = () => {
     setIsTrainingModel(false); // Go back to models view
+  };
+
+  const handleTrainModelContinue = () => {
+    if (!modelName.trim() || !trainingInstructions.trim()) {
+      return; // Do nothing if fields are empty
+    }
+    // Add new model to modelsData
+    const newModel = {
+      name: modelName,
+      status: "Training",
+      progress: 0,
+      accuracy: "N/A",
+      lastUpdated: new Date().toISOString().split('T')[0],
+      color: "bg-blue-500",
+      link: "/platform/training"
+    };
+    modelsData.unshift(newModel);
+    // Redirect to training page
+    window.location.href = "/platform/training";
   };
 
   return (
@@ -284,6 +304,8 @@ export default function Dashboard() {
               </label>
               <input
                 type="text"
+                value={modelName}
+                onChange={(e) => setModelName(e.target.value)}
                 placeholder="Enter a name for your model"
                 className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
               />
@@ -328,7 +350,7 @@ export default function Dashboard() {
             <div className="flex justify-start">
               <Link
                 href="#"
-                onClick={() => {/* Handle continue logic here */}}
+                onClick={handleTrainModelContinue}
                 className="mt-4 mr-2 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
               >
                 Continue
