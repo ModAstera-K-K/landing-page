@@ -63,12 +63,12 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
       {
         label: "Training",
         data: Array(7).fill(null).map((_, i) => {
-          // Only show data points when in training phase
-          if (model?.progress < TRAINING_START_PROGRESS) return null;
-          if (model?.progress > TRAINING_END_PROGRESS) return [20, 50, 60, 70, 85, 88, 89.22][i];
+          if (!model?.progress) return null;
+          if (model.progress < TRAINING_START_PROGRESS) return null;
+          if (model.progress > TRAINING_END_PROGRESS) return [20, 50, 60, 70, 85, 88, 89.22][i];
           
           // Calculate progress within training phase
-          const trainingProgress = (model?.progress - TRAINING_START_PROGRESS) / 
+          const trainingProgress = (model.progress - TRAINING_START_PROGRESS) / 
             (TRAINING_END_PROGRESS - TRAINING_START_PROGRESS);
           const pointThreshold = i / 6;
           
@@ -81,12 +81,12 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
       {
         label: "Validation",
         data: Array(7).fill(null).map((_, i) => {
-          // Only show data points when in training phase
-          if (model?.progress < TRAINING_START_PROGRESS) return null;
-          if (model?.progress > TRAINING_END_PROGRESS) return [1, 30, 55, 65, 80, 83.5, 84][i];
+          if (!model?.progress) return null;
+          if (model.progress < TRAINING_START_PROGRESS) return null;
+          if (model.progress > TRAINING_END_PROGRESS) return [1, 30, 55, 65, 80, 83.5, 84][i];
           
           // Calculate progress within training phase
-          const trainingProgress = (model?.progress - TRAINING_START_PROGRESS) / 
+          const trainingProgress = (model.progress - TRAINING_START_PROGRESS) / 
             (TRAINING_END_PROGRESS - TRAINING_START_PROGRESS);
           const pointThreshold = i / 6;
           
@@ -102,12 +102,7 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
   const chartOptions = {
     responsive: true,
     animation: {
-      x: {
-        duration: 0 // Disable x-axis animation
-      },
-      y: {
-        duration: 0 // Disable y-axis animation
-      }
+      duration: 0
     },
     scales: {
       y: {
@@ -152,7 +147,8 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
   }
 
   // Calculate completed steps based on specific progress thresholds
-  const getCompletedSteps = (progress: number) => {
+  const getCompletedSteps = (progress: number | undefined) => {
+    if (!progress) return 0;
     if (progress >= FINAL_SELECTION_PROGRESS) return 5;
     if (progress >= EVALUATION_PROGRESS) return 4;
     if (progress >= TRAINING_END_PROGRESS) return 3;
@@ -201,7 +197,7 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
             ></div>
           </div>
           <div className="font-semibold text-gray-700 dark:text-gray-300" style={{ whiteSpace: "nowrap" }}>
-            {Math.round(model.progress)}% Complete
+            {Math.round(model?.progress ?? 0)}% Complete
           </div>
         </div>
 
@@ -232,7 +228,7 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
                 <p className="text-gray-800 dark:text-gray-200">{step.step}</p>
               </div>
             ))}
-            {model.progress === 100 && (
+            {model?.progress === 100 && (
               <Link
                 href="/platform/training-advanced"
                 className="mt-4 flex items-center space-x-1 text-sm font-semibold text-blue-600 dark:text-blue-400"
