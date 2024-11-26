@@ -29,8 +29,8 @@ const trainingSteps = [
 const PREPROCESSING_PROGRESS = 20;
 const PIPELINE_CREATION_PROGRESS = 40;
 const TRAINING_START_PROGRESS = 40;
-const TRAINING_END_PROGRESS = 60;
-const EVALUATION_PROGRESS = 80;
+const TRAINING_END_PROGRESS = 80;
+const EVALUATION_PROGRESS = 90;
 const FINAL_SELECTION_PROGRESS = 100;
 
 export default function ModelTrainingDetail({ params }: { params: { modelId: string }}) {
