@@ -84,11 +84,17 @@ export function startModelTraining(model: typeof modelsData[0]) {
   const intervalId = setInterval(() => {
     progress += 1;
     
-    // Update status based on progress
+    // Update status and color based on progress
     let status = "Training";
-    if (progress >= 80) status = "Evaluating";
+    let color = "bg-blue-500";
+    
+    if (progress >= 80) {
+      status = "Evaluating";
+      color = "bg-yellow-500";  // Same color as Pneumonia Predictor v2
+    }
     if (progress >= 100) {
       status = "Trained";
+      color = "bg-green-500";   // Same color as Sepsis Early Detection
       clearInterval(intervalId);
     }
 
@@ -101,7 +107,7 @@ export function startModelTraining(model: typeof modelsData[0]) {
       progress,
       status,
       accuracy,
-      color: "bg-blue-500"
+      color
     });
   }, 50);
 }
