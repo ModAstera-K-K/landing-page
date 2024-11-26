@@ -24,27 +24,28 @@ export default function Training() {
       {/* Training Progress */}
       <div className="space-y-6">
         {modelsData.map((model, index) => (
-          <Link
+          <div
             key={index}
-            href={model.link}
             className="flex cursor-pointer items-center justify-between rounded-lg bg-white p-6 shadow dark:bg-gray-800"
           >
             {/* Model Information */}
             <div className="flex items-center space-x-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-8 w-8 text-gray-800 dark:text-gray-200"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <Link href={`/platform/training/${model.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-8 w-8 text-gray-800 dark:text-gray-200"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </Link>
               <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {model.name} - {model.status}
               </h2>
@@ -64,7 +65,7 @@ export default function Training() {
             <div className="font-semibold text-gray-700 dark:text-gray-300">
               {Math.round(model.progress)}% Complete
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
