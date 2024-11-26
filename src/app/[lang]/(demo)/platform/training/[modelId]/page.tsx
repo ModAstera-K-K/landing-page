@@ -46,7 +46,22 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
   useEffect(() => {
     const intervalId = setInterval(() => {
       setForceUpdate({});
-      setModel(modelsData.find(m => m.name.toLowerCase().replace(/\s+/g, '-') === params.modelId));
+      const updatedModel = modelsData.find(m => m.name.toLowerCase().replace(/\s+/g, '-') === params.modelId);
+      
+      // Update accuracy when training completes
+      if (updatedModel && updatedModel.progress === 100) {
+        // Find and update the model in modelsData
+        const modelIndex = modelsData.findIndex(m => m.name === updatedModel.name);
+        if (modelIndex !== -1) {
+          modelsData[modelIndex] = {
+            ...modelsData[modelIndex],
+            accuracy: metrics[0].value, // Use the first metric (Accuracy) value
+            status: "Trained"  // Changed from "Completed" to "Trained"
+          };
+        }
+      }
+      
+      setModel(updatedModel);
     }, 50);
     
     return () => clearInterval(intervalId);
