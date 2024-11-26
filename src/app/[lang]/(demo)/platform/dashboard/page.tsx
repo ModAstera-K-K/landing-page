@@ -5,6 +5,7 @@ import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 import datasetsData from "@/app/[lang]/(demo)/platform/datasetsData"; // Import the datasets data
+import { startModelTraining } from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 
 export default function Dashboard() {
   const [showUploadForm, setShowUploadForm] = useState(false);
@@ -62,9 +63,9 @@ export default function Dashboard() {
 
   const handleTrainModelContinue = () => {
     if (!modelName.trim() || !trainingInstructions.trim()) {
-      return; // Do nothing if fields are empty
+      return;
     }
-    // Add new model to modelsData
+    
     const newModel = {
       name: modelName,
       status: "Training",
@@ -74,9 +75,10 @@ export default function Dashboard() {
       color: "bg-blue-500",
       link: "/platform/training"
     };
-    modelsData.unshift(newModel);
     
-    // Reset form and close training model view
+    modelsData.unshift(newModel);
+    startModelTraining(newModel); // Start training immediately
+    
     setModelName("");
     setTrainingInstructions("");
     setEvaluationMetric("Auto");

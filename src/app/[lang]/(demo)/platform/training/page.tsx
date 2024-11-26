@@ -6,52 +6,15 @@ import PlatformNavigation from "@/components/PlatformNavigation";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
 
 export default function Training() {
-  const [modelProgress, setModelProgress] = React.useState<{ [key: string]: number }>({});
-  const [modelColors, setModelColors] = React.useState<{ [key: string]: string }>({});
-
+  // Force re-render every 50ms to update progress
+  const [, setForceUpdate] = React.useState({});
+  
   React.useEffect(() => {
-    modelsData.forEach((model) => {
-      if (model.progress === 0 && !modelProgress[model.name]) {
-        const startTime = Date.now();
-        const duration = 10000; // 10 seconds
-
-        const intervalId = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min((elapsed / duration) * 100, 100);
-          
-          setModelProgress(prev => ({
-            ...prev,
-            [model.name]: progress
-          }));
-
-          // Update status and color based on progress
-          if (progress >= 80 && progress < 100) {
-            model.status = "Evaluating";
-            setModelColors(prev => ({
-              ...prev,
-              [model.name]: "bg-yellow-500" // Yellow color for evaluating
-            }));
-          } else if (progress === 100) {
-            clearInterval(intervalId);
-            model.progress = 100;
-            model.status = "Trained";
-            setModelColors(prev => ({
-              ...prev,
-              [model.name]: "bg-green-500" // Green color for trained
-            }));
-          } else {
-            model.status = "Training";
-            setModelColors(prev => ({
-              ...prev,
-              [model.name]: "bg-blue-500" // Blue color for training
-            }));
-          }
-
-        }, 50); // Update every 50ms for smooth animation
-
-        return () => clearInterval(intervalId);
-      }
-    });
+    const intervalId = setInterval(() => {
+      setForceUpdate({});
+    }, 50);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -91,15 +54,15 @@ export default function Training() {
             <div className="mx-4 flex-grow">
               <div className="h-4 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
-                  className={`${modelColors[model.name] || model.color} h-4 rounded-full transition-all duration-200`}
-                  style={{ width: `${modelProgress[model.name] ?? model.progress}%` }}
+                  className={`${model.color} h-4 rounded-full transition-all duration-200`}
+                  style={{ width: `${model.progress}%` }}
                 ></div>
               </div>
             </div>
 
             {/* Completion Percentage */}
             <div className="font-semibold text-gray-700 dark:text-gray-300">
-              {Math.round(modelProgress[model.name] ?? model.progress)}% Complete
+              {Math.round(model.progress)}% Complete
             </div>
           </Link>
         ))}
