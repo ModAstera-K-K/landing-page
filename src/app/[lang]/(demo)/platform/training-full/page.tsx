@@ -4,6 +4,7 @@ import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import Link from "next/link";
 import PlatformNavigation from "@/components/PlatformNavigation";
+import { useTheme } from "next-themes";
 
 // Sample data for metrics and chart
 const metrics = [
@@ -42,27 +43,53 @@ const chartData = {
   ],
 };
 
-// Update chartOptions if necessary - Keeping it the same for now
-const chartOptions = {
-  responsive: true,
-  scales: {
-    y: {
-      beginAtZero: true,
-      max: 100,
-      ticks: {
-        callback: function (value: number | string): string {
-          return value + "%";
-        },
-      },
-    },
-  },
-};
-
 export default function TrainingFullDetail() {
   const [showDetails, setShowDetails] = useState(false);
+  const { theme } = useTheme();
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  // Update chartOptions with dark mode support
+  const chartOptions = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: theme === 'dark' ? '#4b5563' : undefined,
+        },
+        ticks: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined,
+          callback: function (value: number | string): string {
+            return value + "%";
+          },
+        },
+        border: {
+          color: theme === 'dark' ? '#6b7280' : undefined
+        }
+      },
+      x: {
+        grid: {
+          color: theme === 'dark' ? '#4b5563' : undefined,
+        },
+        ticks: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        },
+        border: {
+          color: theme === 'dark' ? '#6b7280' : undefined
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        }
+      }
+    }
   };
 
   return (
