@@ -25,6 +25,14 @@ const trainingSteps = [
   { step: "Final Model Selection", completed: true },
 ];
 
+// Add these constants at the top with other constants
+const PREPROCESSING_PROGRESS = 20;
+const PIPELINE_CREATION_PROGRESS = 40;
+const TRAINING_START_PROGRESS = 40;
+const TRAINING_END_PROGRESS = 60;
+const EVALUATION_PROGRESS = 80;
+const FINAL_SELECTION_PROGRESS = 100;
+
 export default function ModelTrainingDetail({ params }: { params: { modelId: string }}) {
   const [showDetails, setShowDetails] = useState(false);
   const { theme } = useTheme();
@@ -55,26 +63,38 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
       {
         label: "Training",
         data: Array(7).fill(null).map((_, i) => {
-          const progressThreshold = (i / 6) * 80; // Map index to 0-80% range
-          return (model?.progress || 0) >= progressThreshold 
-            ? [20, 50, 60, 70, 85, 88, 89.22][i]
-            : null;
+          // Only show data points when in training phase
+          if (model?.progress < TRAINING_START_PROGRESS) return null;
+          if (model?.progress > TRAINING_END_PROGRESS) return [20, 50, 60, 70, 85, 88, 89.22][i];
+          
+          // Calculate progress within training phase
+          const trainingProgress = (model?.progress - TRAINING_START_PROGRESS) / 
+            (TRAINING_END_PROGRESS - TRAINING_START_PROGRESS);
+          const pointThreshold = i / 6;
+          
+          return trainingProgress >= pointThreshold ? [20, 50, 60, 70, 85, 88, 89.22][i] : null;
         }),
         borderColor: "#2563eb",
         fill: false,
-        spanGaps: true, // Connects points across null values
+        spanGaps: true,
       },
       {
         label: "Validation",
         data: Array(7).fill(null).map((_, i) => {
-          const progressThreshold = (i / 6) * 80; // Map index to 0-80% range
-          return (model?.progress || 0) >= progressThreshold 
-            ? [1, 30, 55, 65, 80, 83.5, 84][i]
-            : null;
+          // Only show data points when in training phase
+          if (model?.progress < TRAINING_START_PROGRESS) return null;
+          if (model?.progress > TRAINING_END_PROGRESS) return [1, 30, 55, 65, 80, 83.5, 84][i];
+          
+          // Calculate progress within training phase
+          const trainingProgress = (model?.progress - TRAINING_START_PROGRESS) / 
+            (TRAINING_END_PROGRESS - TRAINING_START_PROGRESS);
+          const pointThreshold = i / 6;
+          
+          return trainingProgress >= pointThreshold ? [1, 30, 55, 65, 80, 83.5, 84][i] : null;
         }),
         borderColor: "#f97316",
         fill: false,
-        spanGaps: true, // Connects points across null values
+        spanGaps: true,
       },
     ],
   };
@@ -131,8 +151,18 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
     return <div>Model not found</div>;
   }
 
-  // Calculate completed steps based on progress
-  const completedSteps = Math.floor((model.progress / 100) * trainingSteps.length);
+  // Calculate completed steps based on specific progress thresholds
+  const getCompletedSteps = (progress: number) => {
+    if (progress >= FINAL_SELECTION_PROGRESS) return 5;
+    if (progress >= EVALUATION_PROGRESS) return 4;
+    if (progress >= TRAINING_END_PROGRESS) return 3;
+    if (progress >= PIPELINE_CREATION_PROGRESS) return 2;
+    if (progress >= PREPROCESSING_PROGRESS) return 1;
+    return 0;
+  };
+
+  // Update the completedSteps calculation
+  const completedSteps = getCompletedSteps(model.progress);
   const updatedTrainingSteps = trainingSteps.map((step, index) => ({
     ...step,
     completed: index < completedSteps
