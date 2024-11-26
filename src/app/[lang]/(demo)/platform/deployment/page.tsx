@@ -5,6 +5,7 @@ import { Line, Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 // Sample data object
 const data = {
@@ -40,40 +41,80 @@ const data = {
   },
 };
 
-// Chart options
-const performanceOptions = {
-  responsive: true,
-  scales: {
-    y1: {
-      type: "linear" as const,
-      position: "left" as const,
-      beginAtZero: true,
-      max: 100,
-    },
-    y2: {
-      type: "linear" as const,
-      position: "right" as const,
-      beginAtZero: true,
-      suggestedMax: 100,
-    },
-  },
-};
-
 export default function DeploymentDashboard() {
+  const { theme } = useTheme();
+
+  const performanceOptions = {
+    responsive: true,
+    scales: {
+      y1: {
+        type: "linear" as const,
+        position: "left" as const,
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: theme === 'dark' ? '#4b5563' : undefined,
+          borderColor: theme === 'dark' ? '#6b7280' : undefined
+        },
+        ticks: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        },
+        border: {
+          color: theme === 'dark' ? '#6b7280' : undefined
+        }
+      },
+      y2: {
+        type: "linear" as const,
+        position: "right" as const,
+        beginAtZero: true,
+        suggestedMax: 100,
+        grid: {
+          color: theme === 'dark' ? '#4b5563' : undefined,
+          borderColor: theme === 'dark' ? '#6b7280' : undefined
+        },
+        ticks: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        },
+        border: {
+          color: theme === 'dark' ? '#6b7280' : undefined
+        }
+      },
+      x: {
+        grid: {
+          color: theme === 'dark' ? '#4b5563' : undefined,
+          borderColor: theme === 'dark' ? '#6b7280' : undefined
+        },
+        ticks: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        },
+        border: {
+          color: theme === 'dark' ? '#6b7280' : undefined
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: theme === 'dark' ? '#e5e7eb' : undefined
+        }
+      }
+    }
+  };
+
   const performanceData = {
     labels: data.performance.labels,
     datasets: [
       {
         label: "Accuracy",
         data: data.performance.accuracy,
-        borderColor: "#2563eb",
+        borderColor: theme === 'dark' ? '#60a5fa' : '#2563eb', // brighter blue in dark mode
         fill: false,
         yAxisID: "y1",
       },
       {
         label: "Latency (ms)",
         data: data.performance.latency,
-        borderColor: "#f87171",
+        borderColor: theme === 'dark' ? '#f87171' : '#f87171', // keep same red color
         fill: false,
         yAxisID: "y2",
       },
@@ -86,7 +127,9 @@ export default function DeploymentDashboard() {
       {
         label: "API Calls",
         data: data.apiUsage.calls,
-        backgroundColor: "#1f2937",
+        backgroundColor: theme === 'dark' ? '#60a5fa' : '#1f2937', // blue-400 for dark mode
+        borderColor: theme === 'dark' ? '#3b82f6' : '#1f2937', // blue-500 for dark mode
+        borderWidth: 1,
       },
     ],
   };
@@ -208,7 +251,44 @@ export default function DeploymentDashboard() {
           </h3>
           <Bar
             data={apiUsageData}
-            options={{ responsive: true, maintainAspectRatio: false }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                x: {
+                  grid: {
+                    display: false,
+                    color: theme === 'dark' ? '#4b5563' : undefined, // gray-600
+                    borderColor: theme === 'dark' ? '#6b7280' : undefined // gray-500
+                  },
+                  ticks: {
+                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
+                  },
+                  border: {
+                    color: theme === 'dark' ? '#6b7280' : undefined // gray-500
+                  }
+                },
+                y: {
+                  grid: {
+                    color: theme === 'dark' ? '#4b5563' : undefined, // gray-600
+                    borderColor: theme === 'dark' ? '#6b7280' : undefined // gray-500
+                  },
+                  ticks: {
+                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
+                  },
+                  border: {
+                    color: theme === 'dark' ? '#6b7280' : undefined // gray-500
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
+                  }
+                }
+              }
+            }}
           />
         </div>
       </div>
