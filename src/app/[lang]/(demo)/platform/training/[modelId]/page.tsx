@@ -9,7 +9,7 @@ import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
 
 // Reusing the metrics and training steps from training-full page
 const metrics = [
-  { metric: "Accuracy", value: "89.22%" },
+  { metric: "Accuracy", value: `${(Math.random() * (89 - 86) + 86).toFixed(2)}%` },
   { metric: "F1 Score", value: "0.889" },
   { metric: "True Positive Rate", value: "0.895" },
   { metric: "True Negative Rate", value: "0.901" },
