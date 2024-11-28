@@ -45,12 +45,8 @@ export default function AnnotationPage() {
   };
 
   const tools = [
-    { icon: "🔍", name: "Zoom Tool" },
-    { icon: "↩", name: "Undo" },
-    { icon: "⟲", name: "Reset" },
-    { icon: "✏️", name: "Draw Rectangle", type: "box" },
-    { icon: "⬚", name: "Select Region" },
-    { icon: "🔺", name: "Draw Polygon", type: "polygon" },
+    { icon: "▢", name: "Rectangle", type: "box" },
+    { icon: "〰️", name: "Polygon", type: "polygon" },
   ];
 
   const generateRandomColor = () => {
@@ -73,8 +69,11 @@ export default function AnnotationPage() {
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
       <div className="mt-10"></div>
       {/* Top toolbar */}
-      <div className="flex items-center space-x-2 border-b border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800 p-2">
-        <button className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700" title="Menu">
+      <div className="flex items-center space-x-2 border-b border-gray-300 bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-800">
+        <button
+          className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+          title="Menu"
+        >
           <svg
             className="h-5 w-5 text-black dark:text-white"
             fill="none"
@@ -92,7 +91,7 @@ export default function AnnotationPage() {
 
         {isVideo && (
           <>
-            <div className="flex space-x-2 border-l border-r border-gray-300 dark:border-gray-700 px-2">
+            <div className="flex space-x-2 border-l border-r border-gray-300 px-2 dark:border-gray-700">
               <button
                 className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                 onClick={() => setCurrentFrame(0)}
@@ -155,14 +154,16 @@ export default function AnnotationPage() {
               >
                 <button
                   className={`rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                    selectedTool === tool.type ? "bg-gray-300 dark:bg-gray-600" : ""
+                    selectedTool === tool.type
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
                   }`}
                   onClick={() => setSelectedTool(tool.type)}
                 >
                   {tool.icon}
                 </button>
                 {hoveredTool === tool.name && (
-                  <div className="absolute left-14 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 dark:bg-gray-700 px-2 py-1 text-sm text-white">
+                  <div className="absolute left-14 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-sm text-white dark:bg-gray-700">
                     {tool.name}
                   </div>
                 )}
@@ -172,7 +173,7 @@ export default function AnnotationPage() {
         </div>
 
         {/* Canvas area */}
-        <div className="relative flex-1 bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
+        <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-white dark:bg-gray-900">
           <KonvaCanvas
             annotations={annotations}
             setAnnotations={setAnnotations}
@@ -191,7 +192,7 @@ export default function AnnotationPage() {
           <div className="border-b border-gray-300 dark:border-gray-700">
             <div className="flex">
               <button
-                className={`flex-1 border-r border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium ${
+                className={`flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium dark:border-gray-700 ${
                   activeTab === "objects" ? "bg-gray-200 dark:bg-gray-700" : ""
                 }`}
                 onClick={() => setActiveTab("objects")}
@@ -200,7 +201,7 @@ export default function AnnotationPage() {
                 Objects
               </button>
               <button
-                className={`flex-1 border-r border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium ${
+                className={`flex-1 border-r border-gray-300 px-4 py-2 text-sm font-medium dark:border-gray-700 ${
                   activeTab === "labels" ? "bg-gray-200 dark:bg-gray-700" : ""
                 }`}
                 onClick={() => setActiveTab("labels")}
@@ -221,7 +222,7 @@ export default function AnnotationPage() {
           </div>
 
           {/* Coordinates display */}
-          <div className="flex justify-center border-t border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-4">
+          <div className="flex justify-center border-t border-gray-300 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800">
             <Link
               href="/platform/dashboard"
               className="rounded-md bg-blue-500 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-600"
@@ -229,8 +230,10 @@ export default function AnnotationPage() {
               Continue
             </Link>
           </div>
-          <div className="border-b border-gray-300 dark:border-gray-700 p-2 text-sm">
-            <p className="mb-1 font-medium text-black dark:text-white">Mouse Position:</p>
+          <div className="border-b border-gray-300 p-2 text-sm dark:border-gray-700">
+            <p className="mb-1 font-medium text-black dark:text-white">
+              Mouse Position:
+            </p>
             <div className="flex space-x-4 text-black dark:text-white">
               <p>X: {mouseCoords.x}</p>
               <p>Y: {mouseCoords.y}</p>
@@ -246,7 +249,7 @@ export default function AnnotationPage() {
                     className={`mb-2 flex cursor-pointer items-center justify-between rounded border p-2 ${
                       selectedId === anno.id
                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900"
-                        : "border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        : "border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
                     }`}
                     onClick={() => setSelectedId(anno.id)}
                   >
@@ -311,7 +314,7 @@ export default function AnnotationPage() {
                 {selectedId && (
                   <button
                     onClick={() => setSelectedId(null)}
-                    className="mt-4 w-full rounded bg-gray-200 dark:bg-gray-700 px-3 py-2 text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                    className="mt-4 w-full rounded bg-gray-200 px-3 py-2 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
                   >
                     Clear Selection
                   </button>
@@ -327,7 +330,7 @@ export default function AnnotationPage() {
                     value={newLabel}
                     onChange={(e) => setNewLabel(e.target.value)}
                     placeholder="Enter new label"
-                    className="w-full rounded border border-gray-300 dark:border-gray-700 px-2 py-1 dark:bg-gray-800 dark:text-white"
+                    className="w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   />
                   <button
                     onClick={() => {
@@ -354,7 +357,7 @@ export default function AnnotationPage() {
                   {labels.map((label) => (
                     <div
                       key={label.name}
-                      className="flex items-center justify-between rounded border border-gray-300 dark:border-gray-700 p-2"
+                      className="flex items-center justify-between rounded border border-gray-300 p-2 dark:border-gray-700"
                     >
                       <div className="flex items-center space-x-2">
                         <input
@@ -378,7 +381,9 @@ export default function AnnotationPage() {
                           }}
                           className="h-6 w-6 cursor-pointer"
                         />
-                        <span className="text-black dark:text-white">{label.name}</span>
+                        <span className="text-black dark:text-white">
+                          {label.name}
+                        </span>
                       </div>
                       <button
                         onClick={() => {
@@ -402,7 +407,9 @@ export default function AnnotationPage() {
             )}
 
             {activeTab === "issues" && (
-              <div className="text-center text-gray-500 dark:text-gray-400">No issues found</div>
+              <div className="text-center text-gray-500 dark:text-gray-400">
+                No issues found
+              </div>
             )}
           </div>
         </div>
