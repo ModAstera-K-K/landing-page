@@ -82,11 +82,12 @@ export default function Dashboard() {
       lastUpdated: new Date().toISOString().split('T')[0],
       progress: 0,
       color: "bg-blue-500",
-      link: "/platform/training"
+      link: "/platform/training",
+      trainingInstructions: trainingInstructions
     };
     
     modelsData.unshift(newModel);
-    startModelTraining(newModel); // Start training immediately
+    startModelTraining(newModel);
     
     setModelName("");
     setTrainingInstructions("");
