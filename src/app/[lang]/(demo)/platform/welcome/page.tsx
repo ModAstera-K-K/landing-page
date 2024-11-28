@@ -20,10 +20,7 @@ export default function Welcome() {
         <h1 className="mb-2 text-2xl font-semibold text-gray-800">
           Welcome to ModAstera
         </h1>
-        <p className="mb-6 text-gray-600">
-          Upload dataset, annotate, train, evaluate, select models, deploy and
-          analyze AI models from a single interface.
-        </p>
+        <p className="mb-6 text-gray-600">Build, Use, and Share Medical AI.</p>
         <Link href="/platform/dashboard">
           <button className="rounded-md bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700">
             Get Started

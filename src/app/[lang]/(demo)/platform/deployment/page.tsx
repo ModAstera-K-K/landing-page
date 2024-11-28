@@ -53,14 +53,14 @@ export default function DeploymentDashboard() {
         beginAtZero: true,
         max: 100,
         grid: {
-          color: theme === 'dark' ? '#4b5563' : undefined,
+          color: theme === "dark" ? "#4b5563" : undefined,
         },
         ticks: {
-          color: theme === 'dark' ? '#e5e7eb' : undefined
+          color: theme === "dark" ? "#e5e7eb" : undefined,
         },
         border: {
-          color: theme === 'dark' ? '#6b7280' : undefined
-        }
+          color: theme === "dark" ? "#6b7280" : undefined,
+        },
       },
       y2: {
         type: "linear" as const,
@@ -68,34 +68,34 @@ export default function DeploymentDashboard() {
         beginAtZero: true,
         suggestedMax: 100,
         grid: {
-          color: theme === 'dark' ? '#4b5563' : undefined,
+          color: theme === "dark" ? "#4b5563" : undefined,
         },
         ticks: {
-          color: theme === 'dark' ? '#e5e7eb' : undefined
+          color: theme === "dark" ? "#e5e7eb" : undefined,
         },
         border: {
-          color: theme === 'dark' ? '#6b7280' : undefined
-        }
+          color: theme === "dark" ? "#6b7280" : undefined,
+        },
       },
       x: {
         grid: {
-          color: theme === 'dark' ? '#4b5563' : undefined,
+          color: theme === "dark" ? "#4b5563" : undefined,
         },
         ticks: {
-          color: theme === 'dark' ? '#e5e7eb' : undefined
+          color: theme === "dark" ? "#e5e7eb" : undefined,
         },
         border: {
-          color: theme === 'dark' ? '#6b7280' : undefined
-        }
-      }
+          color: theme === "dark" ? "#6b7280" : undefined,
+        },
+      },
     },
     plugins: {
       legend: {
         labels: {
-          color: theme === 'dark' ? '#e5e7eb' : undefined
-        }
-      }
-    }
+          color: theme === "dark" ? "#e5e7eb" : undefined,
+        },
+      },
+    },
   };
 
   const performanceData = {
@@ -104,14 +104,14 @@ export default function DeploymentDashboard() {
       {
         label: "Accuracy",
         data: data.performance.accuracy,
-        borderColor: theme === 'dark' ? '#60a5fa' : '#2563eb', // brighter blue in dark mode
+        borderColor: theme === "dark" ? "#60a5fa" : "#2563eb", // brighter blue in dark mode
         fill: false,
         yAxisID: "y1",
       },
       {
         label: "Latency (ms)",
         data: data.performance.latency,
-        borderColor: theme === 'dark' ? '#f87171' : '#f87171', // keep same red color
+        borderColor: theme === "dark" ? "#f87171" : "#f87171", // keep same red color
         fill: false,
         yAxisID: "y2",
       },
@@ -124,8 +124,8 @@ export default function DeploymentDashboard() {
       {
         label: "API Calls",
         data: data.apiUsage.calls,
-        backgroundColor: theme === 'dark' ? '#60a5fa' : '#1f2937', // blue-400 for dark mode
-        borderColor: theme === 'dark' ? '#3b82f6' : '#1f2937', // blue-500 for dark mode
+        backgroundColor: theme === "dark" ? "#60a5fa" : "#1f2937", // blue-400 for dark mode
+        borderColor: theme === "dark" ? "#3b82f6" : "#1f2937", // blue-500 for dark mode
         borderWidth: 1,
       },
     ],
@@ -227,7 +227,7 @@ export default function DeploymentDashboard() {
           </tbody>
         </table>
         <Link
-          href="/platform/dataset"
+          href="/platform/dashboard"
           className="mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           Deploy New Model
@@ -258,34 +258,34 @@ export default function DeploymentDashboard() {
                 x: {
                   grid: {
                     display: false,
-                    color: theme === 'dark' ? '#4b5563' : undefined, // gray-600
+                    color: theme === "dark" ? "#4b5563" : undefined, // gray-600
                   },
                   ticks: {
-                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
+                    color: theme === "dark" ? "#e5e7eb" : undefined, // gray-200
                   },
                   border: {
-                    color: theme === 'dark' ? '#6b7280' : undefined // gray-500
-                  }
+                    color: theme === "dark" ? "#6b7280" : undefined, // gray-500
+                  },
                 },
                 y: {
                   grid: {
-                    color: theme === 'dark' ? '#4b5563' : undefined, // gray-600
+                    color: theme === "dark" ? "#4b5563" : undefined, // gray-600
                   },
                   ticks: {
-                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
+                    color: theme === "dark" ? "#e5e7eb" : undefined, // gray-200
                   },
                   border: {
-                    color: theme === 'dark' ? '#6b7280' : undefined // gray-500
-                  }
-                }
+                    color: theme === "dark" ? "#6b7280" : undefined, // gray-500
+                  },
+                },
               },
               plugins: {
                 legend: {
                   labels: {
-                    color: theme === 'dark' ? '#e5e7eb' : undefined // gray-200
-                  }
-                }
-              }
+                    color: theme === "dark" ? "#e5e7eb" : undefined, // gray-200
+                  },
+                },
+              },
             }}
           />
         </div>
