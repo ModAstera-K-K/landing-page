@@ -1,6 +1,6 @@
 "use client";
 
-import { Stage, Layer, Rect, Image } from "react-konva";
+import { Stage, Layer, Rect, Image, Line } from "react-konva";
 import { useState, useEffect, useRef, useCallback } from "react";
 import useImage from "use-image";
 
@@ -156,6 +156,93 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
   );
 };
 
+const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
+  const handleAnchorDragMove = (e, index) => {
+    e.cancelBubble = true;
+    const stage = e.target.getStage();
+    
+    // Get the transformed pointer position
+    const transform = stage.getAbsoluteTransform().copy();
+    transform.invert();
+    const pos = transform.point(stage.getPointerPosition());
+    
+    // Create new points array with updated position
+    const newPoints = [...annotation.points];
+    newPoints[index * 2] = pos.x;
+    newPoints[index * 2 + 1] = pos.y;
+    
+    onChange({
+      ...annotation,
+      points: newPoints,
+    });
+  };
+
+  return (
+    <>
+      <Line
+        points={annotation.points}
+        stroke={annotation.color || "#00ff00"}
+        strokeWidth={2}
+        closed
+        onClick={() => onSelect(annotation.id)}
+        onTap={() => onSelect(annotation.id)}
+        draggable
+        onDragMove={(e) => {
+          const stage = e.target.getStage();
+          // Get transformed position
+          const transform = stage.getAbsoluteTransform().copy();
+          transform.invert();
+          const pos = transform.point(stage.getPointerPosition());
+          const lastPos = transform.point(stage.getPointerPosition());
+          
+          const dx = pos.x - lastPos.x;
+          const dy = pos.y - lastPos.y;
+          
+          // Update all points
+          const newPoints = annotation.points.map((coord, index) => {
+            return index % 2 === 0 
+              ? coord + dx 
+              : coord + dy;
+          });
+          
+          onChange({
+            ...annotation,
+            points: newPoints,
+          });
+          
+          // Reset position
+          e.target.position({ x: 0, y: 0 });
+        }}
+      />
+
+      {isSelected && annotation.points.length >= 4 && 
+        Array.from({ length: annotation.points.length / 2 }, (_, i) => (
+          <Rect
+            key={i}
+            x={annotation.points[i * 2] - ANCHOR_SIZE / 2}
+            y={annotation.points[i * 2 + 1] - ANCHOR_SIZE / 2}
+            width={ANCHOR_SIZE}
+            height={ANCHOR_SIZE}
+            fill={ANCHOR_FILL_COLOR}
+            stroke={ANCHOR_STROKE_COLOR}
+            strokeWidth={1}
+            draggable
+            onDragMove={(e) => handleAnchorDragMove(e, i)}
+            onMouseEnter={(e) => {
+              const stage = e.target.getStage();
+              stage.container().style.cursor = "pointer";
+            }}
+            onMouseLeave={(e) => {
+              const stage = e.target.getStage();
+              stage.container().style.cursor = "default";
+            }}
+          />
+        ))
+      }
+    </>
+  );
+};
+
 export default function KonvaCanvas({
   annotations,
   setAnnotations,
@@ -165,6 +252,7 @@ export default function KonvaCanvas({
   mediaUrl,
   currentFrame,
   isVideo,
+  selectedTool,
 }) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPos, setStartPos] = useState(null);
@@ -176,6 +264,9 @@ export default function KonvaCanvas({
   const [currentImage, setCurrentImage] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [polygonPoints, setPolygonPoints] = useState([]);
+  const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
+  const [tempPolygonPoints, setTempPolygonPoints] = useState([]);
 
   // For static image
   const [staticImage] = useImage(isVideo ? null : mediaUrl);
@@ -283,48 +374,86 @@ export default function KonvaCanvas({
     const pos = getRelativePointerPosition(e.target.getStage());
     if (!pos) return;
 
-    setIsDrawing(true);
-    setStartPos(pos);
-    setNewRect({
-      x: pos.x,
-      y: pos.y,
-      width: 0,
-      height: 0,
-    });
+    if (selectedTool === "box") {
+      setIsDrawing(true);
+      setStartPos(pos);
+      setNewRect({
+        x: pos.x,
+        y: pos.y,
+        width: 0,
+        height: 0,
+      });
+    } else if (selectedTool === "polygon") {
+      setIsDrawingPolygon(true);
+      setTempPolygonPoints([pos.x, pos.y]);
+    }
   };
 
   const handleMouseMove = (e) => {
-    if (!isDrawing || !e.target.getStage()) return;
+    if (!e.target.getStage()) return;
 
     const pos = getRelativePointerPosition(e.target.getStage());
     if (!pos) return;
 
-    setMousePos(pos);
+    if (selectedTool === "box" && isDrawing) {
+      setMousePos(pos);
 
-    if (newRect) {
-      setNewRect({
-        x: Math.min(startPos.x, pos.x),
-        y: Math.min(startPos.y, pos.y),
-        width: Math.abs(pos.x - startPos.x),
-        height: Math.abs(pos.y - startPos.y),
-      });
+      if (newRect) {
+        setNewRect({
+          x: Math.min(startPos.x, pos.x),
+          y: Math.min(startPos.y, pos.y),
+          width: Math.abs(pos.x - startPos.x),
+          height: Math.abs(pos.y - startPos.y),
+        });
+      }
+    } else if (selectedTool === "polygon" && isDrawingPolygon) {
+      if (tempPolygonPoints.length === 0 || 
+          shouldAddNewPoint(tempPolygonPoints, pos.x, pos.y)) {
+        setTempPolygonPoints([...tempPolygonPoints, pos.x, pos.y]);
+      }
     }
   };
 
-  const handleMouseUp = (e) => {
-    if (!isDrawing) return;
+  const shouldAddNewPoint = (points, x, y) => {
+    if (points.length < 2) return true;
+    
+    const lastX = points[points.length - 2];
+    const lastY = points[points.length - 1];
+    
+    // Calculate distance between last point and current position
+    const distance = Math.sqrt(
+      Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2)
+    );
+    
+    // Only add point if distance is greater than 10 pixels
+    return distance > 10;
+  };
 
-    setIsDrawing(false);
-    if (newRect && newRect.width > 5 && newRect.height > 5) {
-      const annotation = {
-        ...newRect,
-        id: Date.now().toString(),
-      };
-      setAnnotations([...annotations, annotation]);
+  const handleMouseUp = (e) => {
+    if (selectedTool === "box" && isDrawing) {
+      setIsDrawing(false);
+      if (newRect && newRect.width > 5 && newRect.height > 5) {
+        const annotation = {
+          ...newRect,
+          id: Date.now().toString(),
+        };
+        setAnnotations([...annotations, annotation]);
+      }
+      setNewRect(null);
+      setStartPos(null);
+      setMousePos(null);
+    } else if (selectedTool === "polygon" && isDrawingPolygon) {
+      setIsDrawingPolygon(false);
+      if (tempPolygonPoints.length >= 4) { // Minimum 2 points (4 coordinates)
+        const annotation = {
+          id: Date.now().toString(),
+          points: tempPolygonPoints,
+          type: "polygon",
+        };
+        setAnnotations([...annotations, annotation]);
+      }
+      setTempPolygonPoints([]);
     }
-    setNewRect(null);
-    setStartPos(null);
-    setMousePos(null);
   };
 
   return (
@@ -350,21 +479,41 @@ export default function KonvaCanvas({
               alt=""
             />
           )}
-          {annotations.map((annotation) => (
-            <AnnotationRect
-              key={annotation.id}
-              annotation={annotation}
-              isSelected={selectedId === annotation.id}
-              onChange={(newBox) => {
-                setAnnotations(
-                  annotations.map((a) =>
-                    a.id === annotation.id ? { ...a, ...newBox } : a,
-                  ),
-                );
-              }}
-              onSelect={setSelectedId}
-            />
-          ))}
+          {annotations.map((annotation) => {
+            if (annotation.type === "polygon") {
+              return (
+                <PolygonAnnotation
+                  key={annotation.id}
+                  annotation={annotation}
+                  isSelected={selectedId === annotation.id}
+                  onChange={(newPolygon) => {
+                    setAnnotations(
+                      annotations.map((a) =>
+                        a.id === annotation.id ? { ...a, ...newPolygon } : a
+                      )
+                    );
+                  }}
+                  onSelect={setSelectedId}
+                />
+              );
+            } else {
+              return (
+                <AnnotationRect
+                  key={annotation.id}
+                  annotation={annotation}
+                  isSelected={selectedId === annotation.id}
+                  onChange={(newBox) => {
+                    setAnnotations(
+                      annotations.map((a) =>
+                        a.id === annotation.id ? { ...a, ...newBox } : a
+                      )
+                    );
+                  }}
+                  onSelect={setSelectedId}
+                />
+              );
+            }
+          })}
           {newRect && (
             <Rect
               x={newRect.x}
@@ -374,6 +523,15 @@ export default function KonvaCanvas({
               stroke="#00ff00"
               strokeWidth={2}
               dash={[5, 5]}
+            />
+          )}
+          {tempPolygonPoints.length > 0 && (
+            <Line
+              points={tempPolygonPoints}
+              stroke="#00ff00"
+              strokeWidth={2}
+              dash={[5, 5]}
+              closed={isDrawingPolygon}
             />
           )}
         </Layer>

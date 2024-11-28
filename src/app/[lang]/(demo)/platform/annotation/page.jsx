@@ -23,6 +23,7 @@ export default function AnnotationPage() {
   const [labels, setLabels] = useState([]);
   const [activeTab, setActiveTab] = useState("objects"); // 'objects' | 'labels' | 'issues'
   const [newLabel, setNewLabel] = useState("");
+  const [selectedTool, setSelectedTool] = useState("box"); // 'box' | 'polygon'
 
   // Load media metadata
   useEffect(() => {
@@ -47,8 +48,9 @@ export default function AnnotationPage() {
     { icon: "🔍", name: "Zoom Tool" },
     { icon: "↩", name: "Undo" },
     { icon: "⟲", name: "Reset" },
-    { icon: "✏️", name: "Draw Rectangle" },
+    { icon: "✏️", name: "Draw Rectangle", type: "box" },
     { icon: "⬚", name: "Select Region" },
+    { icon: "🔺", name: "Draw Polygon", type: "polygon" },
   ];
 
   const generateRandomColor = () => {
@@ -151,7 +153,12 @@ export default function AnnotationPage() {
                 onMouseEnter={() => setHoveredTool(tool.name)}
                 onMouseLeave={() => setHoveredTool(null)}
               >
-                <button className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
+                <button
+                  className={`rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    selectedTool === tool.type ? "bg-gray-300 dark:bg-gray-600" : ""
+                  }`}
+                  onClick={() => setSelectedTool(tool.type)}
+                >
                   {tool.icon}
                 </button>
                 {hoveredTool === tool.name && (
@@ -175,6 +182,7 @@ export default function AnnotationPage() {
             mediaUrl={mediaUrl}
             currentFrame={currentFrame}
             isVideo={isVideo}
+            selectedTool={selectedTool}
           />
         </div>
 
