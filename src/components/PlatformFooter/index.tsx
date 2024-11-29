@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+
 const Footer = ({ lang }: { lang: string }) => {
   // Add dictionary state
   const [dictionary, setDictionary] = useState<any>({});
@@ -15,7 +16,7 @@ const Footer = ({ lang }: { lang: string }) => {
 
   return (
     <footer
-      className="wow fadeInUp relative z-10 bg-[#090E34]"
+      className="wow fadeInUp fixed bottom-0 left-0 right-0 z-10 bg-[#090E34]"
       data-wow-delay=".15s"
     >
       <div className="border-t border-[#8890A4] border-opacity-40 py-8">
