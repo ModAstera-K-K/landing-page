@@ -82,13 +82,18 @@ export function updateModelStatus(modelName: string, updates: Partial<typeof mod
 
 export function startModelTraining(model: typeof modelsData[0]) {
   let progress = 0;
+  const totalDuration = 20000; // 20 seconds
+  const intervalDuration = 50; // Update every 50ms
+  const totalSteps = totalDuration / intervalDuration; // Total number of updates
+  const increment = 100 / totalSteps; // Increment per update
+
   const intervalId = setInterval(() => {
-    progress += 1;
-    
+    progress += increment;
+
     // Update status and color based on progress
     let status = "Training";
     let color = "bg-blue-500";
-    
+
     if (progress >= 80) {
       status = "Evaluating";
       color = "bg-yellow-500";  // Same color as Pneumonia Predictor v2
@@ -105,12 +110,12 @@ export function startModelTraining(model: typeof modelsData[0]) {
       "-";
 
     updateModelStatus(model.name, {
-      progress,
+      progress: Math.min(progress, 100), // Ensure progress does not exceed 100
       status,
       accuracy,
       color
     });
-  }, 50);
+  }, intervalDuration);
 }
 
 export default modelsData;
