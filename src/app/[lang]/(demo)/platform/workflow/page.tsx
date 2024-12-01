@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import ReactFlow, {
   MiniMap,
@@ -7,6 +7,7 @@ import ReactFlow, {
   Background,
   useNodesState,
   useEdgesState,
+  Position,
 } from "react-flow-renderer";
 
 interface StepComponentProps {
@@ -91,8 +92,22 @@ const StepComponent = ({
   );
 };
 
+interface Step {
+  step: number;
+  reasoning: string;
+  explanation: string;
+  function: string;
+  parameters: Record<string, any>;
+}
+
+interface TaskData {
+  title: string;
+  task_summary: string;
+  steps: Step[];
+}
+
 export default function ComponentsPage() {
-  const [taskData, setTaskData] = useState({
+  const [taskData, setTaskData] = useState<TaskData>({
     title: "Example Task",
     task_summary:
       "Generate two random 3-dimensional vectors, compute their dot product, find their magnitudes, and calculate the angle between them in degrees.",
@@ -242,6 +257,8 @@ export default function ComponentsPage() {
         x: Math.max(dependencyLevel, index) * 200,
         y: dependencyLevel < index ? index * 100 : dependencyLevel * 100,
       },
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
     };
   });
 
@@ -250,7 +267,8 @@ export default function ComponentsPage() {
     id: `e${index + 1}-${index + 2}`,
     source: `${index + 1}`,
     target: `${index + 2}`,
-    type: "smoothstep",
+    type: "default",
+    animated: true,
   }));
 
   // Add edges for previous_result dependencies
@@ -263,8 +281,8 @@ export default function ComponentsPage() {
             id: `e${sourceIndex}-${index + 1}-dep`,
             source: `${sourceIndex}`,
             target: `${index + 1}`,
-            type: "smoothstep",
-            style: { stroke: "#ff0072" },
+            type: "default",
+            animated: true,
           });
         }
       });
@@ -313,7 +331,7 @@ export default function ComponentsPage() {
         >
           <Controls />
           <Background />
-          <MiniMap style={{ height: 120, width: 120 }} zoomable pannable />
+          <MiniMap style={{ height: 120, width: 120 }} />
         </ReactFlow>
       </div>
 
