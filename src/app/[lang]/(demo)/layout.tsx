@@ -53,6 +53,7 @@ export default function RootLayout({
             <Header lang={params.lang} />
 
             <div className="mt-20">{children}</div>
+            <div className="h-[100px]"></div>
             <Footer lang={params.lang} />
             <ScrollToTop />
           </ThemeProvider>

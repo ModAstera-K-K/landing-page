@@ -1,0 +1,332 @@
+"use client";
+import { useState, useCallback } from "react";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+} from "react-flow-renderer";
+
+interface StepComponentProps {
+  step: {
+    function: string;
+    explanation?: string;
+    parameters?: Record<string, any>;
+  };
+  index: number;
+  onParameterChange: (index: number, paramName: string, value: any) => void;
+}
+
+const StepComponent = ({
+  step,
+  index,
+  onParameterChange,
+}: StepComponentProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="mb-4 rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <div
+        className="flex cursor-pointer items-center justify-between p-4"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+          Step {index + 1}: {step.function}
+        </h3>
+        <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+          {isExpanded ? (
+            <ChevronUpIcon className="h-5 w-5" />
+          ) : (
+            <ChevronDownIcon className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+
+      {isExpanded && (
+        <div className="border-t border-gray-200 p-4 dark:border-gray-700">
+          {step.explanation && (
+            <div className="mb-4">
+              <h4 className="mb-2 font-medium text-gray-700 dark:text-gray-300">
+                Explanation
+              </h4>
+              <p className="text-gray-600 dark:text-gray-400">
+                {step.explanation}
+              </p>
+            </div>
+          )}
+
+          <div>
+            <h4 className="mb-2 font-medium text-gray-700 dark:text-gray-300">
+              Parameters
+            </h4>
+            <div className="space-y-2">
+              {Object.entries(step.parameters || {}).map(([name, value]) => (
+                <div key={name} className="flex items-center space-x-2">
+                  <label
+                    htmlFor={`param-${index}-${name}`}
+                    className="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >
+                    {name}:
+                  </label>
+                  <input
+                    id={`param-${index}-${name}`}
+                    type="text"
+                    value={
+                      typeof value === "object" ? JSON.stringify(value) : value
+                    }
+                    onChange={(e) =>
+                      onParameterChange(index, name, e.target.value)
+                    }
+                    className="flex-1 rounded-md border border-gray-300 bg-gray-50 px-3 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function ComponentsPage() {
+  const [taskData, setTaskData] = useState({
+    title: "Example Task",
+    task_summary:
+      "Generate two random 3-dimensional vectors, compute their dot product, find their magnitudes, and calculate the angle between them in degrees.",
+    steps: [
+      {
+        step: 1,
+        reasoning: "Generate the first random 3D vector",
+        explanation:
+          "Use numpy's random.rand function to generate a 3D vector with random values.",
+        function: "numpy.random.rand",
+        parameters: {
+          d0: 3,
+        },
+      },
+      {
+        step: 2,
+        reasoning: "Generate the second random 3D vector",
+        explanation:
+          "Use numpy's random.rand function to generate another 3D vector with random values.",
+        function: "numpy.random.rand",
+        parameters: {
+          d0: 3,
+        },
+      },
+      {
+        step: 3,
+        reasoning: "Compute the dot product of the two vectors",
+        explanation:
+          "Use numpy's dot function to compute the dot product of the two vectors. This is necessary to find the angle between them.",
+        function: "numpy.dot",
+        parameters: {
+          a: "previous_result_1",
+          b: "previous_result_2",
+        },
+      },
+      {
+        step: 4,
+        reasoning: "Compute the magnitude of the first vector",
+        explanation:
+          "Use numpy's linalg.norm function to compute the magnitude (Euclidean norm) of the first vector.",
+        function: "numpy.linalg.norm",
+        parameters: {
+          x: "previous_result_1",
+        },
+      },
+      {
+        step: 5,
+        reasoning: "Compute the magnitude of the second vector",
+        explanation:
+          "Use numpy's linalg.norm function to compute the magnitude (Euclidean norm) of the second vector.",
+        function: "numpy.linalg.norm",
+        parameters: {
+          x: "previous_result_2",
+        },
+      },
+      {
+        step: 6,
+        reasoning: "Compute the product of the magnitudes of the two vectors",
+        explanation:
+          "Multiply the magnitudes of the two vectors which is required to calculate the cosine of the angle between them.",
+        function: "multiplier",
+        parameters: {
+          a: "previous_result_4",
+          b: "previous_result_5",
+        },
+      },
+      {
+        step: 7,
+        reasoning: "Compute the cosine of the angle between the vectors",
+        explanation:
+          "Divide the dot product of the vectors by the product of their magnitudes to find the cosine of the angle between the vectors.",
+        function: "divider",
+        parameters: {
+          a: "previous_result_3",
+          b: "previous_result_6",
+        },
+      },
+      {
+        step: 8,
+        reasoning: "Compute the angle in radians",
+        explanation:
+          "Use numpy's arccos function to compute the angle in radians from its cosine.",
+        function: "numpy.arccos",
+        parameters: {
+          x: "previous_result_7",
+        },
+      },
+      {
+        step: 9,
+        reasoning: "Convert the angle from radians to degrees",
+        explanation:
+          "Multiply the angle in radians by 180/pi to convert it to degrees.",
+        function: "multiplier",
+        parameters: {
+          a: "previous_result_8",
+          b: 57.2957795,
+        },
+      },
+    ],
+  });
+
+  // Create nodes from steps with improved layout
+  const initialNodes = taskData.steps.map((step, index) => {
+    const dependencyLevel = Math.max(
+      0,
+      ...Object.values(step.parameters || {})
+        .filter(
+          (value): value is string =>
+            typeof value === "string" && value.startsWith("previous_result_"),
+        )
+        .map((value) => parseInt(value.split("_")[2]) - 1),
+    );
+
+    // Create parameter string with formatted previous_result references
+    const paramString = step.parameters
+      ? Object.entries(step.parameters)
+          .map(([key, value]) => {
+            if (
+              typeof value === "string" &&
+              value.startsWith("previous_result_")
+            ) {
+              const stepNum = value.split("_")[2];
+              return `${key}: Step ${stepNum}`;
+            }
+            return `${key}: ${value}`;
+          })
+          .join("\n")
+      : "";
+
+    return {
+      id: `${index + 1}`,
+      type: "default",
+      data: {
+        label: (
+          <>
+            <p className="font-medium">
+              Step {index + 1}: {step.function}
+            </p>
+            <p className="font-medium">Inputs:</p>
+            {paramString && (
+              <div className="mt-1 text-xs text-gray-500">{paramString}</div>
+            )}
+          </>
+        ),
+      },
+      position: {
+        x: Math.max(dependencyLevel, index) * 200,
+        y: dependencyLevel < index ? index * 100 : dependencyLevel * 100,
+      },
+    };
+  });
+
+  // Create edges between consecutive steps
+  const initialEdges = taskData.steps.slice(0, -1).map((_, index) => ({
+    id: `e${index + 1}-${index + 2}`,
+    source: `${index + 1}`,
+    target: `${index + 2}`,
+    type: "smoothstep",
+  }));
+
+  // Add edges for previous_result dependencies
+  taskData.steps.forEach((step, index) => {
+    if (step.parameters) {
+      Object.values(step.parameters).forEach((value) => {
+        if (typeof value === "string" && value.startsWith("previous_result_")) {
+          const sourceIndex = parseInt(value.split("_")[2]);
+          initialEdges.push({
+            id: `e${sourceIndex}-${index + 1}-dep`,
+            source: `${sourceIndex}`,
+            target: `${index + 1}`,
+            type: "smoothstep",
+            style: { stroke: "#ff0072" },
+          });
+        }
+      });
+    }
+  });
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const handleParameterChange = (
+    stepIndex: number,
+    paramName: string,
+    value: any,
+  ) => {
+    setTaskData((prevData) => {
+      const newSteps = [...prevData.steps];
+      newSteps[stepIndex] = {
+        ...newSteps[stepIndex],
+        parameters: {
+          ...newSteps[stepIndex].parameters,
+          [paramName]: value,
+        },
+      };
+      return { ...prevData, steps: newSteps };
+    });
+  };
+
+  return (
+    <div className="container mx-auto max-w-4xl p-6">
+      <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+        {taskData.title}
+      </h1>
+
+      <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">
+        {taskData.task_summary}
+      </p>
+
+      <div className="mb-8 h-[640px] rounded-lg border border-gray-200 dark:border-gray-700">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+        >
+          <Controls />
+          <Background />
+          <MiniMap style={{ height: 120, width: 120 }} zoomable pannable />
+        </ReactFlow>
+      </div>
+
+      <div className="space-y-4">
+        {taskData.steps.map((step, index) => (
+          <StepComponent
+            key={index}
+            step={step}
+            index={index}
+            onParameterChange={handleParameterChange}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

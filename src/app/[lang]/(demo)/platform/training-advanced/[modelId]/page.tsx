@@ -11,8 +11,9 @@ import ReactFlow, {
 import PlatformNavigation from "@/components/PlatformNavigation";
 import modelCode from "@/app/[lang]/(demo)/platform/modelCode";
 import { Highlight, themes } from "prism-react-renderer";
-import { useParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import modelsData from "../../modelsData";
+import Editor from "react-simple-code-editor";
 
 // Sample data for nodes and edges
 const initialNodes = [
@@ -83,8 +84,8 @@ interface NodeContentProps {
 
 function NodeContent({ title, details }: NodeContentProps) {
   return (
-    <div className="text-center transform scale-60">
-      <h3 className="font-semibold text-gray-800 dark:text-black text-xs">
+    <div className="scale-60 transform text-center">
+      <h3 className="text-xs font-semibold text-gray-800 dark:text-black">
         {title}
       </h3>
       <ul className="mt-2 space-y-1 text-[0.64rem] text-gray-600 dark:text-black">
@@ -99,14 +100,15 @@ function NodeContent({ title, details }: NodeContentProps) {
 export default function AdvancedView() {
   const params = useParams();
   const modelId = params?.modelId as string;
-  
+
   // Find the specific model
-  const model = modelsData.find(m => 
-    m.name.toLowerCase().replace(/\s+/g, '-') === modelId
+  const model = modelsData.find(
+    (m) => m.name.toLowerCase().replace(/\s+/g, "-") === modelId,
   );
 
   // Use model's training instructions or default
-  const trainingInstructions = model?.trainingInstructions || 
+  const trainingInstructions =
+    model?.trainingInstructions ||
     "Train multiple models and select the best one to predict Sepsis early detection from the uploaded images.";
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -132,7 +134,7 @@ export default function AdvancedView() {
     }
   }, [showCode]);
 
-  const handleNodeClick = (event: any, node: { id: string; }) => {
+  const handleNodeClick = (event: any, node: { id: string }) => {
     if (node.id === "2") {
       setShowCode((prev) => !prev);
     }
@@ -154,7 +156,7 @@ export default function AdvancedView() {
 
   const handleRetrain = () => {
     // Add your retraining logic here
-    console.log('Retraining with modified code...');
+    console.log("Retraining with modified code...");
   };
 
   return (
@@ -167,9 +169,7 @@ export default function AdvancedView() {
             <h3 className="font-semibold text-gray-800 dark:text-gray-100">
               Training Instructions
             </h3>
-            <p className="mt-2">
-              {trainingInstructions}
-            </p>
+            <p className="mt-2">{trainingInstructions}</p>
           </div>
 
           {/* React Flow Canvas */}
@@ -194,30 +194,57 @@ export default function AdvancedView() {
 
         {/* Code Display */}
         {showCode && (
-          <div className="w-3/5 p-4 bg-gray-900 text-gray-200 rounded shadow-md flex flex-col max-h-[624px] dark:bg-gray-800">
-            <div className="flex justify-end mb-2 gap-2">
+          <div className="flex max-h-[624px] w-3/5 flex-col rounded bg-gray-900 p-4 text-gray-200 shadow-md dark:bg-gray-800">
+            <div className="mb-2 flex justify-end gap-2">
               {isCodeModified && !isEditing && (
                 <button
-                  className="bg-green-500 text-white px-2 py-1 rounded dark:bg-green-700"
+                  className="rounded bg-green-500 px-2 py-1 text-white dark:bg-green-700"
                   onClick={handleRetrain}
                 >
                   Retrain
                 </button>
               )}
               <button
-                className="bg-blue-500 text-white px-2 py-1 rounded dark:bg-blue-700"
+                className="rounded bg-blue-500 px-2 py-1 text-white dark:bg-blue-700"
                 onClick={handleEditClick}
               >
                 {isEditing ? "Save" : "Edit"}
               </button>
+              <button
+                className="rounded bg-gray-500 px-2 py-1 text-white dark:bg-gray-700"
+                onClick={() => setShowCode(false)}
+              >
+                Close
+              </button>
             </div>
-            <div className="overflow-y-auto flex-grow">
+            <div className="flex-grow overflow-y-auto">
               {isEditing ? (
-                <textarea
-                  className="w-full h-full p-2 bg-gray-800 text-gray-200 rounded dark:bg-gray-700 dark:text-gray-100"
+                <Editor
                   value={pythonCode}
-                  onChange={handleCodeChange}
-                  spellCheck={false}
+                  onValueChange={code => setPythonCode(code)}
+                  highlight={code => (
+                    <Highlight theme={themes.nightOwl} code={code} language="python">
+                      {({ tokens, getLineProps, getTokenProps }) => (
+                        <>
+                          {tokens.map((line, i) => (
+                            <div {...getLineProps({ line, key: i })}>
+                              {line.map((token, key) => (
+                                <span key={key} {...getTokenProps({ token })} />
+                              ))}
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </Highlight>
+                  )}
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 14,
+                    backgroundColor: 'transparent',
+                    minHeight: '100%',
+                  }}
+                  textareaClassName="focus:outline-none"
                 />
               ) : (
                 <Highlight
@@ -225,7 +252,13 @@ export default function AdvancedView() {
                   code={pythonCode}
                   language="python"
                 >
-                  {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  {({
+                    className,
+                    style,
+                    tokens,
+                    getLineProps,
+                    getTokenProps,
+                  }) => (
                     <pre className="overflow-x-auto">
                       {tokens.map((line, i) => (
                         <div key={i} {...getLineProps({ line })}>

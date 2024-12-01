@@ -37,6 +37,7 @@
     "react-flow-renderer": "^10.3.17",
     "react-hot-toast": "^2.4.1",
     "react-konva": "^18.2.10",
+    "react-simple-code-editor": "^0.14.1",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "stripe": "^14.7.0",
