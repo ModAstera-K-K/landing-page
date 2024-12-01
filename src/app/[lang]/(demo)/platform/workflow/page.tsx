@@ -209,17 +209,32 @@ export default function ComponentsPage() {
     ],
   });
 
+  function getIncomingConnections(step: Step) {
+    let count = 0;
+    const paramValues = Object.values(step.parameters || {});
+    for (const value of paramValues) {
+      if (typeof value === "string" && value.includes("previous_result")) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  // Calculate incoming connections for each node
+  const incomingConnections = taskData.steps.map((step, index) => {
+    return getIncomingConnections(step);
+  });
+
   // Create nodes from steps with improved layout
   const initialNodes = taskData.steps.map((step, index) => {
-    const dependencyLevel = Math.max(
-      0,
-      ...Object.values(step.parameters || {})
-        .filter(
-          (value): value is string =>
-            typeof value === "string" && value.startsWith("previous_result_"),
-        )
-        .map((value) => parseInt(value.split("_")[2]) - 1),
+    const dependencies = Object.values(step.parameters || {}).filter(
+      (value): value is string =>
+        typeof value === "string" && value.startsWith("previous_result_"),
     );
+
+    const dependencyLevel = dependencies.length
+      ? Math.max(...dependencies.map((value) => parseInt(value.split("_")[2])))
+      : 0;
 
     // Create parameter string with formatted previous_result references
     const paramString = step.parameters
@@ -236,6 +251,13 @@ export default function ComponentsPage() {
           })
           .join("\n")
       : "";
+
+    console.log(
+      "incoming connections: ",
+      index,
+      incomingConnections[index],
+      step.function,
+    );
 
     return {
       id: `${index + 1}`,
@@ -254,8 +276,11 @@ export default function ComponentsPage() {
         ),
       },
       position: {
-        x: Math.max(dependencyLevel, index) * 200,
-        y: dependencyLevel < index ? index * 100 : dependencyLevel * 100,
+        x: index * 180, // Align nodes horizontally
+        y:
+          incomingConnections[index] > 0
+            ? ((incomingConnections[index] * index) / 2) * 50
+            : 0, // Displace vertically if multiple connections
       },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
