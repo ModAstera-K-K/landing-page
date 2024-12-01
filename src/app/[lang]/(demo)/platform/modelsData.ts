@@ -8,6 +8,7 @@ export interface ModelData {
   link: string;
   startTime?: number;
   intervalId?: ReturnType<typeof setInterval>;
+  trainingInstructions?: string;
 }
 
 const modelsData: ModelData[] = [

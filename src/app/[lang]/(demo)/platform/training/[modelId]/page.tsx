@@ -241,7 +241,7 @@ export default function ModelTrainingDetail({ params }: { params: { modelId: str
             ))}
             {model?.progress === 100 && (
               <Link
-                href="/platform/training-advanced"
+                href={`/platform/training-advanced/${model.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="mt-4 flex items-center space-x-1 text-sm font-semibold text-blue-600 dark:text-blue-400"
               >
                 Advanced View

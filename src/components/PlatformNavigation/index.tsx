@@ -46,7 +46,7 @@ const NavigationMenu = () => {
       </nav>
       {isTrainingAdvanced && (
         <Link
-          href="/platform/training-full"
+          href={`/platform/training/${currentPath.split('/').pop()}`}
           className="flex items-center space-x-1 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
         >
           <svg

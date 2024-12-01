@@ -11,6 +11,8 @@ import ReactFlow, {
 import PlatformNavigation from "@/components/PlatformNavigation";
 import modelCode from "@/app/[lang]/(demo)/platform/modelCode";
 import { Highlight, themes } from "prism-react-renderer";
+import { useParams } from 'next/navigation';
+import modelsData from "../../modelsData";
 
 // Sample data for nodes and edges
 const initialNodes = [
@@ -95,6 +97,18 @@ function NodeContent({ title, details }: NodeContentProps) {
 }
 
 export default function AdvancedView() {
+  const params = useParams();
+  const modelId = params?.modelId as string;
+  
+  // Find the specific model
+  const model = modelsData.find(m => 
+    m.name.toLowerCase().replace(/\s+/g, '-') === modelId
+  );
+
+  // Use model's training instructions or default
+  const trainingInstructions = model?.trainingInstructions || 
+    "Train multiple models and select the best one to predict Sepsis early detection from the uploaded images.";
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showCode, setShowCode] = useState(false);
@@ -154,8 +168,7 @@ export default function AdvancedView() {
               Training Instructions
             </h3>
             <p className="mt-2">
-              Train multiple models and select the best one to predict Sepsis early
-              detection from the uploaded images.
+              {trainingInstructions}
             </p>
           </div>
 
