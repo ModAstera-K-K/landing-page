@@ -252,13 +252,6 @@ export default function ComponentsPage() {
           .join("\n")
       : "";
 
-    console.log(
-      "incoming connections: ",
-      index,
-      incomingConnections[index],
-      step.function,
-    );
-
     return {
       id: `${index + 1}`,
       type: "default",
@@ -278,8 +271,8 @@ export default function ComponentsPage() {
       position: {
         x: index * 180, // Align nodes horizontally
         y:
-          incomingConnections[index] > 0
-            ? ((incomingConnections[index] * index) / 2) * 50
+          incomingConnections[index] > 1
+            ? incomingConnections[index] * (index % 2 === 0 ? -1 : 1) * 50
             : 0, // Displace vertically if multiple connections
       },
       sourcePosition: Position.Right,
