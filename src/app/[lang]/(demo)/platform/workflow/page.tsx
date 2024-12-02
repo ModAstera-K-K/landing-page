@@ -9,6 +9,16 @@ import ReactFlow, {
   useEdgesState,
   Position,
 } from "react-flow-renderer";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface StepComponentProps {
   step: {
@@ -105,6 +115,56 @@ interface TaskData {
   task_summary: string;
   steps: Step[];
 }
+
+const NodeDialog = ({
+  isOpen,
+  onClose,
+  step,
+  stepIndex,
+  onParameterChange,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  step: Step;
+  stepIndex: number;
+  onParameterChange: (index: number, paramName: string, value: any) => void;
+}) => {
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            Step {stepIndex + 1}: {step.function}
+          </DialogTitle>
+          {step.explanation && (
+            <DialogDescription>{step.explanation}</DialogDescription>
+          )}
+        </DialogHeader>
+
+        <div className="grid gap-4 py-4">
+          {Object.entries(step.parameters || {}).map(([name, value]) => (
+            <div key={name} className="grid grid-cols-4 items-center gap-4">
+              <label className="text-right text-sm font-medium">{name}:</label>
+              <Input
+                className="col-span-3"
+                value={
+                  typeof value === "object" ? JSON.stringify(value) : value
+                }
+                onChange={(e) =>
+                  onParameterChange(stepIndex, name, e.target.value)
+                }
+              />
+            </div>
+          ))}
+        </div>
+
+        <DialogFooter>
+          <Button onClick={onClose}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default function ComponentsPage() {
   const [taskData, setTaskData] = useState<TaskData>({
@@ -209,6 +269,9 @@ export default function ComponentsPage() {
     ],
   });
 
+  const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   function getIncomingConnections(step: Step) {
     let count = 0;
     const paramValues = Object.values(step.parameters || {});
@@ -257,7 +320,13 @@ export default function ComponentsPage() {
       type: "default",
       data: {
         label: (
-          <>
+          <div
+            onDoubleClick={() => {
+              setSelectedStep(index);
+              setIsDialogOpen(true);
+            }}
+            className="cursor-pointer"
+          >
             <p className="font-medium">
               Step {index + 1}: {step.function}
             </p>
@@ -265,7 +334,7 @@ export default function ComponentsPage() {
             {paramString && (
               <div className="mt-1 text-xs text-gray-500">{paramString}</div>
             )}
-          </>
+          </div>
         ),
       },
       position: {
@@ -363,6 +432,19 @@ export default function ComponentsPage() {
           />
         ))}
       </div>
+
+      {selectedStep !== null && (
+        <NodeDialog
+          isOpen={isDialogOpen}
+          onClose={() => {
+            setIsDialogOpen(false);
+            setSelectedStep(null);
+          }}
+          step={taskData.steps[selectedStep]}
+          stepIndex={selectedStep}
+          onParameterChange={handleParameterChange}
+        />
+      )}
     </div>
   );
 }
