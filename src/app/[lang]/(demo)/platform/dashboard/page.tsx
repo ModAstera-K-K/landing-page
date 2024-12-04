@@ -54,11 +54,6 @@ export default function Dashboard() {
     // Trigger a re-render or state update if necessary
   };
 
-  // Update the datasets display to reflect the new data
-  useEffect(() => {
-    // This will ensure the component re-renders when datasetsData changes
-  }, [datasetsData]);
-
   // New function to handle training model click
   const handleTrainModelClick = () => {
     setIsTrainingModel(true);
