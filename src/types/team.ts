@@ -4,4 +4,8 @@ export type TeamType = {
   designation: string;
   image: string;
   linkedinLink: string;
+  experience: {
+    en: string[];
+    jp: string[];
+  };
 };
