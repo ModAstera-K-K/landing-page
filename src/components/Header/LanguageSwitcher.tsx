@@ -23,7 +23,7 @@ const LanguageSwitcher = ({ currentLang }: { currentLang: string }) => {
             : "text-body-color hover:text-primary dark:text-dark-6 dark:hover:text-primary"
         }`}
       >
-        ENGLISH
+        EN
       </button>
       <span className="text-body-color dark:text-dark-6">|</span>
       <button

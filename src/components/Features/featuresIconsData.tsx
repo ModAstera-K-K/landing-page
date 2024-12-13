@@ -1,6 +1,6 @@
 import { Feature } from "@/types/feature";
 
-const featuresData: Feature[] = [
+const featuresIconsData: Feature[] = [
   {
     id: 1,
     icon: (
@@ -32,7 +32,8 @@ const featuresData: Feature[] = [
     title: "", // Will be filled from translations
     paragraph: "", // Will be filled from translations
     btn: "", // Will be filled from translations
-    btnLink: "" // Will be filled from translations
+    btnLink: "", // Will be filled from translations
+    image: "", // Will be filled from translations
   },
   {
     id: 2,
@@ -53,7 +54,8 @@ const featuresData: Feature[] = [
     title: "", // Will be filled from translations
     paragraph: "", // Will be filled from translations
     btn: "", // Will be filled from translations
-    btnLink: "" // Will be filled from translations
+    btnLink: "", // Will be filled from translations
+    image: "",
   },
   {
     id: 3,
@@ -74,7 +76,8 @@ const featuresData: Feature[] = [
     title: "", // Will be filled from translations
     paragraph: "", // Will be filled from translations
     btn: "", // Will be filled from translations
-    btnLink: "" // Will be filled from translations
+    btnLink: "", // Will be filled from translations
+    image: "",
   },
 
   {
@@ -128,7 +131,8 @@ const featuresData: Feature[] = [
     title: "", // Will be filled from translations
     paragraph: "", // Will be filled from translations
     btn: "", // Will be filled from translations
-    btnLink: "" // Will be filled from translations
+    btnLink: "", // Will be filled from translations
+    image: "",
   },
 ];
-export default featuresData;
+export default featuresIconsData;

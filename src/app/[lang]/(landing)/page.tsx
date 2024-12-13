@@ -14,9 +14,9 @@ import { getAllPosts } from "@/utils/markdown";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "ModAstera - AI Solutions Tailored for HealthTech",
+  title: "ModAstera - Save 90% on Medical AI Development Costs",
   description:
-    "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
+    "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.",
 };
 
 export default async function Home({

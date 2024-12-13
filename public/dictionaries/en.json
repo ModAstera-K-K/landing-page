@@ -1,8 +1,18 @@
 {
   "mainPage": {
     "title": "Save 90% on Medical AI Development Costs",
-    "subTitle": "Our platform accelerates AI development for health and medical technology companies by simplifying and integrating the entire workflow—from data preprocessing and annotation to model building and deployment.",
+    "subTitle": "Our platform accelerates AI development for health and medical technology companies by simplifying and integrating the entire workflow. From data preprocessing and annotation to model building and deployment in days.",
     "byTitle": "Backed By"
+  },
+  "about": {
+    "title": "NextGeneration Platform to Power the World's Medical AI",
+    "paragraphs": [
+      "ModAstera is dedicated to accelerating AI development for health and medical technology companies. Our platform simplifies and integrates the entire AI workflow, from data preprocessing and annotation to model building, and deployment.",
+      "Designed for both beginners and advanced users, ModAstera empowers organizations to overcome the challenges of AI adoption by reducing costs, complexity, and time-to-market. With built-in compliance for healthcare regulations like HIPAA and APPI, we ensure seamless and secure integration into medical workflows.",
+      "Our platform includes pre-built healthcare-specific models tailored for applications in medical imaging, diagnostics, patient monitoring, and personalized medicine, allowing companies to focus on innovation and improved patient outcomes. Real-time monitoring and adaptive tools ensure that solutions remain accurate and effective over time.",
+      "At ModAstera, we are reimagining healthcare AI to help healthtech innovators transform ideas into impactful solutions."
+    ],
+    "cta": "https://calendly.com/modastera/30min"
   },
   "features": {
     "subtitle": "Features",
@@ -10,27 +20,45 @@
     "paragraph": "Our platform is designed to meet the unique needs of health tech companies, Our goal is to help you achieve business goals faster and cheaper.",
     "items": {
       "feature1": {
-        "title": "Pre-Built HealthTech-specific AI Models",
-        "paragraph": "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
+        "title": "AI Engineering Agent",
+        "paragraph": "Designed to accelerate, streamline and automate complex engineering tasks. Whether you’re building models, optimizing parameters, or deploying solutions, the agent acts as your virtual assistant, ensuring precision and efficiency. Tailored for healthtech, it simplifies the creation of segmentation and classification models, reduces development time, and supports both beginners and experts with no-code to full-code functionality. Let our intelligent agent handle the heavy lifting so you can focus on innovation.",
         "btn": "Learn More",
+        "image": "/images/features/ai-eng-agent.jpeg",
         "btnLink": "https://calendly.com/modastera/30min"
       },
       "feature2": {
+        "title": "AI-Assisted Data Annotation",
+        "paragraph": "Enhance the quality and speed of your data preparation with an intuitive tool that reduces manual effort while ensuring accuracy. Our platform leverages AI to pre-label medical data, such as images or patient records, providing a strong foundation for training reliable AI models. With customizable annotation workflows and healthcare-specific templates, users can efficiently process complex datasets, from medical imaging to diagnostic data, ensuring better outcomes with minimal effort.",
+        "btn": "Learn More",
+        "image": "/images/features/data-annotation.jpeg",
+        "btnLink": "https://calendly.com/modastera/30min"
+      },
+      "feature3": {
+        "title": "Pre-Built HealthTech-specific AI Models",
+        "paragraph": "Jumpstart your AI projects with a library of healthcare-specific models tailored for common use cases like diagnostics, patient monitoring, and imaging analysis. These models can be quickly adapted to fit your unique needs, reducing the time from concept to deployment.",
+        "btn": "Learn More",
+        "image": "/images/features/feature.jpeg",
+        "btnLink": "https://calendly.com/modastera/30min"
+      },
+      "feature4": {
         "title": "Built-In Compliance",
         "paragraph": "Easily manage healthcare data with confidence. Our platform ensures compliance with global healthcare regulations, including HIPAA, APPI, and GDPR, by incorporating robust data privacy, encryption, and security protocols. This allows users to meet regulatory requirements without additional setup, speeding up deployment and safeguarding patient information.",
         "btn": "Learn More",
+        "image": "/images/features/feature.jpeg",
         "btnLink": "https://calendly.com/modastera/30min"
       },
       "feature3": {
         "title": "Flexible AI Development",
         "paragraph": "Tailor your AI development to any team's skill level and project requirements with our \"no-code to full-code\" interface. Whether you're building models from scratch or adjusting pre-built templates, ModAstera adapts to your workflows, enabling both rapid prototyping for new users and in-depth customization for advanced AI professionals.",
         "btn": "Learn More",
+        "image": "/images/features/dashboard.jpeg",
         "btnLink": "https://calendly.com/modastera/30min"
       },
       "feature4": {
         "title": "Cost-Effective R&D",
         "paragraph": "ModAstera's all-in-one platform consolidates data annotation, model training, and deployment, significantly reducing the cost and complexity of managing separate tools. By eliminating the need for specialized talent and minimizing infrastructure demands, your team can focus on innovation, not logistics.",
         "btn": "Learn More",
+        "image": "/images/features/deployment.jpeg",
         "btnLink": "https://calendly.com/modastera/30min"
       }
     }
@@ -65,6 +93,6 @@
     "waitlistBtnTitle": "Join the waitlist"
   },
   "footer": {
-    "title": "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists"
+    "title": "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days."
   }
 }

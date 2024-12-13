@@ -12,24 +12,39 @@ const About = () => {
             <div className="w-full px-4 lg:w-1/2">
               <div className="mb-12 max-w-[540px] lg:mb-0">
                 <h2 className="mb-5 text-3xl font-bold leading-tight text-dark dark:text-white sm:text-[40px] sm:leading-[1.2]">
-                  Brilliant Toolkit to Build Next.js SaaS Websites.
+                  NextGeneration Platform to Power the World&apos;s Medical AI
                 </h2>
                 <p className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
-                  The main thrust is to focus on educating attendees on how to
-                  best protect highly vulnerable business applications with
-                  interactive panel discussions and roundtables led by subject
-                  matter experts.
-                  <br /> <br />
-                  The main thrust is to focus on educating attendees on how to
-                  best protect highly vulnerable business applications with
-                  interactive panel.
+                  ModAstera is dedicated to accelerating AI development for
+                  health and medical technology companies. Our platform
+                  simplifies and integrates the entire AI workflow, from data
+                  preprocessing and annotation to model building, and
+                  deployment.
+                  <br />
+                  Designed for both beginners and advanced users, ModAstera
+                  empowers organizations to overcome the challenges of AI
+                  adoption by reducing costs, complexity, and time-to-market.
+                  With built-in compliance for healthcare regulations like HIPAA
+                  and APPI, we ensure seamless and secure integration into
+                  medical workflows.
+                  <br />
+                  Our platform includes pre-built healthcare-specific models
+                  tailored for applications in medical imaging, diagnostics,
+                  patient monitoring, and personalized medicine, allowing
+                  companies to focus on innovation and improved patient
+                  outcomes. Real-time monitoring and adaptive tools ensure that
+                  solutions remain accurate and effective over time.
+                  <br />
+                  At ModAstera, we are reimagining healthcare AI to help
+                  healthtech innovators transform ideas into impactful
+                  solutions.
                 </p>
 
                 <a
                   href="/#"
                   className="inline-flex items-center justify-center rounded-md bg-primary px-7 py-3 text-center text-base font-medium text-white duration-300 hover:bg-primary/90"
                 >
-                  Know More
+                  Learn More
                 </a>
               </div>
             </div>
@@ -62,13 +77,13 @@ const About = () => {
                   <div className="relative z-10 mb-4 flex items-center justify-center overflow-hidden bg-primary px-6 py-12 sm:mb-8 sm:h-[160px] sm:p-5 lg:mb-4 xl:mb-8">
                     <div>
                       <span className="block text-5xl font-extrabold text-white">
-                        09
+                        15
                       </span>
                       <span className="block text-base font-semibold text-white">
-                        We have
+                        Combined Years
                       </span>
                       <span className="block text-base font-medium text-white text-opacity-70">
-                        Years of experience
+                        of AI Development Experience
                       </span>
                     </div>
                     <div>

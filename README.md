@@ -1,6 +1,6 @@
-# ModAstera - AI Solutions Tailored for HealthTech
+# ModAstera - Save 90% on Medical AI Development Costs
 
-AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists
+Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.
 
 ## Setup Instructions
 

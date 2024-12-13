@@ -41,9 +41,9 @@ const Hero = async ({ lang }: { lang: string }) => {
             >
               <div className="mt-16">
                 <Image
-                  src="/images/hero/hero-image.png"
+                  src="/images/hero/modastera-dashboard.jpeg"
                   alt="hero"
-                  className="mx-auto max-w-full rounded-t-xl rounded-tr-xl"
+                  className="mx-auto max-w-full rounded"
                   width={845}
                   height={316}
                 />
