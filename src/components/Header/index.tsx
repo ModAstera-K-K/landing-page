@@ -68,7 +68,7 @@ const Header = ({ lang }: { lang: string }) => {
               <Link
                 href="/"
                 className={`navbar-logo block w-full ${
-                  sticky ? "py-2" : "py-5"
+                  sticky ? "py-1" : "py-2"
                 } `}
               >
                 {pathUrl !== "/" ? (
