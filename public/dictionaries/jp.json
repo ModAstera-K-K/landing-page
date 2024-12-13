@@ -46,20 +46,6 @@
         "btn": "詳細を見る",
         "image": "/images/features/deployment.jpeg",
         "btnLink": "https://calendly.com/modastera/30min"
-      },
-      "feature3": {
-        "title": "柔軟なAI開発",
-        "paragraph": "「ノーコードからフルコードまで」のインターフェースで、チームのスキルレベルやプロジェクト要件に合わせてAI開発をカスタマイズできます。モデルを一から構築する場合でも、既存のテンプレートを調整する場合でも、ModAsteraはワークフローに適応し、新規ユーザーの迅速なプロトタイピングから、上級AIプロフェッショナルの詳細なカスタマイズまで対応します。",
-        "btn": "詳細を見る",
-        "image": "/images/features/feature.jpeg",
-        "btnLink": "https://calendly.com/modastera/30min"
-      },
-      "feature4": {
-        "title": "高コスパの研究開発",
-        "paragraph": "ModAsteraのオールインワンプラットフォームは、データアノテーション、モデルトレーニング、デプロイメントを統合し、個別ツールの管理コストと複雑さを大幅に削減します。専門人材の必要性を排除し、インフラ要件を最小限に抑えることで、チームはロジスティクスではなくイノベーションに集中できます。",
-        "btn": "詳細を見る",
-        "image": "/images/features/feature.jpeg",
-        "btnLink": "https://calendly.com/modastera/30min"
       }
     }
   },

@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { getDictionary } from "@/app/[lang]/(landing)/dictionaries";
 
-const About = () => {
+const About = async ({ lang }: { lang: string }) => {
+  const pageData = await getDictionary(lang);
   return (
     <section
       id="about"
@@ -12,33 +14,15 @@ const About = () => {
             <div className="w-full px-4 lg:w-1/2">
               <div className="mb-12 max-w-[540px] lg:mb-0">
                 <h2 className="mb-5 text-3xl font-bold leading-tight text-dark dark:text-white sm:text-[40px] sm:leading-[1.2]">
-                  NextGeneration Platform to Power the World&apos;s Medical AI
+                  {pageData.about.title}
                 </h2>
-                <p className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
-                  ModAstera is dedicated to accelerating AI development for
-                  health and medical technology companies. Our platform
-                  simplifies and integrates the entire AI workflow, from data
-                  preprocessing and annotation to model building, and
-                  deployment.
-                  <br />
-                  Designed for both beginners and advanced users, ModAstera
-                  empowers organizations to overcome the challenges of AI
-                  adoption by reducing costs, complexity, and time-to-market.
-                  With built-in compliance for healthcare regulations like HIPAA
-                  and APPI, we ensure seamless and secure integration into
-                  medical workflows.
-                  <br />
-                  Our platform includes pre-built healthcare-specific models
-                  tailored for applications in medical imaging, diagnostics,
-                  patient monitoring, and personalized medicine, allowing
-                  companies to focus on innovation and improved patient
-                  outcomes. Real-time monitoring and adaptive tools ensure that
-                  solutions remain accurate and effective over time.
-                  <br />
-                  At ModAstera, we are reimagining healthcare AI to help
-                  healthtech innovators transform ideas into impactful
-                  solutions.
-                </p>
+                <div className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
+                  {pageData.about.paragraphs.map(
+                    (paragraphText: string, i: number) => (
+                      <p key={i}>{paragraphText}</p>
+                    ),
+                  )}
+                </div>
 
                 <a
                   href="/#"

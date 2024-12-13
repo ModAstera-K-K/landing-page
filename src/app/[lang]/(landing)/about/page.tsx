@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 const AboutPage = async ({ params }: { params: { lang: string } }) => {
   return (
     <main>
-      <Breadcrumb pageName="About Us" />
-      <About />
+      <Breadcrumb pageName="About ModAstera" />
+      <About lang={params.lang} />
       <Team lang={params.lang} />
     </main>
   );

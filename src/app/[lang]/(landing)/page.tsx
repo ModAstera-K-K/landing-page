@@ -31,7 +31,7 @@ export default async function Home({
       <ScrollUp />
       <Hero lang={lang} />
       <Features lang={lang} />
-      <About />
+      <About lang={lang} />
       <CallToAction lang={lang} />
       {/*<Pricing />*/}
       {/*<Testimonials />*/}
