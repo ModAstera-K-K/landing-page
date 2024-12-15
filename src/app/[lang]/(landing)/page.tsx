@@ -5,7 +5,7 @@ import Contact from "@/components/Contact";
 import Features from "@/components/Features";
 import Hero from "@/components/Hero";
 import Team from "@/components/Team";
-// import HomeBlogSection from "@/components/Blog/HomeBlogSection";
+import HomeNewsAndBlogSection from "@/components/Blog/HomeNewsAndBlogSection";
 // import Clients from "@/components/Clients";
 // import Faq from "@/components/Faq";
 // import Pricing from "@/components/Pricing";
@@ -37,7 +37,7 @@ export default async function Home({
       {/*<Testimonials />*/}
       {/*<Faq />*/}
       <Team lang={lang} />
-      {/*<HomeBlogSection posts={posts} />*/}
+      <HomeNewsAndBlogSection posts={posts} />
       <Contact lang={lang} />
       {/*<Clients />*/}
     </main>

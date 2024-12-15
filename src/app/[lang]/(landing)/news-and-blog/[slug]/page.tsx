@@ -41,8 +41,7 @@ export async function generateMetadata({ params }: Props) {
         },
       },
     };
-  }
-  else {
+  } else {
     return {
       title: "Not Found",
       description: "No blog article has been found",
@@ -79,7 +78,6 @@ export default async function Post({ params }: Props) {
   return (
     <>
       <Breadcrumb pageName="Blog Details" />
-
       <section className="pb-10 pt-20 dark:bg-dark lg:pb-20 lg:pt-[120px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap justify-center">
@@ -109,7 +107,10 @@ export default async function Post({ params }: Props) {
                       </div>
                       <p className="text-base font-medium text-white">
                         By{" "}
-                        <Link href="/public#" className="text-white hover:opacity-70">
+                        <Link
+                          href="/public#"
+                          className="text-white hover:opacity-70"
+                        >
                           {post.author}
                         </Link>
                       </p>
@@ -228,10 +229,7 @@ export default async function Post({ params }: Props) {
             </div>
 
             {posts.slice(0, 3).map((blog, key) => (
-              <div
-                key={key}
-                className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
-              >
+              <div key={key} className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3">
                 <SingleBlog blog={blog} />
               </div>
             ))}
