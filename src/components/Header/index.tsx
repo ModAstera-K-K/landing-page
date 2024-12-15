@@ -6,6 +6,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggler from "@/components/Common/ThemeToggler";
+import DropdownArrowIcon from "@/components/Common/Icons/MenuIcons/DropdownArrowIcon";
+import HamburgerButton from "@/components/Common/Icons/MenuIcons/HamburgerButton";
+import SubmenuArrowIcon from "@/components/Common/Icons/MenuIcons/SubmenuArrowIcon";
 
 import menuData from "./menuData";
 
@@ -115,40 +118,12 @@ const Header = ({ lang }: { lang: string }) => {
             </div>
             <div className="flex w-full items-center justify-center px-4">
               <div className="flex flex-1 justify-center">
-                <button
+                <HamburgerButton
+                  navbarOpen={navbarOpen}
+                  pathUrl={pathUrl}
+                  sticky={sticky}
                   onClick={navbarToggleHandler}
-                  id="navbarToggler"
-                  aria-label="Mobile Menu"
-                  className="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden"
-                >
-                  <span
-                    className={`relative my-1.5 block h-0.5 w-[30px] transition-all duration-300 ${
-                      navbarOpen ? " top-[7px] rotate-45" : " "
-                    } ${pathUrl !== "/" && "!bg-dark dark:!bg-white"} ${
-                      pathUrl === "/" && sticky
-                        ? "bg-dark dark:bg-white"
-                        : "bg-white"
-                    }`}
-                  />
-                  <span
-                    className={`relative my-1.5 block h-0.5 w-[30px] transition-all duration-300 ${
-                      navbarOpen ? "opacity-0 " : " "
-                    } ${pathUrl !== "/" && "!bg-dark dark:!bg-white"} ${
-                      pathUrl === "/" && sticky
-                        ? "bg-dark dark:bg-white"
-                        : "bg-white"
-                    }`}
-                  />
-                  <span
-                    className={`relative my-1.5 block h-0.5 w-[30px] transition-all duration-300 ${
-                      navbarOpen ? " top-[-8px] -rotate-45" : " "
-                    } ${pathUrl !== "/" && "!bg-dark dark:!bg-white"} ${
-                      pathUrl === "/" && sticky
-                        ? "bg-dark dark:bg-white"
-                        : "bg-white"
-                    }`}
-                  />
-                </button>
+                />
                 <nav
                   id="navbarCollapse"
                   className={`navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark-2 lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 lg:dark:bg-transparent ${
@@ -198,21 +173,8 @@ const Header = ({ lang }: { lang: string }) => {
                               className={`ud-menu-scroll flex items-center justify-between py-2 text-base text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary lg:inline-flex lg:px-0 lg:py-6`}
                             >
                               {menuItem.title}
-
                               <span className="pl-1">
-                                <svg
-                                  className={`duration-300 lg:group-hover:rotate-180`}
-                                  width="16"
-                                  height="17"
-                                  viewBox="0 0 16 17"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M8.00039 11.9C7.85039 11.9 7.72539 11.85 7.60039 11.75L1.85039 6.10005C1.62539 5.87505 1.62539 5.52505 1.85039 5.30005C2.07539 5.07505 2.42539 5.07505 2.65039 5.30005L8.00039 10.525L13.3504 5.25005C13.5754 5.02505 13.9254 5.02505 14.1504 5.25005C14.3754 5.47505 14.3754 5.82505 14.1504 6.05005L8.40039 11.7C8.27539 11.825 8.15039 11.9 8.00039 11.9Z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
+                                <SubmenuArrowIcon />
                               </span>
                             </button>
                           ) : (
@@ -225,21 +187,8 @@ const Header = ({ lang }: { lang: string }) => {
                               }`}
                             >
                               {menuItem.title}
-
                               <span className="pl-1">
-                                <svg
-                                  className={`duration-300 lg:group-hover:rotate-180`}
-                                  width="16"
-                                  height="17"
-                                  viewBox="0 0 16 17"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M8.00039 11.9C7.85039 11.9 7.72539 11.85 7.60039 11.75L1.85039 6.10005C1.62539 5.87505 1.62539 5.52505 1.85039 5.30005C2.07539 5.07505 2.42539 5.07505 2.65039 5.30005L8.00039 10.525L13.3504 5.25005C13.5754 5.02505 13.9254 5.02505 14.1504 5.25005C14.3754 5.47505 14.3754 5.82505 14.1504 6.05005L8.40039 11.7C8.27539 11.825 8.15039 11.9 8.00039 11.9Z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
+                                <SubmenuArrowIcon />
                               </span>
                             </button>
                           )}

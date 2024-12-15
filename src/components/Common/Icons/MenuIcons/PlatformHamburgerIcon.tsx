@@ -1,10 +1,10 @@
-interface HamburgerIconProps {
+interface PlatformHamburgerIconProps {
   navbarOpen: boolean;
   pathUrl: string;
   sticky: boolean;
 }
 
-const HamburgerIcon = ({ navbarOpen, pathUrl, sticky }: HamburgerIconProps) => (
+const PlatformHamburgerIcon = ({ navbarOpen, pathUrl, sticky }: PlatformHamburgerIconProps) => (
   <>
     <span
       className={`relative my-1.5 block h-0.5 w-[30px] transition-all duration-300 ${
@@ -36,4 +36,4 @@ const HamburgerIcon = ({ navbarOpen, pathUrl, sticky }: HamburgerIconProps) => (
   </>
 );
 
-export default HamburgerIcon; 
+export default PlatformHamburgerIcon; 
