@@ -157,20 +157,26 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
 };
 
 const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  const [points, setPoints] = useState(annotation.points);
+
+  // Update local points when annotation changes
+  useEffect(() => {
+    setPoints(annotation.points);
+  }, [annotation.points]);
+
   const handleAnchorDragMove = (e, index) => {
     e.cancelBubble = true;
     const stage = e.target.getStage();
-
-    // Get the transformed pointer position
-    const transform = stage.getAbsoluteTransform().copy();
-    transform.invert();
-    const pos = transform.point(stage.getPointerPosition());
+    const pos = stage.getPointerPosition();
 
     // Create new points array with updated position
-    const newPoints = [...annotation.points];
+    const newPoints = [...points];
     newPoints[index * 2] = pos.x;
     newPoints[index * 2 + 1] = pos.y;
 
+    setPoints(newPoints);
     onChange({
       ...annotation,
       points: newPoints,
@@ -180,46 +186,56 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
   return (
     <>
       <Line
-        points={annotation.points}
+        points={points}
         stroke={annotation.color || "#00ff00"}
         strokeWidth={2}
         closed
         onClick={() => onSelect(annotation.id)}
         onTap={() => onSelect(annotation.id)}
-        draggable
+        // draggable
+        onDragStart={(e) => {
+          setIsDragging(true);
+          const pos = e.target.getStage().getPointerPosition();
+          setLastPos(pos);
+        }}
         onDragMove={(e) => {
-          const stage = e.target.getStage();
-          // Get transformed position
-          const transform = stage.getAbsoluteTransform().copy();
-          transform.invert();
-          const pos = transform.point(stage.getPointerPosition());
-          const lastPos = transform.point(stage.getPointerPosition());
+          if (!isDragging) return;
 
+          const pos = e.target.getStage().getPointerPosition();
+
+          // Calculate the movement delta
           const dx = pos.x - lastPos.x;
           const dy = pos.y - lastPos.y;
 
           // Update all points
-          const newPoints = annotation.points.map((coord, index) => {
-            return index % 2 === 0 ? coord + dx : coord + dy;
-          });
+          const newPoints = [...points];
+          for (let i = 0; i < newPoints.length; i += 2) {
+            newPoints[i] += dx;
+            newPoints[i + 1] += dy;
+          }
 
+          // Update last position
+          setLastPos(pos);
+
+          // Update local points and annotation
+          setPoints(newPoints);
           onChange({
             ...annotation,
             points: newPoints,
           });
-
-          // Reset position
-          e.target.position({ x: 0, y: 0 });
+        }}
+        onDragEnd={() => {
+          setIsDragging(false);
         }}
       />
 
       {isSelected &&
-        annotation.points.length >= 4 &&
-        Array.from({ length: annotation.points.length / 2 }, (_, i) => (
+        points.length >= 4 &&
+        Array.from({ length: points.length / 2 }, (_, i) => (
           <Rect
             key={i}
-            x={annotation.points[i * 2] - ANCHOR_SIZE / 2}
-            y={annotation.points[i * 2 + 1] - ANCHOR_SIZE / 2}
+            x={points[i * 2] - ANCHOR_SIZE / 2}
+            y={points[i * 2 + 1] - ANCHOR_SIZE / 2}
             width={ANCHOR_SIZE}
             height={ANCHOR_SIZE}
             fill={ANCHOR_FILL_COLOR}

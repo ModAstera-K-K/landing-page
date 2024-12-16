@@ -17,8 +17,8 @@ export default function AnnotationPage() {
   const [totalFrames, setTotalFrames] = useState(0);
   const [isVideo, setIsVideo] = useState(false);
   const [mediaUrl, setMediaUrl] = useState(
-    "/images/examples/chest-x-ray-29.jpg",
-    // "/images/examples/modastera-demo-1.mp4",
+    // "/images/examples/chest-x-ray-29.jpg",
+    "/images/examples/modastera-demo-1.mp4",
   );
   const [hoveredTool, setHoveredTool] = useState(null);
   const [labels, setLabels] = useState([]);
