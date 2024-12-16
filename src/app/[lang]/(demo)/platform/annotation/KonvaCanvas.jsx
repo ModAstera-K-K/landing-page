@@ -275,6 +275,7 @@ export default function KonvaCanvas({
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState([]);
   const [currentPolygon, setCurrentPolygon] = useState(null);
+  const [pointAddCounter, setPointAddCounter] = useState(0);
 
   useEffect(() => {
     if (isVideo) {
@@ -389,8 +390,12 @@ export default function KonvaCanvas({
         }),
       );
     } else if (selectedTool === "polygon") {
-      // Add point to polygon while dragging
-      setPoints([...points, pos.x, pos.y]);
+      // Add point to polygon every other mouse move
+      setPointAddCounter((prev) => prev + 1);
+      if (pointAddCounter % 2 === 0) {
+        // rate of adding points -> 1/2
+        setPoints([...points, pos.x, pos.y]);
+      }
     }
   };
 
@@ -414,6 +419,7 @@ export default function KonvaCanvas({
         },
       ]);
       setPoints([]);
+      setPointAddCounter(0); // Reset counter
     }
     setIsDrawing(false);
   };
