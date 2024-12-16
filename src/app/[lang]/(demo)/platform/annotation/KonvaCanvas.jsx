@@ -276,6 +276,7 @@ export default function KonvaCanvas({
   const [points, setPoints] = useState([]);
   const [currentPolygon, setCurrentPolygon] = useState(null);
   const [pointAddCounter, setPointAddCounter] = useState(0);
+  const [frameRate, setFrameRate] = useState(30);
 
   useEffect(() => {
     if (isVideo) {
@@ -307,7 +308,7 @@ export default function KonvaCanvas({
         });
 
         // Seek to the current frame
-        video.currentTime = currentFrame / 30; // Assuming 30fps
+        video.currentTime = currentFrame / frameRate;
       });
     } else {
       // Handle static image
@@ -322,12 +323,12 @@ export default function KonvaCanvas({
         });
       };
     }
-  }, [mediaUrl, isVideo]);
+  }, [mediaUrl, isVideo, frameRate]);
 
   // Update video frame when currentFrame changes
   useEffect(() => {
     if (isVideo && videoRef.current) {
-      videoRef.current.currentTime = currentFrame / 30; // Assuming 30fps
+      videoRef.current.currentTime = currentFrame / frameRate;
     }
   }, [currentFrame, isVideo]);
 

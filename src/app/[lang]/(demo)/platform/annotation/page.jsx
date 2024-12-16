@@ -25,6 +25,7 @@ export default function AnnotationPage() {
   const [activeTab, setActiveTab] = useState("objects"); // 'objects' | 'labels' | 'issues'
   const [newLabel, setNewLabel] = useState("");
   const [selectedTool, setSelectedTool] = useState("box"); // 'box' | 'polygon'
+  const [frameRate, setFrameRate] = useState(30);
 
   // Load media metadata
   useEffect(() => {
@@ -33,13 +34,13 @@ export default function AnnotationPage() {
       const video = document.createElement("video");
       video.src = mediaUrl;
       video.addEventListener("loadedmetadata", () => {
-        setTotalFrames(Math.floor(video.duration * video.frameRate));
+        setTotalFrames(Math.floor(video.duration * frameRate));
       });
     } else {
       setIsVideo(false);
       setTotalFrames(0);
     }
-  }, [mediaUrl]);
+  }, [mediaUrl, frameRate]);
 
   const handleMouseMove = (coords) => {
     setMouseCoords(coords);
@@ -127,16 +128,18 @@ export default function AnnotationPage() {
 
             <input
               type="range"
-              className="w-96"
+              className="w-full"
               min="0"
               max={totalFrames - 1}
               value={currentFrame}
               onChange={(e) => setCurrentFrame(parseInt(e.target.value))}
               title="Timeline"
             />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              Frame: {currentFrame + 1} / {totalFrames}
-            </span>
+            <div className="w-max">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Frame: {currentFrame + 1} / {totalFrames}
+              </span>
+            </div>
           </>
         )}
       </div>
