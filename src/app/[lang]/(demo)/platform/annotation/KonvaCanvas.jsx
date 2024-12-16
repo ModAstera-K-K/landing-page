@@ -1,8 +1,8 @@
 "use client";
 
-import { Stage, Layer, Rect, Image, Line } from "react-konva";
+import { Stage, Layer, Image as KonvaImage, Rect, Line } from "react-konva";
 import { useState, useEffect, useRef, useCallback } from "react";
-import useImage from "use-image";
+import Konva from "konva";
 
 const ANCHOR_STROKE_COLOR = "#666";
 const ANCHOR_FILL_COLOR = "#fff";
@@ -160,17 +160,17 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
   const handleAnchorDragMove = (e, index) => {
     e.cancelBubble = true;
     const stage = e.target.getStage();
-    
+
     // Get the transformed pointer position
     const transform = stage.getAbsoluteTransform().copy();
     transform.invert();
     const pos = transform.point(stage.getPointerPosition());
-    
+
     // Create new points array with updated position
     const newPoints = [...annotation.points];
     newPoints[index * 2] = pos.x;
     newPoints[index * 2 + 1] = pos.y;
-    
+
     onChange({
       ...annotation,
       points: newPoints,
@@ -194,28 +194,27 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
           transform.invert();
           const pos = transform.point(stage.getPointerPosition());
           const lastPos = transform.point(stage.getPointerPosition());
-          
+
           const dx = pos.x - lastPos.x;
           const dy = pos.y - lastPos.y;
-          
+
           // Update all points
           const newPoints = annotation.points.map((coord, index) => {
-            return index % 2 === 0 
-              ? coord + dx 
-              : coord + dy;
+            return index % 2 === 0 ? coord + dx : coord + dy;
           });
-          
+
           onChange({
             ...annotation,
             points: newPoints,
           });
-          
+
           // Reset position
           e.target.position({ x: 0, y: 0 });
         }}
       />
 
-      {isSelected && annotation.points.length >= 4 && 
+      {isSelected &&
+        annotation.points.length >= 4 &&
         Array.from({ length: annotation.points.length / 2 }, (_, i) => (
           <Rect
             key={i}
@@ -237,8 +236,7 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
               stage.container().style.cursor = "default";
             }}
           />
-        ))
-      }
+        ))}
     </>
   );
 };
@@ -254,288 +252,248 @@ export default function KonvaCanvas({
   isVideo,
   selectedTool,
 }) {
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [startPos, setStartPos] = useState(null);
-  const [mousePos, setMousePos] = useState(null);
-  const [newRect, setNewRect] = useState(null);
-  const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [currentImage, setCurrentImage] = useState(null);
+  const [image, setImage] = useState(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const imageRef = useRef(null);
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [polygonPoints, setPolygonPoints] = useState([]);
-  const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
-  const [tempPolygonPoints, setTempPolygonPoints] = useState([]);
-
-  // For static image
-  const [staticImage] = useImage(isVideo ? null : mediaUrl);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [points, setPoints] = useState([]);
+  const [currentPolygon, setCurrentPolygon] = useState(null);
 
   useEffect(() => {
-    if (!isVideo) {
-      setCurrentImage(staticImage);
-    }
-  }, [staticImage, isVideo]);
+    if (isVideo) {
+      // Handle video
+      const video = document.createElement("video");
+      video.src = mediaUrl;
+      video.crossOrigin = "anonymous";
+      videoRef.current = video;
 
-  // 1. First define updateVideoFrame
-  const updateVideoFrame = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current) return;
+      video.addEventListener("loadedmetadata", () => {
+        setSize({
+          width: video.videoWidth,
+          height: video.videoHeight,
+        });
 
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+        // Create a canvas to draw the video frame
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
 
-    video.currentTime = currentFrame;
+        video.addEventListener("seeked", () => {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageObj = new window.Image();
+          imageObj.src = canvas.toDataURL();
+          imageObj.onload = () => {
+            setImage(imageObj);
+          };
+        });
 
-    video.addEventListener(
-      "seeked",
-      () => {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const frameImage = new Image();
-        frameImage.src = canvas.toDataURL();
-        frameImage.onload = () => {
-          setCurrentImage(frameImage);
-        };
-      },
-      { once: true },
-    );
-  }, [currentFrame]);
-
-  // 2. Then use it in useEffect hooks
-  useEffect(() => {
-    if (!isVideo || !mediaUrl) return;
-
-    const video = document.createElement("video");
-    video.src = mediaUrl;
-    videoRef.current = video;
-
-    video.addEventListener("loadeddata", () => {
-      const canvas = document.createElement("canvas");
-      canvasRef.current = canvas;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      updateVideoFrame();
-    });
-  }, [mediaUrl, isVideo, updateVideoFrame]);
-
-  useEffect(() => {
-    if (!isVideo || !videoRef.current) return;
-    updateVideoFrame();
-  }, [currentFrame, isVideo, updateVideoFrame]);
-
-  useEffect(() => {
-    const updateSize = () => {
-      // Calculate available space
-      const containerWidth = window.innerWidth * 0.75;
-      const containerHeight = window.innerHeight - 50;
-      
-      setStageSize({
-        width: containerWidth,
-        height: containerHeight
+        // Seek to the current frame
+        video.currentTime = currentFrame / 30; // Assuming 30fps
       });
-    };
-
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  // Improved centering logic
-  useEffect(() => {
-    if (currentImage && stageSize.width && stageSize.height) {
-      // Calculate scale to fit image properly
-      const scaleX = stageSize.width / currentImage.width;
-      const scaleY = stageSize.height / currentImage.height;
-      const newScale = Math.min(scaleX, scaleY, 1);
-
-      // Calculate center position with the new scale
-      const x = (stageSize.width - (currentImage.width * newScale)) / 2;
-      const y = (stageSize.height - (currentImage.height * newScale)) / 2;
-
-      setPosition({ x, y });
-      setScale(newScale);
+    } else {
+      // Handle static image
+      const imageObj = new window.Image();
+      imageObj.src = mediaUrl;
+      imageObj.crossOrigin = "anonymous";
+      imageObj.onload = () => {
+        setImage(imageObj);
+        setSize({
+          width: imageObj.width,
+          height: imageObj.height,
+        });
+      };
     }
-  }, [currentImage, stageSize]);
+  }, [mediaUrl, isVideo]);
 
-  const getRelativePointerPosition = (stage) => {
-    const transform = stage.getAbsoluteTransform().copy();
-    // Invert the transform to account for scale and position
-    transform.invert();
-    const pos = stage.getPointerPosition();
-    if (!pos) return null;
-    // Return transformed point
-    return transform.point(pos);
-  };
+  // Update video frame when currentFrame changes
+  useEffect(() => {
+    if (isVideo && videoRef.current) {
+      videoRef.current.currentTime = currentFrame / 30; // Assuming 30fps
+    }
+  }, [currentFrame, isVideo]);
 
   const handleMouseDown = (e) => {
-    if (selectedId || !e.target.getStage()) return;
+    // If an annotation is selected, only allow interaction with that annotation
+    if (selectedId) {
+      const clickedOnStage = e.target === e.target.getStage();
+      if (clickedOnStage) {
+        // Clicked on empty space - deselect
+        setSelectedId(null);
+      }
+      return;
+    }
 
-    const pos = getRelativePointerPosition(e.target.getStage());
-    if (!pos) return;
+    const stage = e.target.getStage();
+    const pos = stage.getPointerPosition();
 
     if (selectedTool === "box") {
+      setAnnotations([
+        ...annotations,
+        {
+          id: crypto.randomUUID(),
+          x: pos.x,
+          y: pos.y,
+          width: 0,
+          height: 0,
+          type: "box",
+        },
+      ]);
       setIsDrawing(true);
-      setStartPos(pos);
-      setNewRect({
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
-      });
     } else if (selectedTool === "polygon") {
-      setIsDrawingPolygon(true);
-      setTempPolygonPoints([pos.x, pos.y]);
+      setPoints([pos.x, pos.y]);
+      setIsDrawing(true);
     }
   };
 
   const handleMouseMove = (e) => {
-    if (!e.target.getStage()) return;
+    const pos = e.target.getStage().getPointerPosition();
+    onMouseMove(pos);
 
-    const pos = getRelativePointerPosition(e.target.getStage());
-    if (!pos) return;
+    // Don't draw if an annotation is selected
+    if (selectedId) return;
+    if (!isDrawing) return;
 
-    if (selectedTool === "box" && isDrawing) {
-      setMousePos(pos);
+    if (selectedTool === "box") {
+      const lastAnnotation = annotations[annotations.length - 1];
+      const newWidth = pos.x - lastAnnotation.x;
+      const newHeight = pos.y - lastAnnotation.y;
 
-      if (newRect) {
-        setNewRect({
-          x: Math.min(startPos.x, pos.x),
-          y: Math.min(startPos.y, pos.y),
-          width: Math.abs(pos.x - startPos.x),
-          height: Math.abs(pos.y - startPos.y),
-        });
-      }
-    } else if (selectedTool === "polygon" && isDrawingPolygon) {
-      if (tempPolygonPoints.length === 0 || 
-          shouldAddNewPoint(tempPolygonPoints, pos.x, pos.y)) {
-        setTempPolygonPoints([...tempPolygonPoints, pos.x, pos.y]);
-      }
+      setAnnotations(
+        annotations.map((anno, i) => {
+          if (i === annotations.length - 1) {
+            return {
+              ...anno,
+              width: newWidth,
+              height: newHeight,
+            };
+          }
+          return anno;
+        }),
+      );
+    } else if (selectedTool === "polygon") {
+      // Add point to polygon while dragging
+      setPoints([...points, pos.x, pos.y]);
     }
   };
 
-  const shouldAddNewPoint = (points, x, y) => {
-    if (points.length < 2) return true;
-    
-    const lastX = points[points.length - 2];
-    const lastY = points[points.length - 1];
-    
-    // Calculate distance between last point and current position
-    const distance = Math.sqrt(
-      Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2)
-    );
-    
-    // Only add point if distance is greater than 10 pixels
-    return distance > 10;
-  };
+  const handleMouseUp = () => {
+    // Don't create new annotation if one is selected
+    if (selectedId) return;
 
-  const handleMouseUp = (e) => {
-    if (selectedTool === "box" && isDrawing) {
-      setIsDrawing(false);
-      if (newRect && newRect.width > 5 && newRect.height > 5) {
-        const annotation = {
-          ...newRect,
-          id: Date.now().toString(),
-        };
-        setAnnotations([...annotations, annotation]);
-      }
-      setNewRect(null);
-      setStartPos(null);
-      setMousePos(null);
-    } else if (selectedTool === "polygon" && isDrawingPolygon) {
-      setIsDrawingPolygon(false);
-      if (tempPolygonPoints.length >= 4) { // Minimum 2 points (4 coordinates)
-        const annotation = {
-          id: Date.now().toString(),
-          points: tempPolygonPoints,
+    if (isDrawing && selectedTool === "polygon" && points.length >= 6) {
+      // Close the polygon by adding the first point again
+      const closedPoints = [...points, points[0], points[1]];
+
+      // Simplify points by removing points that are too close together
+      const simplifiedPoints = simplifyPoints(closedPoints);
+
+      setAnnotations([
+        ...annotations,
+        {
+          id: crypto.randomUUID(),
+          points: simplifiedPoints,
           type: "polygon",
-        };
-        setAnnotations([...annotations, annotation]);
-      }
-      setTempPolygonPoints([]);
+        },
+      ]);
+      setPoints([]);
     }
+    setIsDrawing(false);
+  };
+
+  // Helper function to simplify points by removing points that are too close together
+  const simplifyPoints = (points) => {
+    const minDistance = 5; // Minimum distance between points
+    const simplified = [points[0], points[1]];
+
+    for (let i = 2; i < points.length; i += 2) {
+      const dx = points[i] - simplified[simplified.length - 2];
+      const dy = points[i + 1] - simplified[simplified.length - 1];
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance >= minDistance) {
+        simplified.push(points[i], points[i + 1]);
+      }
+    }
+
+    // Always add the closing point
+    if (simplified.length >= 4) {
+      simplified.push(simplified[0], simplified[1]);
+    }
+
+    return simplified;
   };
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-      <Stage
-        width={stageSize.width}
-        height={stageSize.height}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        scale={{ x: scale, y: scale }}
-        className={`bg-transparent ${selectedId ? "cursor-default" : "cursor-crosshair"}`}
-      >
-        <Layer>
-          {currentImage && (
-            <Image
-              image={currentImage}
-              x={position.x}
-              y={position.y}
-              width={currentImage.width}
-              height={currentImage.height}
-              alt=""
-            />
-          )}
-          {annotations.map((annotation) => {
-            if (annotation.type === "polygon") {
-              return (
-                <PolygonAnnotation
-                  key={annotation.id}
-                  annotation={annotation}
-                  isSelected={selectedId === annotation.id}
-                  onChange={(newPolygon) => {
-                    setAnnotations(
-                      annotations.map((a) =>
-                        a.id === annotation.id ? { ...a, ...newPolygon } : a
-                      )
-                    );
-                  }}
-                  onSelect={setSelectedId}
-                />
-              );
-            } else {
-              return (
-                <AnnotationRect
-                  key={annotation.id}
-                  annotation={annotation}
-                  isSelected={selectedId === annotation.id}
-                  onChange={(newBox) => {
-                    setAnnotations(
-                      annotations.map((a) =>
-                        a.id === annotation.id ? { ...a, ...newBox } : a
-                      )
-                    );
-                  }}
-                  onSelect={setSelectedId}
-                />
-              );
-            }
-          })}
-          {newRect && (
-            <Rect
-              x={newRect.x}
-              y={newRect.y}
-              width={newRect.width}
-              height={newRect.height}
-              stroke="#00ff00"
-              strokeWidth={2}
-              dash={[5, 5]}
-            />
-          )}
-          {tempPolygonPoints.length > 0 && (
-            <Line
-              points={tempPolygonPoints}
-              stroke="#00ff00"
-              strokeWidth={2}
-              dash={[5, 5]}
-              closed={isDrawingPolygon}
-            />
-          )}
-        </Layer>
-      </Stage>
-    </div>
+    <Stage
+      width={size.width}
+      height={size.height}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      <Layer>
+        {image && (
+          <KonvaImage
+            ref={imageRef}
+            image={image}
+            width={size.width}
+            height={size.height}
+          />
+        )}
+        {annotations.map((annotation) => {
+          if (annotation.type === "box") {
+            return (
+              <AnnotationRect
+                key={annotation.id}
+                annotation={annotation}
+                isSelected={selectedId === annotation.id}
+                onChange={(newAttrs) => {
+                  setAnnotations(
+                    annotations.map((a) =>
+                      a.id === annotation.id ? { ...a, ...newAttrs } : a,
+                    ),
+                  );
+                }}
+                onSelect={(id) => {
+                  setSelectedId(id);
+                  setIsDrawing(false); // Stop drawing when selecting an annotation
+                }}
+              />
+            );
+          } else if (annotation.type === "polygon") {
+            return (
+              <PolygonAnnotation
+                key={annotation.id}
+                annotation={annotation}
+                isSelected={selectedId === annotation.id}
+                onChange={(newAttrs) => {
+                  setAnnotations(
+                    annotations.map((a) =>
+                      a.id === annotation.id ? { ...a, ...newAttrs } : a,
+                    ),
+                  );
+                }}
+                onSelect={(id) => {
+                  setSelectedId(id);
+                  setIsDrawing(false); // Stop drawing when selecting an annotation
+                }}
+              />
+            );
+          }
+          return null;
+        })}
+        {/* Only show drawing preview if no annotation is selected */}
+        {!selectedId && isDrawing && points.length >= 4 && (
+          <Line
+            points={points}
+            stroke="#00ff00"
+            strokeWidth={2}
+            closed={false}
+          />
+        )}
+      </Layer>
+    </Stage>
   );
 }
