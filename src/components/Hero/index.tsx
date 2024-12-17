@@ -40,12 +40,15 @@ const Hero = async ({ lang }: { lang: string }) => {
               data-wow-delay=".25s"
             >
               <div className="mt-16">
-                <Image
-                  src="/images/hero/modastera-dashboard.jpeg"
-                  alt="hero"
-                  className="mx-auto max-w-full rounded"
-                  width={845}
-                  height={316}
+                <video
+                  src="/images/examples/modastera-demo-1.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="mx-auto max-w-full rounded-lg"
+                  width={1920}
+                  height={1080}
                 />
               </div>
               <HeroDecorations />
