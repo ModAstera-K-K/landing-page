@@ -1,13 +1,13 @@
 const SupportLogos = () => {
   return (
-    <div>
+    <div className="flex w-full justify-center">
       <div
-        className="wow fadeInUp flex flex-wrap items-center justify-center gap-4 text-center"
+        className="wow fadeInUp flex flex-wrap items-center justify-center gap-4 rounded-lg  px-6 py-2 text-center"
         data-wow-delay=".3s"
       >
         <a
           href="https://www.antler.co/"
-          className="text-white/100"
+          className="text-white/100 drop-shadow-[0_0_2px_rgba(255,255,255,0.15)]"
           target="_blank"
           rel="noopener"
           title="Antler"
@@ -27,10 +27,9 @@ const SupportLogos = () => {
             />
           </svg>
         </a>
-
         <a
           href="https://www.microsoft.com/en-us/startups"
-          className="text-white/100"
+          className="text-white/100 drop-shadow-[0_0_2px_rgba(255,255,255,0.15)]"
           target="_blank"
           rel="noopener"
           title="Microsoft for Startups"
@@ -73,10 +72,9 @@ const SupportLogos = () => {
             </g>
           </svg>
         </a>
-
         <a
           href="https://aws.amazon.com/startups"
-          className="text-white/100"
+          className="text-white/100 drop-shadow-[0_0_2px_rgba(255,255,255,0.15)]"
           target="_blank"
           rel="noopener"
           title="AWS for Startups"
