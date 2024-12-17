@@ -4,9 +4,9 @@ import { getAllPosts } from "@/utils/markdown";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "Blog Grids | ModAstera - AI Solutions Tailored for HealthTech",
-  description: "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
+  title: "Blog Grids | ModAstera - Save 90% on Medical AI Development Costs",
+  description:
+    "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.",
 };
 
 const Blog = () => {
@@ -14,7 +14,7 @@ const Blog = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Blog Grids" />
+      <Breadcrumb pageName="News and Blog" />
 
       <section className="pb-10 pt-20 lg:pb-20 lg:pt-[120px]">
         <div className="container">

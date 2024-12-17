@@ -3,7 +3,7 @@ import NotFound from "@/components/NotFound";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "404 Page | ModAstera - AI Solutions Tailored for HealthTech",
+  title: "404 Page | ModAstera - Save 90% on Medical AI Development Costs",
 };
 
 const ErrorPage = () => {

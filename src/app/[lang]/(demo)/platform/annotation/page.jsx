@@ -18,6 +18,7 @@ export default function AnnotationPage() {
   const [isVideo, setIsVideo] = useState(false);
   const [mediaUrl, setMediaUrl] = useState(
     "/images/examples/chest-x-ray-29.jpg",
+    // "/images/examples/modastera-demo-1.mp4",
   );
   const [hoveredTool, setHoveredTool] = useState(null);
   const [labels, setLabels] = useState([]);
@@ -32,7 +33,7 @@ export default function AnnotationPage() {
       const video = document.createElement("video");
       video.src = mediaUrl;
       video.addEventListener("loadedmetadata", () => {
-        setTotalFrames(Math.floor(video.duration * video.frameRate || 30));
+        setTotalFrames(Math.floor(video.duration * video.frameRate));
       });
     } else {
       setIsVideo(false);

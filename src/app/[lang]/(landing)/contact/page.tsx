@@ -3,12 +3,12 @@ import Contact from "@/components/Contact";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "Contact us | ModAstera - AI Solutions Tailored for HealthTech",
-  description: "AI Solutions Tailored for HealthTech: From Idea to Deployment in Days | Cheaper than Hiring AI Specialists",
+  title: "Contact us | ModAstera - Save 90% on Medical AI Development Costs",
+  description:
+    "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.",
 };
 
-const ContactPage  = async ({ params }: { params: { lang: string } }) => {
+const ContactPage = async ({ params }: { params: { lang: string } }) => {
   return (
     <>
       <Breadcrumb pageName="Contact Page" />

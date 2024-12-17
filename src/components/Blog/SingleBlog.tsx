@@ -9,7 +9,11 @@ const SingleBlog = ({ blog }: { blog: Blog }) => {
   return (
     <div className="wow fadeInUp group mb-10" data-wow-delay=".1s">
       <div className="mb-8 overflow-hidden rounded">
-        <Link href={`/src/app/blogs/${slug}`} aria-label="blog cover" className="block">
+        <Link
+          href={`/news-and-blog/${slug}`}
+          aria-label="blog cover"
+          className="block"
+        >
           <Image
             src={coverImage!}
             alt="image"
