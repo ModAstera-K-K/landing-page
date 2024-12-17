@@ -157,20 +157,26 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
 };
 
 const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  const [points, setPoints] = useState(annotation.points);
+
+  // Update local points when annotation changes
+  useEffect(() => {
+    setPoints(annotation.points);
+  }, [annotation.points]);
+
   const handleAnchorDragMove = (e, index) => {
     e.cancelBubble = true;
     const stage = e.target.getStage();
-
-    // Get the transformed pointer position
-    const transform = stage.getAbsoluteTransform().copy();
-    transform.invert();
-    const pos = transform.point(stage.getPointerPosition());
+    const pos = stage.getPointerPosition();
 
     // Create new points array with updated position
-    const newPoints = [...annotation.points];
+    const newPoints = [...points];
     newPoints[index * 2] = pos.x;
     newPoints[index * 2 + 1] = pos.y;
 
+    setPoints(newPoints);
     onChange({
       ...annotation,
       points: newPoints,
@@ -180,46 +186,56 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
   return (
     <>
       <Line
-        points={annotation.points}
+        points={points}
         stroke={annotation.color || "#00ff00"}
         strokeWidth={2}
         closed
         onClick={() => onSelect(annotation.id)}
         onTap={() => onSelect(annotation.id)}
-        draggable
+        // draggable
+        onDragStart={(e) => {
+          setIsDragging(true);
+          const pos = e.target.getStage().getPointerPosition();
+          setLastPos(pos);
+        }}
         onDragMove={(e) => {
-          const stage = e.target.getStage();
-          // Get transformed position
-          const transform = stage.getAbsoluteTransform().copy();
-          transform.invert();
-          const pos = transform.point(stage.getPointerPosition());
-          const lastPos = transform.point(stage.getPointerPosition());
+          if (!isDragging) return;
 
+          const pos = e.target.getStage().getPointerPosition();
+
+          // Calculate the movement delta
           const dx = pos.x - lastPos.x;
           const dy = pos.y - lastPos.y;
 
           // Update all points
-          const newPoints = annotation.points.map((coord, index) => {
-            return index % 2 === 0 ? coord + dx : coord + dy;
-          });
+          const newPoints = [...points];
+          for (let i = 0; i < newPoints.length; i += 2) {
+            newPoints[i] += dx;
+            newPoints[i + 1] += dy;
+          }
 
+          // Update last position
+          setLastPos(pos);
+
+          // Update local points and annotation
+          setPoints(newPoints);
           onChange({
             ...annotation,
             points: newPoints,
           });
-
-          // Reset position
-          e.target.position({ x: 0, y: 0 });
+        }}
+        onDragEnd={() => {
+          setIsDragging(false);
         }}
       />
 
       {isSelected &&
-        annotation.points.length >= 4 &&
-        Array.from({ length: annotation.points.length / 2 }, (_, i) => (
+        points.length >= 4 &&
+        Array.from({ length: points.length / 2 }, (_, i) => (
           <Rect
             key={i}
-            x={annotation.points[i * 2] - ANCHOR_SIZE / 2}
-            y={annotation.points[i * 2 + 1] - ANCHOR_SIZE / 2}
+            x={points[i * 2] - ANCHOR_SIZE / 2}
+            y={points[i * 2 + 1] - ANCHOR_SIZE / 2}
             width={ANCHOR_SIZE}
             height={ANCHOR_SIZE}
             fill={ANCHOR_FILL_COLOR}
@@ -259,20 +275,46 @@ export default function KonvaCanvas({
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState([]);
   const [currentPolygon, setCurrentPolygon] = useState(null);
+  const [pointAddCounter, setPointAddCounter] = useState(0);
+  const [frameRate, setFrameRate] = useState(30);
+  const containerRef = useRef(null);
+
+  // Function to calculate scaled dimensions while maintaining aspect ratio
+  const calculateAspectRatioFit = (
+    srcWidth,
+    srcHeight,
+    maxWidth,
+    maxHeight,
+  ) => {
+    const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+    return {
+      width: srcWidth * ratio,
+      height: srcHeight * ratio,
+    };
+  };
 
   useEffect(() => {
     if (isVideo) {
-      // Handle video
       const video = document.createElement("video");
       video.src = mediaUrl;
       video.crossOrigin = "anonymous";
       videoRef.current = video;
 
       video.addEventListener("loadedmetadata", () => {
-        setSize({
-          width: video.videoWidth,
-          height: video.videoHeight,
-        });
+        // Get container dimensions
+        const container = containerRef.current;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // Calculate scaled dimensions
+        const scaledDimensions = calculateAspectRatioFit(
+          video.videoWidth,
+          video.videoHeight,
+          containerWidth,
+          containerHeight,
+        );
+
+        setSize(scaledDimensions);
 
         // Create a canvas to draw the video frame
         const canvas = document.createElement("canvas");
@@ -290,29 +332,62 @@ export default function KonvaCanvas({
         });
 
         // Seek to the current frame
-        video.currentTime = currentFrame / 30; // Assuming 30fps
+        video.currentTime = currentFrame / frameRate;
       });
     } else {
-      // Handle static image
+      // Handle static image similarly
       const imageObj = new window.Image();
       imageObj.src = mediaUrl;
       imageObj.crossOrigin = "anonymous";
       imageObj.onload = () => {
+        // Get container dimensions
+        const container = containerRef.current;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // Calculate scaled dimensions
+        const scaledDimensions = calculateAspectRatioFit(
+          imageObj.width,
+          imageObj.height,
+          containerWidth,
+          containerHeight,
+        );
+
+        setSize(scaledDimensions);
         setImage(imageObj);
-        setSize({
-          width: imageObj.width,
-          height: imageObj.height,
-        });
       };
     }
-  }, [mediaUrl, isVideo]);
+  }, [mediaUrl, isVideo, frameRate]);
 
-  // Update video frame when currentFrame changes
+  // Add resize handler
+  useEffect(() => {
+    const handleResize = () => {
+      if (!image) return;
+
+      const container = containerRef.current;
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+
+      const scaledDimensions = calculateAspectRatioFit(
+        image.width || image.videoWidth,
+        image.height || image.videoHeight,
+        containerWidth,
+        containerHeight,
+      );
+
+      setSize(scaledDimensions);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [image]);
+
+  // Add back the effect for updating video frame
   useEffect(() => {
     if (isVideo && videoRef.current) {
-      videoRef.current.currentTime = currentFrame / 30; // Assuming 30fps
+      videoRef.current.currentTime = currentFrame / frameRate;
     }
-  }, [currentFrame, isVideo]);
+  }, [currentFrame, isVideo, frameRate]);
 
   const handleMouseDown = (e) => {
     // If an annotation is selected, only allow interaction with that annotation
@@ -373,8 +448,12 @@ export default function KonvaCanvas({
         }),
       );
     } else if (selectedTool === "polygon") {
-      // Add point to polygon while dragging
-      setPoints([...points, pos.x, pos.y]);
+      // Add point to polygon every other mouse move
+      setPointAddCounter((prev) => prev + 1);
+      if (pointAddCounter % 2 === 0) {
+        // rate of adding points -> 1/2
+        setPoints([...points, pos.x, pos.y]);
+      }
     }
   };
 
@@ -398,6 +477,7 @@ export default function KonvaCanvas({
         },
       ]);
       setPoints([]);
+      setPointAddCounter(0); // Reset counter
     }
     setIsDrawing(false);
   };
@@ -426,74 +506,80 @@ export default function KonvaCanvas({
   };
 
   return (
-    <Stage
-      width={size.width}
-      height={size.height}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+    <div
+      ref={containerRef}
+      className="flex items-center justify-center overflow-hidden"
+      style={{ width: "100%", height: "100%" }}
     >
-      <Layer>
-        {image && (
-          <KonvaImage
-            ref={imageRef}
-            image={image}
-            width={size.width}
-            height={size.height}
-          />
-        )}
-        {annotations.map((annotation) => {
-          if (annotation.type === "box") {
-            return (
-              <AnnotationRect
-                key={annotation.id}
-                annotation={annotation}
-                isSelected={selectedId === annotation.id}
-                onChange={(newAttrs) => {
-                  setAnnotations(
-                    annotations.map((a) =>
-                      a.id === annotation.id ? { ...a, ...newAttrs } : a,
-                    ),
-                  );
-                }}
-                onSelect={(id) => {
-                  setSelectedId(id);
-                  setIsDrawing(false); // Stop drawing when selecting an annotation
-                }}
-              />
-            );
-          } else if (annotation.type === "polygon") {
-            return (
-              <PolygonAnnotation
-                key={annotation.id}
-                annotation={annotation}
-                isSelected={selectedId === annotation.id}
-                onChange={(newAttrs) => {
-                  setAnnotations(
-                    annotations.map((a) =>
-                      a.id === annotation.id ? { ...a, ...newAttrs } : a,
-                    ),
-                  );
-                }}
-                onSelect={(id) => {
-                  setSelectedId(id);
-                  setIsDrawing(false); // Stop drawing when selecting an annotation
-                }}
-              />
-            );
-          }
-          return null;
-        })}
-        {/* Only show drawing preview if no annotation is selected */}
-        {!selectedId && isDrawing && points.length >= 4 && (
-          <Line
-            points={points}
-            stroke="#00ff00"
-            strokeWidth={2}
-            closed={false}
-          />
-        )}
-      </Layer>
-    </Stage>
+      <Stage
+        width={size.width}
+        height={size.height}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
+        <Layer>
+          {image && (
+            <KonvaImage
+              ref={imageRef}
+              image={image}
+              width={size.width}
+              height={size.height}
+            />
+          )}
+          {annotations.map((annotation) => {
+            if (annotation.type === "box") {
+              return (
+                <AnnotationRect
+                  key={annotation.id}
+                  annotation={annotation}
+                  isSelected={selectedId === annotation.id}
+                  onChange={(newAttrs) => {
+                    setAnnotations(
+                      annotations.map((a) =>
+                        a.id === annotation.id ? { ...a, ...newAttrs } : a,
+                      ),
+                    );
+                  }}
+                  onSelect={(id) => {
+                    setSelectedId(id);
+                    setIsDrawing(false); // Stop drawing when selecting an annotation
+                  }}
+                />
+              );
+            } else if (annotation.type === "polygon") {
+              return (
+                <PolygonAnnotation
+                  key={annotation.id}
+                  annotation={annotation}
+                  isSelected={selectedId === annotation.id}
+                  onChange={(newAttrs) => {
+                    setAnnotations(
+                      annotations.map((a) =>
+                        a.id === annotation.id ? { ...a, ...newAttrs } : a,
+                      ),
+                    );
+                  }}
+                  onSelect={(id) => {
+                    setSelectedId(id);
+                    setIsDrawing(false); // Stop drawing when selecting an annotation
+                  }}
+                />
+              );
+            }
+            return null;
+          })}
+          {/* Only show drawing preview if no annotation is selected */}
+          {!selectedId && isDrawing && points.length >= 4 && (
+            <Line
+              points={points}
+              stroke="#00ff00"
+              strokeWidth={2}
+              closed={false}
+            />
+          )}
+        </Layer>
+      </Stage>
+    </div>
   );
 }

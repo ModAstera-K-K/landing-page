@@ -17,14 +17,15 @@ export default function AnnotationPage() {
   const [totalFrames, setTotalFrames] = useState(0);
   const [isVideo, setIsVideo] = useState(false);
   const [mediaUrl, setMediaUrl] = useState(
-    "/images/examples/chest-x-ray-29.jpg",
-    // "/images/examples/modastera-demo-1.mp4",
+    // "/images/examples/chest-x-ray-29.jpg",
+    "/images/examples/modastera-demo-1.mp4",
   );
   const [hoveredTool, setHoveredTool] = useState(null);
   const [labels, setLabels] = useState([]);
   const [activeTab, setActiveTab] = useState("objects"); // 'objects' | 'labels' | 'issues'
   const [newLabel, setNewLabel] = useState("");
   const [selectedTool, setSelectedTool] = useState("box"); // 'box' | 'polygon'
+  const [frameRate, setFrameRate] = useState(30);
 
   // Load media metadata
   useEffect(() => {
@@ -33,13 +34,13 @@ export default function AnnotationPage() {
       const video = document.createElement("video");
       video.src = mediaUrl;
       video.addEventListener("loadedmetadata", () => {
-        setTotalFrames(Math.floor(video.duration * video.frameRate));
+        setTotalFrames(Math.floor(video.duration * frameRate));
       });
     } else {
       setIsVideo(false);
       setTotalFrames(0);
     }
-  }, [mediaUrl]);
+  }, [mediaUrl, frameRate]);
 
   const handleMouseMove = (coords) => {
     setMouseCoords(coords);
@@ -127,24 +128,26 @@ export default function AnnotationPage() {
 
             <input
               type="range"
-              className="w-96"
+              className="w-full"
               min="0"
               max={totalFrames - 1}
               value={currentFrame}
               onChange={(e) => setCurrentFrame(parseInt(e.target.value))}
               title="Timeline"
             />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              Frame: {currentFrame + 1} / {totalFrames}
-            </span>
+            <div className="w-40">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Frame: {currentFrame + 1} / {totalFrames}
+              </span>
+            </div>
           </>
         )}
       </div>
 
       {/* Main content */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         {/* Left toolbar */}
-        <div className="w-12 border-r border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+        <div className="border-r border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
           <div className="flex flex-col items-center space-y-2 py-2">
             {tools.map((tool) => (
               <div
@@ -173,23 +176,21 @@ export default function AnnotationPage() {
           </div>
         </div>
 
-        {/* Canvas area */}
-        <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-white dark:bg-gray-900">
-          <KonvaCanvas
-            annotations={annotations}
-            setAnnotations={setAnnotations}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            onMouseMove={handleMouseMove}
-            mediaUrl={mediaUrl}
-            currentFrame={currentFrame}
-            isVideo={isVideo}
-            selectedTool={selectedTool}
-          />
-        </div>
+        {/* Canvas container */}
+        <KonvaCanvas
+          annotations={annotations}
+          setAnnotations={setAnnotations}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+          onMouseMove={handleMouseMove}
+          mediaUrl={mediaUrl}
+          currentFrame={currentFrame}
+          isVideo={isVideo}
+          selectedTool={selectedTool}
+        />
 
-        {/* Right sidebar */}
-        <div className="w-64 border-l border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+        {/* Right panel */}
+        <div className="w-64 border-l border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
           <div className="border-b border-gray-300 dark:border-gray-700">
             <div className="flex">
               <button

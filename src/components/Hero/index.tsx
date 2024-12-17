@@ -21,12 +21,12 @@ const Hero = async ({ lang }: { lang: string }) => {
                 <h1 className="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
                   {t.mainPage.title}
                 </h1>
-                <p className="mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]">
+                <p className="mx-auto mb-9 max-w-[600px] text-base text-white sm:text-lg sm:leading-[1.44]">
                   {t.mainPage.subTitle}
                 </p>
               </div>
               <div>
-                <p className="mb-4 text-center text-base font-medium text-white/80">
+                <p className="text-center text-sm text-white/80">
                   {t.mainPage.byTitle}
                 </p>
                 <SupportLogos />
@@ -40,12 +40,15 @@ const Hero = async ({ lang }: { lang: string }) => {
               data-wow-delay=".25s"
             >
               <div className="mt-16">
-                <Image
-                  src="/images/hero/modastera-dashboard.jpeg"
-                  alt="hero"
-                  className="mx-auto max-w-full rounded"
-                  width={845}
-                  height={316}
+                <video
+                  src="/images/examples/modastera-demo-1.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="mx-auto max-w-full rounded-lg"
+                  width={960}
+                  height={540}
                 />
               </div>
               <HeroDecorations />
