@@ -1,5 +1,3 @@
-"use client";
-
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -8,8 +6,6 @@ import { ThemeProvider } from "next-themes";
 import "@/styles/index.css";
 import "@/styles/prism-vsc-dark-plus.css";
 import ToasterContext from "@/components/context/ToasetContex";
-import { useEffect, useState } from "react";
-import PreLoader from "@/components/Common/PreLoader";
 
 interface LangParams {
   lang: string;
@@ -22,12 +18,6 @@ export default function RootLayout({
   children: React.ReactNode;
   params: LangParams;
 }) {
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1);
-  }, []);
-
   return (
     <html
       suppressHydrationWarning={true}
