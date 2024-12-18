@@ -237,8 +237,8 @@ export default function AnnotationPage() {
               Mouse Position:
             </p>
             <div className="flex space-x-4 text-black dark:text-white">
-              <p>X: {mouseCoords.x}</p>
-              <p>Y: {mouseCoords.y}</p>
+              <p>X: {Math.round(mouseCoords.x)}</p>
+              <p>Y: {Math.round(mouseCoords.y)}</p>
             </div>
           </div>
 
