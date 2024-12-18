@@ -5,7 +5,10 @@ import PlatformNavigation from "@/components/PlatformNavigation";
 import Link from "next/link";
 import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 import datasetsData from "@/app/[lang]/(demo)/platform/datasetsData"; // Import the datasets data
-import { startModelTraining, subscribeToModelUpdates } from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
+import {
+  startModelTraining,
+  subscribeToModelUpdates,
+} from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 
 export default function Dashboard() {
   const [showUploadForm, setShowUploadForm] = useState(false);
@@ -33,9 +36,9 @@ export default function Dashboard() {
   const handleContinueClick = () => {
     // Check if a file is uploaded and a dataset name is provided
     if (!uploadedFile || !datasetName) {
-        return; // Do nothing if conditions are not met
+      return; // Do nothing if conditions are not met
     }
-    
+
     setShowUploadForm(false);
     // Reset the form fields if needed
     setDatasetName("");
@@ -45,10 +48,10 @@ export default function Dashboard() {
 
     // Append new dataset to datasetsData at the top
     const newDataset = {
-        name: datasetName,
-        size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
-        lastUpdated: new Date().toISOString().split('T')[0], // Current date
-        annotationPath: "/platform/dashboard"
+      name: datasetName,
+      size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
+      lastUpdated: new Date().toISOString().split("T")[0], // Current date
+      annotationPath: "/platform/dashboard",
     };
     datasetsData.unshift(newDataset); // Update datasetsData to add at the top
     // Trigger a re-render or state update if necessary
@@ -69,21 +72,21 @@ export default function Dashboard() {
     if (!modelName.trim() || !trainingInstructions.trim()) {
       return;
     }
-    
+
     const newModel = {
       name: modelName,
       status: "Training",
       accuracy: "-",
-      lastUpdated: new Date().toISOString().split('T')[0],
+      lastUpdated: new Date().toISOString().split("T")[0],
       progress: 0,
       color: "bg-blue-500",
       link: "/platform/training",
-      trainingInstructions: trainingInstructions
+      trainingInstructions: trainingInstructions,
     };
-    
+
     modelsData.unshift(newModel);
     startModelTraining(newModel);
-    
+
     setModelName("");
     setTrainingInstructions("");
     setEvaluationMetric("Auto");
@@ -183,7 +186,9 @@ export default function Dashboard() {
               ) : (
                 <>
                   <div
-                    onClick={() => document.getElementById('fileInput')?.click()}
+                    onClick={() =>
+                      document.getElementById("fileInput")?.click()
+                    }
                     className="cursor-pointer"
                   >
                     <svg
@@ -233,7 +238,7 @@ export default function Dashboard() {
             <Link
               href="#"
               onClick={() => setShowUploadForm(false)}
-              className="mt-4 ml-2 rounded bg-gray-400 px-4 py-2 font-semibold text-white hover:bg-gray-500"
+              className="ml-2 mt-4 rounded bg-gray-400 px-4 py-2 font-semibold text-white hover:bg-gray-500"
             >
               Cancel
             </Link>
@@ -246,12 +251,19 @@ export default function Dashboard() {
             <table className="w-full text-left">
               <thead>
                 <tr>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Size</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Name
+                  </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Size
+                  </th>
                   <th className="pb-2 text-gray-600 dark:text-gray-400">
                     Last Updated
                   </th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Annotations</th> {/* Updated column name */}
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Annotations
+                  </th>{" "}
+                  {/* Updated column name */}
                 </tr>
               </thead>
               <tbody>
@@ -271,7 +283,7 @@ export default function Dashboard() {
                     </td>
                     <td className="py-2 text-gray-800 dark:text-gray-200">
                       <Link
-                        href={dataset.annotationPath || '#'}
+                        href={dataset.annotationPath || "#"}
                         className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
                       >
                         Update
@@ -291,7 +303,7 @@ export default function Dashboard() {
             </Link>
           </div>
         )}
-        
+
         {isTrainingModel ? ( // Conditional rendering for Train Model block
           <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
             <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
@@ -321,7 +333,7 @@ export default function Dashboard() {
                 className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
               />
             </div>
-            
+
             <div className="mb-4">
               <label className="mb-2 block text-gray-600 dark:text-gray-400">
                 Training Instructions
@@ -357,12 +369,12 @@ export default function Dashboard() {
                 choose for you.
               </p>
             </div>
-            
+
             <div className="flex justify-start">
               <Link
                 href="#"
                 onClick={handleTrainModelContinue}
-                className="mt-4 mr-2 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                className="mr-2 mt-4 rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
               >
                 Continue
               </Link>
@@ -384,10 +396,18 @@ export default function Dashboard() {
             <table className="w-full text-left">
               <thead>
                 <tr>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Status</th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Accuracy</th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">Last Updated</th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Name
+                  </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Status
+                  </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Accuracy
+                  </th>
+                  <th className="pb-2 text-gray-600 dark:text-gray-400">
+                    Last Updated
+                  </th>
                 </tr>
               </thead>
               <tbody>
