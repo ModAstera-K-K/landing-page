@@ -357,7 +357,7 @@ export default function KonvaCanvas({
         setImage(imageObj);
       };
     }
-  }, [mediaUrl, isVideo, frameRate]);
+  }, [mediaUrl, isVideo, frameRate, currentFrame]);
 
   // Add resize handler
   useEffect(() => {
