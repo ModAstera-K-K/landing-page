@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const ContactPage = async ({ params }: { params: { lang: string } }) => {
   return (
     <>
-      <Breadcrumb pageName="Contact Page" />
+      <Breadcrumb pageName="Contact" />
       <Contact lang={params.lang} />
     </>
   );

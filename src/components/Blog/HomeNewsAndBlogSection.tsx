@@ -7,7 +7,7 @@ const HomeBlogSection = ({ posts }: any) => {
       <div className="container mx-auto">
         <div className="mb-[60px]">
           <SectionTitle
-            title="Recent News and Blog"
+            title="Recent News + Blog"
             paragraph="Stay up to date with the latest developments in health and medical AI technology, industry insights, and our company updates."
             width="640px"
             center

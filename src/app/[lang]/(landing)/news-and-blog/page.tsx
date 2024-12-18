@@ -14,7 +14,7 @@ const Blog = () => {
 
   return (
     <>
-      <Breadcrumb pageName="News and Blog" />
+      <Breadcrumb pageName="News + Blog" />
 
       <section className="pb-10 pt-20 lg:pb-20 lg:pt-[120px]">
         <div className="container">
