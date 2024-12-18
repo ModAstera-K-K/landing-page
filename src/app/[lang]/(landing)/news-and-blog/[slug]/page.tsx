@@ -150,8 +150,7 @@ export default async function Post({ params }: Props) {
                 </div>
                 <div className="w-full px-4 lg:w-4/12">
                   <div>
-                    <Newsletter />
-
+                    {/* <Newsletter /> */}
                     <div className="-mx-4 mb-8 flex flex-wrap">
                       <div className="w-full px-4">
                         <h2
@@ -171,8 +170,7 @@ export default async function Post({ params }: Props) {
                         />
                       ))}
                     </div>
-
-                    <div
+                    {/* <div
                       className="wow fadeInUp mb-12 overflow-hidden rounded"
                       data-wow-delay=".1s"
                     >
@@ -183,7 +181,7 @@ export default async function Post({ params }: Props) {
                         width={408}
                         height={254}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

@@ -16,7 +16,8 @@ interface LangParams {
 }
 
 export default function RootLayout({
-  children, params,
+  children,
+  params,
 }: {
   children: React.ReactNode;
   params: LangParams;
@@ -24,34 +25,32 @@ export default function RootLayout({
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    setTimeout(() => setLoading(false), 1);
   }, []);
 
   return (
-    <html suppressHydrationWarning={true} className="!scroll-smooth" lang={params.lang}>
+    <html
+      suppressHydrationWarning={true}
+      className="!scroll-smooth"
+      lang={params.lang}
+    >
       {/*
         <head /> will contain the components returned by the nearest parent
         head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
       <body>
-        {loading ? (
-          <PreLoader />
-        ) : (
-          // <SessionProvider>
-            <ThemeProvider
-              attribute="class"
-              enableSystem={false}
-              defaultTheme="light"
-            >
-              <ToasterContext />
-              <Header lang={params.lang} />
-              {children}
-              <Footer lang={params.lang} />
-              <ScrollToTop />
-            </ThemeProvider>
-          // </SessionProvider>
-        )}
+        <ThemeProvider
+          attribute="class"
+          enableSystem={false}
+          defaultTheme="light"
+        >
+          <ToasterContext />
+          <Header lang={params.lang} />
+          {children}
+          <Footer lang={params.lang} />
+          <ScrollToTop />
+        </ThemeProvider>
       </body>
     </html>
   );

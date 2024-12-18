@@ -37,18 +37,20 @@ const Hero = async ({ lang }: { lang: string }) => {
           <div className="w-full px-4">
             <div
               className="wow fadeInUp relative z-10 mx-auto max-w-[845px]"
-              data-wow-delay=".25s"
+              // data-wow-delay=".25s"
             >
-              <div className="mt-16">
+              <div className="mt-8">
                 <video
                   src="/images/examples/modastera-demo-1.mp4"
                   autoPlay
                   loop
                   muted
+                  controls
                   playsInline
                   className="mx-auto max-w-full rounded-lg"
-                  width={960}
-                  height={540}
+                  // width="960"
+                  // height="540"
+                  preload="auto"
                 />
               </div>
               <HeroDecorations />

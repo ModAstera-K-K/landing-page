@@ -46,25 +46,25 @@ const teamData: TeamType[] = [
       ],
     },
   },
-  {
-    id: 3,
-    name: "Vinyl Chintalapudi",
-    designation: "CTO",
-    image: "/images/team/team-03.png",
-    linkedinLink: "https://www.linkedin.com/in/vinylch/",
-    experience: {
-      en: [
-        "MSc in Information Science and Tech., The University of Tokyo",
-        "Ex-AI/ML Engineer at Indeed",
-        "Specialist in advanced Computer Vision and NLP techniques",
-      ],
-      jp: [
-        "東京大学大学院情報理工学系研究科修士課程修了",
-        "元Indeed社AI/MLエンジニア",
-        "コンピュータビジョンとNLPのスペシャリスト",
-      ],
-    },
-  },
+  // {
+  //   id: 3,
+  //   name: "Vinyl Chintalapudi",
+  //   designation: "CTO",
+  //   image: "/images/team/team-03.png",
+  //   linkedinLink: "https://www.linkedin.com/in/vinylch/",
+  //   experience: {
+  //     en: [
+  //       "MSc in Information Science and Tech., The University of Tokyo",
+  //       "Ex-AI/ML Engineer at Indeed",
+  //       "Specialist in advanced Computer Vision and NLP techniques",
+  //     ],
+  //     jp: [
+  //       "東京大学大学院情報理工学系研究科修士課程修了",
+  //       "元Indeed社AI/MLエンジニア",
+  //       "コンピュータビジョンとNLPのスペシャリスト",
+  //     ],
+  //   },
+  // },
 ];
 
 const Team = async ({ lang }: { lang: string }) => {

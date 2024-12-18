@@ -17,7 +17,7 @@ const SingleBlog = ({ blog }: { blog: Blog }) => {
           <Image
             src={coverImage!}
             alt="image"
-            className="w-full transition group-hover:rotate-6 group-hover:scale-125"
+            className="w-full transition group-hover:scale-105"
             width={408}
             height={272}
           />
@@ -29,7 +29,7 @@ const SingleBlog = ({ blog }: { blog: Blog }) => {
         </span>
         <h3>
           <Link
-            href={`/src/app/blogs/${slug}`}
+            href={`/news-and-blog/${slug}`}
             className="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
           >
             {title}

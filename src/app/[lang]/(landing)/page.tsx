@@ -37,7 +37,7 @@ export default async function Home({
       {/*<Testimonials />*/}
       {/*<Faq />*/}
       <Team lang={lang} />
-      {/* <HomeNewsAndBlogSection posts={posts} /> */}
+      <HomeNewsAndBlogSection posts={posts} />
       <Contact lang={lang} />
       {/*<Clients />*/}
     </main>
