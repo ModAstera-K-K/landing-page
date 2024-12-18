@@ -4,7 +4,7 @@ import LeftDecoration from "@/components/Common/Icons/CallToActionIcons/LeftDeco
 import RightDecoration from "@/components/Common/Icons/CallToActionIcons/RightDecoration";
 
 const CallToAction = async ({ lang }: { lang: string }) => {
-  const t =  await getDictionary(lang);
+  const t = await getDictionary(lang);
   return (
     <section className="relative z-10 overflow-hidden bg-primary py-20 lg:py-[115px]">
       <div className="container mx-auto">

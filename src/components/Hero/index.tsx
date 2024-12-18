@@ -1,4 +1,4 @@
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "@/app/[lang]/(landing)/dictionaries";
 import SupportLogos from "./SupportLogos";
@@ -56,7 +56,7 @@ const Hero = async ({ lang }: { lang: string }) => {
             <div className="mt-4 flex h-[55px] items-center justify-center">
               <Link
                 href="https://docs.google.com/forms/d/1Ca9TLkSCnErycT54DUk2ZhzKlyOGakktV6S3m9gzSeg/viewform?edit_requested=true"
-                className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-6 py-1 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
+                className="mt-4 inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-center text-base font-medium text-white transition hover:bg-[#0BB489]"
               >
                 {t?.header?.waitlistBtnTitle}
               </Link>
