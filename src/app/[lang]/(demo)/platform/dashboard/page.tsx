@@ -22,7 +22,15 @@ export default function Dashboard() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [filesToUpload, setFilesToUpload] = useState<
+    Array<{
+      file: File;
+      progress?: number;
+      status?: "uploading" | "completed" | "error";
+      error?: string;
+      dataType?: string;
+    }>
+  >([]);
 
   // Subscribe to model updates
   useEffect(() => {
@@ -97,43 +105,109 @@ export default function Dashboard() {
     setIsTrainingModel(false);
   };
 
-  const handleFileUpload = async (files: File[]) => {
-    if (!files || files.length === 0 || !datasetName) return;
+  const determineDataType = (
+    file: File,
+  ): "image" | "video" | "text" | "audio" | undefined => {
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    if (!extension) return "text";
 
+    switch (extension) {
+      case "png":
+      case "jpg":
+        return "image";
+      case "mp4":
+        return "video";
+      case "txt":
+        return "text";
+      case "wav":
+        return "audio";
+      default:
+        setUploadError("Unsupported file type in selection.");
+        return undefined;
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!datasetName || filesToUpload.length === 0) return;
     setIsUploading(true);
-    setUploadError(null);
-    setUploadProgress(0);
-
-    const formData = new FormData();
-    formData.append("dataset_name", datasetName);
-
-    // Append all files
-    Array.from(files).forEach((file) => {
-      formData.append("images", file);
-    });
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/upload-images/`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            const progress = progressEvent.total
-              ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              : 0;
-            setUploadProgress(progress);
-          },
-        },
-      );
+      // Upload files sequentially
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const fileUpload = filesToUpload[i];
+        if (fileUpload.status === "completed") continue;
 
-      // Handle successful upload
+        // Validate file type
+        try {
+          determineDataType(fileUpload.file);
+        } catch (error) {
+          setFilesToUpload((prev) =>
+            prev.map((item, index) =>
+              index === i
+                ? { ...item, status: "error", error: "Unsupported file type" }
+                : item,
+            ),
+          );
+          continue;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileUpload.file);
+        formData.append("dataset_name", datasetName);
+        const dataType =
+          fileUpload.dataType || determineDataType(fileUpload.file);
+        if (dataType) {
+          formData.append("data_type", dataType);
+        }
+
+        try {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/`,
+            formData,
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              onUploadProgress: (progressEvent) => {
+                const progress = progressEvent.total
+                  ? Math.round(
+                      (progressEvent.loaded * 100) / progressEvent.total,
+                    )
+                  : 0;
+
+                setFilesToUpload((prev) =>
+                  prev.map((item, index) =>
+                    index === i
+                      ? { ...item, progress, status: "uploading" }
+                      : item,
+                  ),
+                );
+              },
+            },
+          );
+
+          // Update file status to completed
+          setFilesToUpload((prev) =>
+            prev.map((item, index) =>
+              index === i
+                ? { ...item, status: "completed", progress: 100 }
+                : item,
+            ),
+          );
+        } catch (error) {
+          throw new Error("Upload error");
+        }
+      }
+
+      // All files uploaded successfully
+      const totalSize = filesToUpload.reduce(
+        (acc, item) => acc + item.file.size,
+        0,
+      );
       const newDataset = {
         name: datasetName,
-        size: `${(Array.from(files).reduce((acc, file) => acc + file.size, 0) / (1024 * 1024)).toFixed(2)} MB`,
+        size: `${(totalSize / (1024 * 1024)).toFixed(2)} MB`,
         lastUpdated: new Date().toISOString().split("T")[0],
         annotationPath: "/platform/annotation",
       };
@@ -143,11 +217,9 @@ export default function Dashboard() {
       setDatasetName("");
       setFilesToUpload([]);
       setShowUploadForm(false);
-      setIsUploading(false);
-      setUploadProgress(0);
     } catch (error) {
       console.error("Upload error:", error);
-      setUploadError("Failed to upload files. Please try again.");
+    } finally {
       setIsUploading(false);
     }
   };
@@ -156,14 +228,24 @@ export default function Dashboard() {
   const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const files = e.dataTransfer.files;
-    setFilesToUpload(Array.from(files));
+    const files = Array.from(e.dataTransfer.files).map((file) => ({
+      file,
+      progress: 0,
+      status: "uploading" as const,
+      dataType: determineDataType(file),
+    }));
+    setFilesToUpload(files);
   };
 
   // Update the file input handler
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    setFilesToUpload(Array.from(files || []));
+    const files = Array.from(e.target.files || []).map((file) => ({
+      file,
+      progress: 0,
+      status: "uploading" as const,
+      dataType: determineDataType(file),
+    }));
+    setFilesToUpload(files);
   };
 
   return (
@@ -224,10 +306,18 @@ export default function Dashboard() {
                 <div className="w-full">
                   <div className="flex items-center justify-between">
                     <p className="text-gray-600 dark:text-gray-400">
-                      Selected: {filesToUpload[0]?.name}
+                      Selected:{" "}
+                      {filesToUpload
+                        .slice(0, 10)
+                        .map((f) => f.file.name)
+                        .join(", ")}
+                      {filesToUpload.length > 10 ? "..." : ""}
                     </p>
                     <button
-                      onClick={() => setFilesToUpload([])}
+                      onClick={() => {
+                        setFilesToUpload([]);
+                        setUploadError(null);
+                      }}
                       className="text-red-500 hover:text-red-700"
                     >
                       ✕
@@ -298,10 +388,18 @@ export default function Dashboard() {
 
             <div className="flex space-x-2">
               <button
-                onClick={() => handleFileUpload(filesToUpload)}
-                disabled={!filesToUpload || !datasetName || isUploading}
+                onClick={() => handleFileUpload()}
+                disabled={
+                  !filesToUpload.length ||
+                  !datasetName ||
+                  isUploading ||
+                  !!uploadError
+                }
                 className={`rounded px-4 py-2 font-semibold text-white ${
-                  !filesToUpload || !datasetName || isUploading
+                  !filesToUpload.length ||
+                  !datasetName ||
+                  isUploading ||
+                  !!uploadError
                     ? "bg-gray-400"
                     : "bg-blue-600 hover:bg-blue-700"
                 }`}
@@ -387,7 +485,10 @@ export default function Dashboard() {
               <label className="mb-2 block text-gray-600 dark:text-gray-400">
                 Select Dataset
               </label>
-              <select className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200">
+              <select
+                aria-label="Select Dataset"
+                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              >
                 {datasetsData.map((dataset, index) => (
                   <option key={index} value={dataset.name}>
                     {dataset.name}
