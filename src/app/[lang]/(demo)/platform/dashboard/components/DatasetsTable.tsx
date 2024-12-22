@@ -1,7 +1,14 @@
-import { Dataset } from "../types";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
+
+interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+  last_modified: string;
+  samples: string[];
+}
 
 interface DatasetsTableProps {
   onUploadClick: () => void;
@@ -90,7 +97,7 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
                       href={`/platform/datasets/${dataset.id}`}
                       className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
                     >
-                      Update
+                      {dataset.samples?.length || 0} samples
                     </Link>
                   </td>
                 </tr>

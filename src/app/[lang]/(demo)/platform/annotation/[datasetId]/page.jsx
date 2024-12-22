@@ -63,8 +63,12 @@ export default function AnnotationPage({ params }) {
           { withCredentials: true },
         );
         setDatasetData(response.data);
-        fetchSampleData(response.data.samples[0]);
-        setIsLoading(false);
+        if (response.data.samples && response.data.samples.length > 0) {
+          fetchSampleData(response.data.samples[0]);
+        } else {
+          setIsLoading(false);
+          setError("This dataset has no samples.");
+        }
       } catch (err) {
         setError("Failed to fetch dataset data");
         setIsLoading(false);
@@ -132,11 +136,12 @@ export default function AnnotationPage({ params }) {
   };
 
   const getCurrentSampleIndex = () => {
-    if (!datasetData) return -1;
+    if (!datasetData?.samples?.length || !sampleData?.id) return -1;
     return datasetData.samples.indexOf(sampleData.id);
   };
 
   const getNextSampleId = () => {
+    if (!datasetData?.samples?.length) return null;
     const currentIndex = getCurrentSampleIndex();
     if (currentIndex === -1 || currentIndex === datasetData.samples.length - 1)
       return null;
@@ -145,6 +150,7 @@ export default function AnnotationPage({ params }) {
   };
 
   const getPreviousSampleId = () => {
+    if (!datasetData?.samples?.length) return null;
     const currentIndex = getCurrentSampleIndex();
     if (currentIndex <= 0) return null;
     return datasetData.samples[currentIndex - 1];

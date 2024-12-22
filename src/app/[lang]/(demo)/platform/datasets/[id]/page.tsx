@@ -65,10 +65,8 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentSamples = dataset.samples.slice(
-    indexOfFirstItem,
-    indexOfLastItem,
-  );
+  const currentSamples =
+    dataset.samples?.slice(indexOfFirstItem, indexOfLastItem) || [];
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -96,27 +94,38 @@ export default function DatasetView({ params }: { params: { id: string } }) {
         <p className="mt-1 text-sm text-gray-500">
           Last modified: {new Date(dataset.last_modified).toLocaleString()}
         </p>
+        <p className="mt-1 text-sm text-gray-500">
+          Total samples: {dataset.samples?.length || 0}
+        </p>
       </div>
 
       {/* Samples Grid */}
-      <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-        {currentSamples.map((sampleId) => (
-          <SampleCard
-            key={sampleId}
-            sampleId={sampleId}
-            datasetId={params.id}
-          />
-        ))}
-      </div>
+      {!dataset.samples || dataset.samples.length === 0 ? (
+        <div className="mb-8 text-center text-gray-600 dark:text-gray-400">
+          No samples available in this dataset.
+        </div>
+      ) : (
+        <>
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+            {currentSamples.map((sampleId) => (
+              <SampleCard
+                key={sampleId}
+                sampleId={sampleId}
+                datasetId={params.id}
+              />
+            ))}
+          </div>
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalItems={dataset.samples.length}
-        itemsPerPage={itemsPerPage}
-        onPageChange={handlePageChange}
-        onItemsPerPageChange={handleItemsPerPageChange}
-      />
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalItems={dataset.samples?.length || 0}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+          />
+        </>
+      )}
 
       {/* Action Buttons */}
       <div className="mt-8 flex space-x-4">
