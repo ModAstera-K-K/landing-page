@@ -30,6 +30,7 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
     switch (extension) {
       case "png":
       case "jpg":
+      case "jpeg":
         return "image";
       case "mp4":
         return "video";
