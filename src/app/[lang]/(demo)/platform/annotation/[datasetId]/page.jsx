@@ -14,8 +14,10 @@ const KonvaCanvas = dynamic(() => import("./KonvaCanvas"), {
 export default function AnnotationPage({ params }) {
   const searchParams = useSearchParams();
   const sampleId = searchParams.get("sampleId");
+
   const [datasetData, setDatasetData] = useState(null);
   const [sampleData, setSampleData] = useState(null);
+  const [currentFile, setCurrentFile] = useState(null);
   const [annotations, setAnnotations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
@@ -31,6 +33,27 @@ export default function AnnotationPage({ params }) {
   const [selectedTool, setSelectedTool] = useState("box"); // 'box' | 'polygon'
   const [frameRate, setFrameRate] = useState(30);
 
+  const fetchSampleData = async (sampleId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${sampleId}`,
+        { withCredentials: true },
+      );
+      setSampleData(response.data);
+      setCurrentFile(response.data.file);
+      setIsLoading(false);
+    } catch (err) {
+      setError("Failed to load sample data");
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (sampleId) {
+      fetchSampleData(sampleId);
+    }
+  }, [sampleId]);
+
   // Add sample data fetching
   useEffect(() => {
     const fetchDatasetData = async () => {
@@ -40,40 +63,24 @@ export default function AnnotationPage({ params }) {
           { withCredentials: true },
         );
         setDatasetData(response.data);
-      } catch (err) {
-        setError("Failed to fetch dataset data");
-      }
-    };
-
-    const fetchSampleData = async (sampleId) => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${sampleId}`,
-          { withCredentials: true },
-        );
-        setSampleData(response.data);
+        fetchSampleData(response.data.samples[0]);
         setIsLoading(false);
       } catch (err) {
-        setError("Failed to load sample data");
+        setError("Failed to fetch dataset data");
         setIsLoading(false);
       }
     };
 
     fetchDatasetData();
-    if (sampleId) {
-      fetchSampleData(sampleId);
-    } else if (datasetData && datasetData.samples.length > 0) {
-      fetchSampleData(datasetData.samples[datasetData.samples.length - 1]);
-    }
-  }, [params.datasetId, sampleId, datasetData]);
+  }, [params.datasetId]);
 
   useEffect(() => {
-    if (!sampleData?.file) return;
+    if (!currentFile) return;
 
-    if (sampleData.file.match(/\.(mp4|webm|ogg)$/i)) {
+    if (currentFile.match(/\.(mp4|webm|ogg)$/i)) {
       setIsVideo(true);
       const video = document.createElement("video");
-      video.src = sampleData.file;
+      video.src = currentFile;
       video.addEventListener("loadedmetadata", () => {
         setTotalFrames(Math.floor(video.duration * frameRate));
       });
@@ -81,7 +88,7 @@ export default function AnnotationPage({ params }) {
       setIsVideo(false);
       setTotalFrames(0);
     }
-  }, [sampleData, frameRate]);
+  }, [currentFile, frameRate]);
 
   if (isLoading) {
     return (
@@ -125,15 +132,16 @@ export default function AnnotationPage({ params }) {
   };
 
   const getCurrentSampleIndex = () => {
-    if (!datasetData || !sampleId) return -1;
-    return datasetData.samples.indexOf(sampleId);
+    if (!datasetData) return -1;
+    return datasetData.samples.indexOf(sampleData.id);
   };
 
   const getNextSampleId = () => {
     const currentIndex = getCurrentSampleIndex();
     if (currentIndex === -1 || currentIndex === datasetData.samples.length - 1)
       return null;
-    return datasetData.samples[currentIndex + 1];
+    const newIndex = currentIndex + 1;
+    return datasetData.samples[newIndex];
   };
 
   const getPreviousSampleId = () => {
@@ -142,7 +150,47 @@ export default function AnnotationPage({ params }) {
     return datasetData.samples[currentIndex - 1];
   };
 
-  // console.log("getCurrentSampleIndex", getCurrentSampleIndex());
+  const handlePreviousSample = async () => {
+    const prevId = getPreviousSampleId();
+    if (!prevId) return;
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${prevId}`,
+        { withCredentials: true },
+      );
+      setSampleData(response.data);
+      setCurrentFile(response.data.file);
+      setAnnotations([]); // Reset annotations for new sample
+    } catch (err) {
+      setError("Failed to load previous sample");
+    }
+  };
+
+  const handleNextSample = async () => {
+    const nextId = getNextSampleId();
+    if (!nextId) return;
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${nextId}`,
+        { withCredentials: true },
+      );
+      setSampleData(response.data);
+      setCurrentFile(response.data.file);
+      setAnnotations([]); // Reset annotations for new sample
+    } catch (err) {
+      setError("Failed to load next sample");
+    }
+  };
+
+  if (sampleData == null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
@@ -299,39 +347,26 @@ export default function AnnotationPage({ params }) {
               </button>
             </div>
           </div>
-
           {/* Navigation buttons */}
-          <div className="flex justify-between border-t border-gray-300 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800">
-            <Link
-              href={
-                getPreviousSampleId()
-                  ? `/platform/annotation/${params.datasetId}?sampleId=${getPreviousSampleId()}`
-                  : "#"
-              }
-              className={`rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 ${
-                getPreviousSampleId()
-                  ? "bg-blue-500 hover:bg-blue-600"
-                  : "cursor-not-allowed bg-gray-400"
-              }`}
+          <div className="p-2 text-center text-xs text-gray-500 dark:text-gray-400">
+            {sampleData.name}
+          </div>
+          <div className="flex justify-between border-gray-300 p-2 dark:border-gray-700">
+            <button
+              onClick={handlePreviousSample}
+              className={`rounded-md bg-blue-500 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50`}
+              disabled={!getPreviousSampleId()}
             >
               Previous
-            </Link>
-            <Link
-              href={
-                getNextSampleId()
-                  ? `/platform/annotation/${params.datasetId}?sampleId=${getNextSampleId()}`
-                  : "#"
-              }
-              className={`rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 ${
-                getNextSampleId()
-                  ? "bg-blue-500 hover:bg-blue-600"
-                  : "cursor-not-allowed bg-gray-400"
-              }`}
+            </button>
+            <button
+              onClick={handleNextSample}
+              className={`rounded-md bg-blue-500 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50`}
+              disabled={!getNextSampleId()}
             >
               Next
-            </Link>
+            </button>
           </div>
-
           <div className="border-b border-gray-300 p-2 text-sm dark:border-gray-700">
             <p className="mb-1 font-medium text-black dark:text-white">
               Mouse Position:
@@ -341,7 +376,6 @@ export default function AnnotationPage({ params }) {
               <p>Y: {Math.round(mouseCoords.y)}</p>
             </div>
           </div>
-
           <div className="p-4">
             {activeTab === "objects" && (
               <div>
