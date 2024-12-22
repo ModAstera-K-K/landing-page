@@ -3,23 +3,23 @@
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import axios from "axios";
 
 const KonvaCanvas = dynamic(() => import("./KonvaCanvas"), {
   ssr: false,
   loading: () => <div>Loading canvas...</div>,
 });
 
-export default function AnnotationPage() {
+export default function AnnotationPage({ params }) {
   const [annotations, setAnnotations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
   const [currentFrame, setCurrentFrame] = useState(0);
   const [totalFrames, setTotalFrames] = useState(0);
   const [isVideo, setIsVideo] = useState(false);
-  const [mediaUrl, setMediaUrl] = useState(
-    // "/images/examples/chest-x-ray-29.jpg",
-    "/images/examples/modastera-demo-1.mp4",
-  );
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [hoveredTool, setHoveredTool] = useState(null);
   const [labels, setLabels] = useState([]);
   const [activeTab, setActiveTab] = useState("objects"); // 'objects' | 'labels' | 'issues'
@@ -27,8 +27,29 @@ export default function AnnotationPage() {
   const [selectedTool, setSelectedTool] = useState("box"); // 'box' | 'polygon'
   const [frameRate, setFrameRate] = useState(30);
 
-  // Load media metadata
+  // Add sample data fetching
   useEffect(() => {
+    const fetchSampleData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${params.sampleId}`,
+          { withCredentials: true },
+        );
+        setMediaUrl(response.data.file);
+        setIsLoading(false);
+      } catch (err) {
+        setError("Failed to load sample data");
+        setIsLoading(false);
+      }
+    };
+
+    fetchSampleData();
+  }, [params.sampleId]);
+
+  // Modify the media metadata effect to depend on mediaUrl being loaded
+  useEffect(() => {
+    if (!mediaUrl) return;
+
     if (mediaUrl.match(/\.(mp4|webm|ogg)$/i)) {
       setIsVideo(true);
       const video = document.createElement("video");
@@ -41,6 +62,22 @@ export default function AnnotationPage() {
       setTotalFrames(0);
     }
   }, [mediaUrl, frameRate]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
 
   const handleMouseMove = (coords) => {
     setMouseCoords(coords);

@@ -87,7 +87,7 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
                   </td>
                   <td className="py-2 text-gray-800 dark:text-gray-200">
                     <Link
-                      href={`/platform/dashboard/datasets/${dataset.id}`}
+                      href={`/platform/datasets/${dataset.id}`}
                       className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
                     >
                       Update
