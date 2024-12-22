@@ -81,7 +81,9 @@ export default function SampleCard({
             ? `${sample.name.slice(0, 16)}...`
             : sample.name}{" "}
         </span>
-        {sample.annotations.length === 0 && (
+        {(!sample.annotations ||
+          !Array.isArray(sample.annotations) ||
+          sample.annotations.length === 0) && (
           <Link
             href={`/platform/annotation/${datasetId}?sampleId=${sample.id}`}
             className="rounded p-1 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"

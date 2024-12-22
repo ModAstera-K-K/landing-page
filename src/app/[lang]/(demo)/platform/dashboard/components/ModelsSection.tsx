@@ -39,29 +39,29 @@ export function ModelsSection() {
   //   setIsTrainingModel(false); // Reset training model state
   // };
 
-  const handleContinueClick = () => {
-    // Check if a file is uploaded and a dataset name is provided
-    if (!filesToUpload || !datasetName) {
-      return; // Do nothing if conditions are not met
-    }
+  // const handleContinueClick = () => {
+  //   // Check if a file is uploaded and a dataset name is provided
+  //   if (!filesToUpload || !datasetName) {
+  //     return; // Do nothing if conditions are not met
+  //   }
 
-    setShowUploadForm(false);
-    // Reset the form fields if needed
-    setDatasetName("");
-    setTrainingInstructions("");
-    setEvaluationMetric("Auto");
-    setFilesToUpload([]);
+  //   setShowUploadForm(false);
+  //   // Reset the form fields if needed
+  //   setDatasetName("");
+  //   setTrainingInstructions("");
+  //   setEvaluationMetric("Auto");
+  //   setFilesToUpload([]);
 
-    // Append new dataset to datasetsData at the top
-    const newDataset = {
-      name: datasetName,
-      size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
-      lastUpdated: new Date().toISOString().split("T")[0], // Current date
-      annotationPath: "/platform/dashboard",
-    };
-    datasetsData.unshift(newDataset); // Update datasetsData to add at the top
-    // Trigger a re-render or state update if necessary
-  };
+  //   // Append new dataset to datasetsData at the top
+  //   const newDataset = {
+  //     name: datasetName,
+  //     size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
+  //     lastUpdated: new Date().toISOString().split("T")[0], // Current date
+  //     annotationPath: "/platform/dashboard",
+  //   };
+  //   datasetsData.unshift(newDataset); // Update datasetsData to add at the top
+  //   // Trigger a re-render or state update if necessary
+  // };
 
   // New function to handle training model click
   const handleTrainModelClick = () => {
