@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 
@@ -11,13 +12,16 @@ const KonvaCanvas = dynamic(() => import("./KonvaCanvas"), {
 });
 
 export default function AnnotationPage({ params }) {
+  const searchParams = useSearchParams();
+  const sampleId = searchParams.get("sampleId");
+  const [datasetData, setDatasetData] = useState(null);
+  const [sampleData, setSampleData] = useState(null);
   const [annotations, setAnnotations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
   const [currentFrame, setCurrentFrame] = useState(0);
   const [totalFrames, setTotalFrames] = useState(0);
   const [isVideo, setIsVideo] = useState(false);
-  const [mediaUrl, setMediaUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredTool, setHoveredTool] = useState(null);
@@ -29,13 +33,25 @@ export default function AnnotationPage({ params }) {
 
   // Add sample data fetching
   useEffect(() => {
-    const fetchSampleData = async () => {
+    const fetchDatasetData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${params.sampleId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.datasetId}/`,
           { withCredentials: true },
         );
-        setMediaUrl(response.data.file);
+        setDatasetData(response.data);
+      } catch (err) {
+        setError("Failed to fetch dataset data");
+      }
+    };
+
+    const fetchSampleData = async (sampleId) => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${sampleId}`,
+          { withCredentials: true },
+        );
+        setSampleData(response.data);
         setIsLoading(false);
       } catch (err) {
         setError("Failed to load sample data");
@@ -43,17 +59,21 @@ export default function AnnotationPage({ params }) {
       }
     };
 
-    fetchSampleData();
-  }, [params.sampleId]);
+    fetchDatasetData();
+    if (sampleId) {
+      fetchSampleData(sampleId);
+    } else if (datasetData && datasetData.samples.length > 0) {
+      fetchSampleData(datasetData.samples[datasetData.samples.length - 1]);
+    }
+  }, [params.datasetId, sampleId, datasetData]);
 
-  // Modify the media metadata effect to depend on mediaUrl being loaded
   useEffect(() => {
-    if (!mediaUrl) return;
+    if (!sampleData?.file) return;
 
-    if (mediaUrl.match(/\.(mp4|webm|ogg)$/i)) {
+    if (sampleData.file.match(/\.(mp4|webm|ogg)$/i)) {
       setIsVideo(true);
       const video = document.createElement("video");
-      video.src = mediaUrl;
+      video.src = sampleData.file;
       video.addEventListener("loadedmetadata", () => {
         setTotalFrames(Math.floor(video.duration * frameRate));
       });
@@ -61,7 +81,7 @@ export default function AnnotationPage({ params }) {
       setIsVideo(false);
       setTotalFrames(0);
     }
-  }, [mediaUrl, frameRate]);
+  }, [sampleData, frameRate]);
 
   if (isLoading) {
     return (
@@ -103,6 +123,26 @@ export default function AnnotationPage({ params }) {
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   };
+
+  const getCurrentSampleIndex = () => {
+    if (!datasetData || !sampleId) return -1;
+    return datasetData.samples.indexOf(sampleId);
+  };
+
+  const getNextSampleId = () => {
+    const currentIndex = getCurrentSampleIndex();
+    if (currentIndex === -1 || currentIndex === datasetData.samples.length - 1)
+      return null;
+    return datasetData.samples[currentIndex + 1];
+  };
+
+  const getPreviousSampleId = () => {
+    const currentIndex = getCurrentSampleIndex();
+    if (currentIndex <= 0) return null;
+    return datasetData.samples[currentIndex - 1];
+  };
+
+  // console.log("getCurrentSampleIndex", getCurrentSampleIndex());
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
@@ -220,7 +260,7 @@ export default function AnnotationPage({ params }) {
           selectedId={selectedId}
           setSelectedId={setSelectedId}
           onMouseMove={handleMouseMove}
-          mediaUrl={mediaUrl}
+          mediaUrl={sampleData.file}
           currentFrame={currentFrame}
           isVideo={isVideo}
           selectedTool={selectedTool}
@@ -260,15 +300,38 @@ export default function AnnotationPage({ params }) {
             </div>
           </div>
 
-          {/* Coordinates display */}
-          <div className="flex justify-center border-t border-gray-300 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800">
+          {/* Navigation buttons */}
+          <div className="flex justify-between border-t border-gray-300 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-800">
             <Link
-              href="/platform/dashboard"
-              className="rounded-md bg-blue-500 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-600"
+              href={
+                getPreviousSampleId()
+                  ? `/platform/annotation/${params.datasetId}?sampleId=${getPreviousSampleId()}`
+                  : "#"
+              }
+              className={`rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 ${
+                getPreviousSampleId()
+                  ? "bg-blue-500 hover:bg-blue-600"
+                  : "cursor-not-allowed bg-gray-400"
+              }`}
             >
-              Continue
+              Previous
+            </Link>
+            <Link
+              href={
+                getNextSampleId()
+                  ? `/platform/annotation/${params.datasetId}?sampleId=${getNextSampleId()}`
+                  : "#"
+              }
+              className={`rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 ${
+                getNextSampleId()
+                  ? "bg-blue-500 hover:bg-blue-600"
+                  : "cursor-not-allowed bg-gray-400"
+              }`}
+            >
+              Next
             </Link>
           </div>
+
           <div className="border-b border-gray-300 p-2 text-sm dark:border-gray-700">
             <p className="mb-1 font-medium text-black dark:text-white">
               Mouse Position:

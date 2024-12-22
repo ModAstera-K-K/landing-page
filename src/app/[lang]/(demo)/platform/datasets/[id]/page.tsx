@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import SampleCard from "@/components/SampleCard";
+import Pagination from "@/components/Pagination";
 
 interface Dataset {
   id: string;
@@ -18,6 +19,8 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(24);
 
   useEffect(() => {
     const fetchDataset = async () => {
@@ -59,6 +62,25 @@ export default function DatasetView({ params }: { params: { id: string } }) {
     );
   }
 
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentSamples = dataset.samples.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
       <PlatformNavigation />
@@ -77,14 +99,27 @@ export default function DatasetView({ params }: { params: { id: string } }) {
       </div>
 
       {/* Samples Grid */}
-      <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {dataset.samples.map((sampleId) => (
-          <SampleCard key={sampleId} sampleId={sampleId} />
+      <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+        {currentSamples.map((sampleId) => (
+          <SampleCard
+            key={sampleId}
+            sampleId={sampleId}
+            datasetId={params.id}
+          />
         ))}
       </div>
 
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalItems={dataset.samples.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={handlePageChange}
+        onItemsPerPageChange={handleItemsPerPageChange}
+      />
+
       {/* Action Buttons */}
-      <div className="flex space-x-4">
+      <div className="mt-8 flex space-x-4">
         <Link
           href={`/platform/datasets/${dataset.id}/upload`}
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
