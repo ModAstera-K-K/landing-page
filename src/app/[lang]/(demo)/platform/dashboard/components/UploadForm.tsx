@@ -6,8 +6,14 @@ interface UploadFormProps {
   setShowUploadForm: (show: boolean) => void;
 }
 
+interface UploadedSample {
+  id: string;
+  file_path: string;
+}
+
 export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
   const [datasetName, setDatasetName] = useState("");
+  const [description, setDescription] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -47,6 +53,7 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
   const handleFileUpload = async () => {
     if (!datasetName || filesToUpload.length === 0) return;
     setIsUploading(true);
+    const uploadedSamples: UploadedSample[] = [];
 
     try {
       // Upload files sequentially
@@ -78,7 +85,8 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
         }
 
         try {
-          await axios.post(
+          // Upload individual file
+          const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/`,
             formData,
             {
@@ -104,6 +112,9 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
             },
           );
 
+          // Store the uploaded sample information
+          uploadedSamples.push(response.data);
+
           // Update file status to completed
           setFilesToUpload((prev) =>
             prev.map((item, index) =>
@@ -117,26 +128,27 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
         }
       }
 
-      // All files uploaded successfully
-      const totalSize = filesToUpload.reduce(
-        (acc, item) => acc + item.file.size,
-        0,
+      // Create the dataset with all uploaded samples
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/`,
+        {
+          name: datasetName,
+          description: description,
+          samples: uploadedSamples.map((sample) => sample.id),
+        },
+        {
+          withCredentials: true,
+        },
       );
-
-      // const newDataset = {
-      //   name: datasetName,
-      //   size: `${(totalSize / (1024 * 1024)).toFixed(2)} MB`,
-      //   lastUpdated: new Date().toISOString().split("T")[0],
-      //   annotationPath: "/platform/annotation",
-      // };
-      // datasetsData.unshift(newDataset); // TODO: update the datasets list
 
       // Reset form
       setDatasetName("");
+      setDescription("");
       setFilesToUpload([]);
       setShowUploadForm(false);
     } catch (error) {
       console.error("Upload error:", error);
+      setUploadError("Failed to create dataset");
     } finally {
       setIsUploading(false);
     }
@@ -264,6 +276,19 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
           onChange={(e) => setDatasetName(e.target.value)}
           placeholder="Enter a name for your dataset"
           className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="mb-2 block text-gray-600 dark:text-gray-400">
+          Description
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter a description for your dataset"
+          className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+          rows={3}
         />
       </div>
 
