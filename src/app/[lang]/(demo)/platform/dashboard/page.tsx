@@ -10,6 +10,7 @@ import {
   subscribeToModelUpdates,
 } from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
 import axios from "axios";
+import { DatasetsTable } from "./components/DatasetsTable";
 
 export default function Dashboard() {
   const [showUploadForm, setShowUploadForm] = useState(false);
@@ -297,6 +298,7 @@ export default function Dashboard() {
             >
               <input
                 id="fileInput"
+                aria-label="Upload files"
                 type="file"
                 className="hidden"
                 multiple
@@ -416,64 +418,10 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
-          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-              Datasets
-            </h2>
-            <table className="w-full text-left">
-              <thead>
-                <tr>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">
-                    Name
-                  </th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">
-                    Size
-                  </th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">
-                    Last Updated
-                  </th>
-                  <th className="pb-2 text-gray-600 dark:text-gray-400">
-                    Annotations
-                  </th>{" "}
-                  {/* Updated column name */}
-                </tr>
-              </thead>
-              <tbody>
-                {datasetsData.map((dataset, index) => (
-                  <tr
-                    key={index}
-                    className="border-t border-gray-200 dark:border-gray-700"
-                  >
-                    <td className="py-2 text-gray-800 dark:text-gray-200">
-                      {dataset.name}
-                    </td>
-                    <td className="py-2 text-gray-800 dark:text-gray-200">
-                      {dataset.size}
-                    </td>
-                    <td className="py-2 text-gray-800 dark:text-gray-200">
-                      {dataset.lastUpdated}
-                    </td>
-                    <td className="py-2 text-gray-800 dark:text-gray-200">
-                      <Link
-                        href={dataset.annotationPath || "#"}
-                        className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
-                      >
-                        Update
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="mb-4" />
-            <Link
-              href="#"
-              onClick={handleUploadClick}
-              className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-            >
-              Upload New Dataset
-            </Link>
-          </div>
+          <DatasetsTable
+            datasets={datasetsData}
+            onUploadClick={handleUploadClick}
+          />
         )}
 
         {isTrainingModel ? ( // Conditional rendering for Train Model block

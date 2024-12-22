@@ -16,13 +16,7 @@ Follow these steps to set up and run this template on your local machine:
     npm install
 ```
 
-or
-
-```bash
-    yarn install
- ```
-
-4. Now you're ready to start the project on your local server. Use the following command to get it up and running:
+1. Now you're ready to start the project on your local server. Use the following command to get it up and running:
 
 ```bash
     npm run dev
