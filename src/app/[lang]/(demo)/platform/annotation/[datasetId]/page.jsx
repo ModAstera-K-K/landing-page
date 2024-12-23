@@ -15,6 +15,7 @@ export default function AnnotationPage({ params }) {
   const searchParams = useSearchParams();
   const sampleId = searchParams.get("sampleId");
 
+  const [currentSampleId, setCurrentSampleId] = useState(null);
   const [datasetData, setDatasetData] = useState(null);
   const [sampleData, setSampleData] = useState(null);
   const [currentFile, setCurrentFile] = useState(null);
@@ -48,35 +49,33 @@ export default function AnnotationPage({ params }) {
     }
   };
 
-  useEffect(() => {
-    if (sampleId) {
-      fetchSampleData(sampleId);
+  const fetchDatasetData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.datasetId}/`,
+        { withCredentials: true },
+      );
+      setDatasetData(response.data);
+      setIsLoading(false);
+    } catch (err) {
+      setError("Failed to fetch dataset data");
+      setIsLoading(false);
     }
-  }, [sampleId]);
+  };
 
-  // Add sample data fetching
   useEffect(() => {
-    const fetchDatasetData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.datasetId}/`,
-          { withCredentials: true },
-        );
-        setDatasetData(response.data);
-        if (response.data.samples && response.data.samples.length > 0) {
-          fetchSampleData(response.data.samples[0]);
-        } else {
-          setIsLoading(false);
-          setError("This dataset has no samples.");
-        }
-      } catch (err) {
-        setError("Failed to fetch dataset data");
-        setIsLoading(false);
-      }
-    };
-
     fetchDatasetData();
-  }, [params.datasetId]);
+  }, []);
+
+  useEffect(() => {
+    if (sampleId && currentSampleId !== null) {
+      fetchSampleData(sampleId);
+      setCurrentSampleId(sampleId);
+    } else if (datasetData?.samples && datasetData?.samples.length > 0) {
+      fetchSampleData(datasetData.samples[0]);
+      setCurrentSampleId(datasetData.samples[0]);
+    }
+  }, [params.datasetId, sampleId, datasetData, currentSampleId]);
 
   useEffect(() => {
     if (!currentFile) return;
@@ -97,7 +96,7 @@ export default function AnnotationPage({ params }) {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+        <div className="text-gray-600 dark:text-gray-400">isLoading...</div>
       </div>
     );
   }
@@ -189,6 +188,10 @@ export default function AnnotationPage({ params }) {
       setError("Failed to load next sample");
     }
   };
+
+  console.log("datasetData: ", datasetData);
+  console.log("sampleData: ", sampleData);
+  console.log("currentSampleId: ", currentSampleId);
 
   if (sampleData == null) {
     return (

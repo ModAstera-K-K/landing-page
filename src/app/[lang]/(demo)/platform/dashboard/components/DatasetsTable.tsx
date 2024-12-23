@@ -84,7 +84,12 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
                   className="border-t border-gray-200 dark:border-gray-700"
                 >
                   <td className="py-2 text-gray-800 dark:text-gray-200">
-                    {dataset.name}
+                    <Link
+                      href={`/platform/datasets/${dataset.id}`}
+                      className="rounded p-1 hover:bg-blue-50"
+                    >
+                      {dataset.name}
+                    </Link>
                   </td>
                   <td className="py-2 text-gray-800 dark:text-gray-200">
                     {dataset.description}
@@ -93,12 +98,7 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
                     {new Date(dataset.last_modified).toLocaleString()}
                   </td>
                   <td className="py-2 text-gray-800 dark:text-gray-200">
-                    <Link
-                      href={`/platform/datasets/${dataset.id}`}
-                      className="rounded border border-blue-500 px-2 py-1 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900"
-                    >
-                      {dataset.samples?.length || 0} samples
-                    </Link>
+                    {dataset.samples?.length || 0} samples
                   </td>
                 </tr>
               ))}
