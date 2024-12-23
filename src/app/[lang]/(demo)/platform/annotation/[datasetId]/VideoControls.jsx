@@ -5,7 +5,7 @@ export default function VideoControls({
 }) {
   return (
     <>
-      <div className="flex space-x-2 border-l border-r border-gray-300 px-2 dark:border-gray-700">
+      <div className="flex space-x-2 border-gray-300 px-2 dark:border-gray-700">
         <button
           className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
           onClick={() => setCurrentFrame(0)}

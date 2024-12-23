@@ -195,28 +195,11 @@ export default function AnnotationPage({ params }) {
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
-      <div className="mt-10"></div>
+      <div className="px-4 text-xl font-bold text-gray-900 dark:text-white">
+        {datasetData.name}
+      </div>
       {/* Top toolbar */}
       <div className="flex items-center space-x-2 border-b border-gray-300 bg-gray-100 p-2 dark:border-gray-700 dark:bg-gray-800">
-        <button
-          className="rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
-          title="Menu"
-        >
-          <svg
-            className="h-5 w-5 text-black dark:text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-
         {isVideo && (
           <VideoControls
             currentFrame={currentFrame}

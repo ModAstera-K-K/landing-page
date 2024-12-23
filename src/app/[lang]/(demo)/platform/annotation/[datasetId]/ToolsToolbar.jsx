@@ -11,7 +11,7 @@ export default function ToolsToolbar({ selectedTool, setSelectedTool }) {
   ];
 
   return (
-    <div className="border-r border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+    <div className="border-r border-gray-300 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
       <div className="flex flex-col items-center space-y-2 py-2">
         {tools.map((tool) => (
           <div

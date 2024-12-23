@@ -20,7 +20,7 @@ export default function RightPanel({
   generateRandomColor,
 }) {
   return (
-    <div className="w-64 border-l border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+    <div className="w-64 border-l border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800">
       <div className="border-b border-gray-300 dark:border-gray-700">
         <div className="flex">
           <button
@@ -72,7 +72,7 @@ export default function RightPanel({
           Next
         </button>
       </div>
-      <div className="border-b border-gray-300 p-2 text-sm dark:border-gray-700">
+      <div className="flex flex-col items-center justify-center border-b border-gray-300 p-2 text-sm dark:border-gray-700">
         <p className="mb-1 font-medium text-black dark:text-white">
           Mouse Position:
         </p>
