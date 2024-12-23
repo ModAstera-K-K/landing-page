@@ -1,10 +1,28 @@
-import modelsData from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
-import datasetsData from "@/app/[lang]/(demo)/platform/datasetsData";
+import { useEffect, useState } from "react";
+import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
 
 export function StatsSection() {
-  const datasetsCount = datasetsData.length;
+  const [datasetsCount, setDatasetsCount] = useState(0);
   const modelsCount = modelsData.length;
   const activeJobs = 3;
+
+  useEffect(() => {
+    const fetchDatasetsCount = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/`,
+        );
+        const data = await response.json();
+        setDatasetsCount(data.length);
+      } catch (error) {
+        console.error("Error fetching datasets:", error);
+        setDatasetsCount(0);
+      }
+    };
+
+    fetchDatasetsCount();
+  }, []);
+
   return (
     <div className="mb-8 grid grid-cols-3 gap-6">
       <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
