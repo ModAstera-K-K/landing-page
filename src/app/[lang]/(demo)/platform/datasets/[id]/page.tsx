@@ -6,6 +6,14 @@ import Link from "next/link";
 import PlatformNavigation from "@/components/PlatformNavigation";
 import SampleCard from "@/components/SampleCard";
 import Pagination from "@/components/Pagination";
+import { AddSamplesForm } from "@/app/[lang]/(demo)/platform/dashboard/components/AddSamplesForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface Dataset {
   id: string;
@@ -21,7 +29,7 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(24);
-
+  const [showAddSamplesForm, setShowAddSamplesForm] = useState(false);
   useEffect(() => {
     const fetchDataset = async () => {
       try {
@@ -129,19 +137,30 @@ export default function DatasetView({ params }: { params: { id: string } }) {
 
       {/* Action Buttons */}
       <div className="mt-8 flex space-x-4">
-        <Link
-          href={`/platform/datasets/${dataset.id}/upload`}
+        <button
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          onClick={() => setShowAddSamplesForm(true)}
         >
-          Upload Samples
-        </Link>
-        <Link
-          href={`/platform/datasets/${dataset.id}/upload-annotations`}
-          className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-        >
-          Upload Annotation File
-        </Link>
+          Add Samples
+        </button>
       </div>
+
+      {/* Dialog for AddSamplesForm */}
+      <Dialog open={showAddSamplesForm} onOpenChange={setShowAddSamplesForm}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Add Samples to Dataset</DialogTitle>
+            <DialogDescription>
+              Upload new samples to add to this dataset.
+            </DialogDescription>
+          </DialogHeader>
+
+          <AddSamplesForm
+            datasetId={params.id}
+            setShowAddSamplesForm={setShowAddSamplesForm}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-interface UploadFormProps {
-  setShowUploadForm: (show: boolean) => void;
+interface AddSamplesFormProps {
+  setShowAddSamplesForm: (show: boolean) => void;
+  datasetId: string;
 }
 
 interface UploadedSample {
@@ -10,9 +11,10 @@ interface UploadedSample {
   file_path: string;
 }
 
-export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
-  const [datasetName, setDatasetName] = useState("");
-  const [description, setDescription] = useState("");
+export const AddSamplesForm = ({
+  setShowAddSamplesForm,
+  datasetId,
+}: AddSamplesFormProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -25,6 +27,23 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
       dataType?: string;
     }>
   >([]);
+  const [existingSamples, setExistingSamples] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchDataset = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${datasetId}/`,
+          { withCredentials: true },
+        );
+        setExistingSamples(response.data.samples);
+      } catch (error) {
+        console.error("Error fetching dataset:", error);
+        setUploadError("Failed to fetch existing dataset");
+      }
+    };
+    fetchDataset();
+  }, [datasetId]);
 
   const determineDataType = (
     file: File,
@@ -50,7 +69,7 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
   };
 
   const handleFileUpload = async () => {
-    if (!datasetName || filesToUpload.length === 0) return;
+    if (filesToUpload.length === 0) return;
     setIsUploading(true);
     const uploadedSamples: UploadedSample[] = [];
 
@@ -76,7 +95,6 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
 
         const formData = new FormData();
         formData.append("file", fileUpload.file);
-        formData.append("dataset_name", datasetName);
         const dataType =
           fileUpload.dataType || determineDataType(fileUpload.file);
         if (dataType) {
@@ -127,13 +145,14 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
         }
       }
 
-      // Create the dataset with all uploaded samples
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/`,
+      // Update the dataset with all samples (existing + new)
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${datasetId}/`,
         {
-          name: datasetName,
-          description: description,
-          samples: uploadedSamples.map((sample) => sample.id),
+          samples: [
+            ...existingSamples,
+            ...uploadedSamples.map((sample) => sample.id),
+          ],
         },
         {
           withCredentials: true,
@@ -141,13 +160,11 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
       );
 
       // Reset form
-      setDatasetName("");
-      setDescription("");
       setFilesToUpload([]);
-      setShowUploadForm(false);
+      setShowAddSamplesForm(false);
     } catch (error) {
       console.error("Upload error:", error);
-      setUploadError("Failed to create dataset");
+      setUploadError("Failed to update dataset");
     } finally {
       setIsUploading(false);
     }
@@ -178,7 +195,7 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
   return (
     <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
       <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">
-        Upload Dataset
+        Add Samples to Dataset
       </h2>
       <div
         className="mb-4 flex flex-col items-center rounded-lg border-2 border-dashed border-gray-300 p-8 dark:border-gray-600"
@@ -265,46 +282,12 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
         )}
       </div>
 
-      <div className="mb-4">
-        <label className="mb-2 block text-gray-600 dark:text-gray-400">
-          Dataset Name
-        </label>
-        <input
-          type="text"
-          value={datasetName}
-          onChange={(e) => setDatasetName(e.target.value)}
-          placeholder="Enter a name for your dataset"
-          className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="mb-2 block text-gray-600 dark:text-gray-400">
-          Description
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter a description for your dataset"
-          className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-          rows={3}
-        />
-      </div>
-
       <div className="flex space-x-2">
         <button
           onClick={() => handleFileUpload()}
-          disabled={
-            !filesToUpload.length ||
-            !datasetName ||
-            isUploading ||
-            !!uploadError
-          }
+          disabled={!filesToUpload.length || isUploading || !!uploadError}
           className={`rounded px-4 py-2 font-semibold text-white ${
-            !filesToUpload.length ||
-            !datasetName ||
-            isUploading ||
-            !!uploadError
+            !filesToUpload.length || isUploading || !!uploadError
               ? "bg-gray-400"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
@@ -312,7 +295,7 @@ export const UploadForm = ({ setShowUploadForm }: UploadFormProps) => {
           Upload
         </button>
         <button
-          onClick={() => setShowUploadForm(false)}
+          onClick={() => setShowAddSamplesForm(false)}
           disabled={isUploading}
           className="rounded bg-gray-400 px-4 py-2 font-semibold text-white hover:bg-gray-500"
         >

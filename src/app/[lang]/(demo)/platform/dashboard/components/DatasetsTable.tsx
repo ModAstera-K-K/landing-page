@@ -61,8 +61,8 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
         Datasets
       </h2>
       <div>
-        <div className="h-full">
-          <table className="w-full text-left">
+        <div className="min-h-[512px]">
+          <table className="h-full w-full text-left">
             <thead>
               <tr>
                 <th className="pb-2 text-gray-600 dark:text-gray-400">Name</th>
@@ -108,7 +108,7 @@ export const DatasetsTable = ({ onUploadClick }: DatasetsTableProps) => {
         <Link
           href="#"
           onClick={onUploadClick}
-          className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+          className="relative bottom-0 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           New Dataset
         </Link>
