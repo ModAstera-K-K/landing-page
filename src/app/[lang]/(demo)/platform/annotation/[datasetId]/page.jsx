@@ -42,6 +42,11 @@ export default function AnnotationPage({ params }) {
         { withCredentials: true },
       );
       setSampleData(response.data);
+      if (response.data?.annotations?.length > 0) {
+        setAnnotations(response.data.annotations);
+      } else {
+        setAnnotations([]);
+      }
       setCurrentFile(response.data.file);
       setIsLoading(false);
     } catch (err) {
@@ -57,6 +62,11 @@ export default function AnnotationPage({ params }) {
         { withCredentials: true },
       );
       setDatasetData(response.data);
+      if (response.data?.annotations?.length > 0) {
+        setAnnotations(response.data.annotations);
+      } else {
+        setAnnotations([]);
+      }
       setIsLoading(false);
     } catch (err) {
       setError("Failed to fetch dataset data");
@@ -161,8 +171,13 @@ export default function AnnotationPage({ params }) {
         { withCredentials: true },
       );
       setSampleData(response.data);
+      setAnnotations(response.data.annotations);
       setCurrentFile(response.data.file);
-      setAnnotations([]); // Reset annotations for new sample
+      if (response.data?.annotations?.length > 0) {
+        setAnnotations(response.data.annotations); // Reset annotations for new sample
+      } else {
+        setAnnotations([]);
+      }
     } catch (err) {
       setError("Failed to load previous sample");
     }
@@ -179,7 +194,11 @@ export default function AnnotationPage({ params }) {
       );
       setSampleData(response.data);
       setCurrentFile(response.data.file);
-      setAnnotations([]); // Reset annotations for new sample
+      if (response.data?.annotations?.length > 0) {
+        setAnnotations(response.data.annotations); // Reset annotations for new sample
+      } else {
+        setAnnotations([]);
+      }
     } catch (err) {
       setError("Failed to load next sample");
     }

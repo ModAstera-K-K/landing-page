@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 export default function RightPanel({
   activeTab,
@@ -19,6 +20,37 @@ export default function RightPanel({
   setNewLabel,
   generateRandomColor,
 }) {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    console.log("Saving annotations:", annotations);
+    try {
+      setIsSaving(true);
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${sampleData.id}/`,
+        {
+          annotations: annotations,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        },
+      );
+
+      console.log("Save successful:", response.data);
+    } catch (error) {
+      console.error(
+        "Error saving annotations:",
+        error.response?.data || error.message,
+      );
+      // You might want to add proper error handling/notification here
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="w-64 border-l border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800">
       <div className="border-b border-gray-300 dark:border-gray-700">
@@ -150,14 +182,24 @@ export default function RightPanel({
               </div>
             ))}
 
-            {selectedId && (
+            <div className="mt-4 flex flex-col gap-2">
+              {selectedId && (
+                <button
+                  onClick={() => setSelectedId(null)}
+                  className="w-full rounded bg-gray-200 px-3 py-2 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                >
+                  Clear Selection
+                </button>
+              )}
+
               <button
-                onClick={() => setSelectedId(null)}
-                className="mt-4 w-full rounded bg-gray-200 px-3 py-2 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="w-full rounded bg-green-500 px-3 py-2 text-sm text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-green-300"
               >
-                Clear Selection
+                {isSaving ? "Saving..." : "Save Annotations"}
               </button>
-            )}
+            </div>
           </div>
         )}
 

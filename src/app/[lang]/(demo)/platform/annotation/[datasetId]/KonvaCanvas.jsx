@@ -505,6 +505,8 @@ export default function KonvaCanvas({
     return simplified;
   };
 
+  console.log("annotations", annotations);
+
   return (
     <div
       ref={containerRef}
