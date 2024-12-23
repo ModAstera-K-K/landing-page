@@ -30,6 +30,8 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [showAddSamplesForm, setShowAddSamplesForm] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
 
   const fetchDataset = async () => {
     try {
@@ -50,6 +52,19 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   useEffect(() => {
     fetchDataset();
   }, [params.id]);
+
+  const handleUpdate = async (field: "name" | "description", value: string) => {
+    try {
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.id}/`,
+        { [field]: value },
+        { withCredentials: true },
+      );
+      setDataset((prev) => (prev ? { ...prev, [field]: value } : null));
+    } catch (err) {
+      setError(`Failed to update ${field}`);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -94,12 +109,57 @@ export default function DatasetView({ params }: { params: { id: string } }) {
 
       {/* Dataset Info */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {dataset.name}
-        </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          {dataset.description}
-        </p>
+        {isEditingName ? (
+          <input
+            type="text"
+            aria-label="Dataset name"
+            className="border-b border-gray-300 bg-transparent text-2xl font-bold text-gray-900 focus:border-blue-500 focus:outline-none dark:text-white"
+            value={dataset.name}
+            onChange={(e) =>
+              setDataset((prev) =>
+                prev ? { ...prev, name: e.target.value } : null,
+              )
+            }
+            onBlur={(e) => {
+              setIsEditingName(false);
+              handleUpdate("name", e.target.value);
+            }}
+            autoFocus
+          />
+        ) : (
+          <h1
+            className="cursor-pointer text-2xl font-bold text-gray-900 hover:opacity-80 dark:text-white"
+            onClick={() => setIsEditingName(true)}
+          >
+            {dataset.name}
+          </h1>
+        )}
+
+        {isEditingDescription ? (
+          <textarea
+            aria-label="Dataset description"
+            className="mt-2 w-full rounded border bg-transparent p-2 text-gray-600 focus:border-blue-500 focus:outline-none dark:text-gray-400"
+            value={dataset.description}
+            onChange={(e) =>
+              setDataset((prev) =>
+                prev ? { ...prev, description: e.target.value } : null,
+              )
+            }
+            onBlur={(e) => {
+              setIsEditingDescription(false);
+              handleUpdate("description", e.target.value);
+            }}
+            autoFocus
+          />
+        ) : (
+          <p
+            className="mt-2 cursor-pointer text-gray-600 hover:opacity-80 dark:text-gray-400"
+            onClick={() => setIsEditingDescription(true)}
+          >
+            {dataset.description}
+          </p>
+        )}
+
         <p className="mt-1 text-sm text-gray-500">
           Last modified: {new Date(dataset.last_modified).toLocaleString()}
         </p>
