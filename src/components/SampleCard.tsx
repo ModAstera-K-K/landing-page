@@ -60,7 +60,19 @@ export default function SampleCard({
 
   return (
     <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
-      {sample.data_type === "image" ? (
+      {sample?.data_type === "video" ? (
+        <video
+          src={sample.file}
+          className="mb-4 h-48 w-full rounded object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src={sample.file} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      ) : sample?.data_type === "image" ? (
         <Image
           src={sample.file}
           alt={sample.name || `Sample ${sample.id}`}
@@ -71,7 +83,7 @@ export default function SampleCard({
       ) : (
         <div className="mb-4 flex h-48 items-center justify-center rounded bg-gray-100 dark:bg-gray-700">
           <span className="text-gray-500 dark:text-gray-400">
-            {sample.data_type ? sample.data_type.toUpperCase() : "UNKNOWN"}
+            {sample?.data_type ? sample.data_type.toUpperCase() : "UNKNOWN"}
           </span>
         </div>
       )}

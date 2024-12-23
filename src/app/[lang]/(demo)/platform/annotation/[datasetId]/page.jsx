@@ -193,6 +193,8 @@ export default function AnnotationPage({ params }) {
     );
   }
 
+  console.log("currentFile", currentFile);
+
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
       <div className="mt-10"></div>
