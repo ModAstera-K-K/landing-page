@@ -189,10 +189,6 @@ export default function AnnotationPage({ params }) {
     }
   };
 
-  console.log("datasetData: ", datasetData);
-  console.log("sampleData: ", sampleData);
-  console.log("currentSampleId: ", currentSampleId);
-
   if (sampleData == null) {
     return (
       <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
