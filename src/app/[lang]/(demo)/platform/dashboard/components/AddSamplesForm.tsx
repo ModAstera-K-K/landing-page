@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 interface AddSamplesFormProps {
-  setShowAddSamplesForm: (show: boolean) => void;
   datasetId: string;
+  setShowAddSamplesForm: (show: boolean) => void;
+  onSuccess?: () => void;
 }
 
 interface UploadedSample {
@@ -12,8 +13,9 @@ interface UploadedSample {
 }
 
 export const AddSamplesForm = ({
-  setShowAddSamplesForm,
   datasetId,
+  setShowAddSamplesForm,
+  onSuccess,
 }: AddSamplesFormProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -162,6 +164,7 @@ export const AddSamplesForm = ({
       // Reset form
       setFilesToUpload([]);
       setShowAddSamplesForm(false);
+      onSuccess?.();
     } catch (error) {
       console.error("Upload error:", error);
       setUploadError("Failed to update dataset");

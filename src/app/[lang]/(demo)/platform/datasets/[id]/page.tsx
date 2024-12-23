@@ -30,23 +30,24 @@ export default function DatasetView({ params }: { params: { id: string } }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [showAddSamplesForm, setShowAddSamplesForm] = useState(false);
-  useEffect(() => {
-    const fetchDataset = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.id}`,
-          {
-            withCredentials: true,
-          },
-        );
-        setDataset(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError("Failed to fetch dataset");
-        setIsLoading(false);
-      }
-    };
 
+  const fetchDataset = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${params.id}`,
+        {
+          withCredentials: true,
+        },
+      );
+      setDataset(response.data);
+      setIsLoading(false);
+    } catch (err) {
+      setError("Failed to fetch dataset");
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDataset();
   }, [params.id]);
 
@@ -158,6 +159,10 @@ export default function DatasetView({ params }: { params: { id: string } }) {
           <AddSamplesForm
             datasetId={params.id}
             setShowAddSamplesForm={setShowAddSamplesForm}
+            onSuccess={() => {
+              fetchDataset();
+              setCurrentPage(1); // Reset to first page
+            }}
           />
         </DialogContent>
       </Dialog>
