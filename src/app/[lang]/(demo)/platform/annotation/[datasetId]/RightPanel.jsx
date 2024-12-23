@@ -38,8 +38,6 @@ export default function RightPanel({
           withCredentials: true,
         },
       );
-
-      console.log("Save successful:", response.data);
     } catch (error) {
       console.error(
         "Error saving annotations:",
