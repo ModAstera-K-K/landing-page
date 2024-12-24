@@ -67,6 +67,7 @@ export default function AnnotationPage({ params }) {
       } else {
         setAnnotations([]);
       }
+      setLabels(response.data.labels);
       setIsLoading(false);
     } catch (err) {
       setError("Failed to fetch dataset data");
@@ -249,6 +250,7 @@ export default function AnnotationPage({ params }) {
         />
 
         <RightPanel
+          datasetId={params.datasetId}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           sampleData={sampleData}

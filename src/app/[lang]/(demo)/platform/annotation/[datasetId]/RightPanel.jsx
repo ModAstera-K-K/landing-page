@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 export default function RightPanel({
+  datasetId,
   activeTab,
   setActiveTab,
   sampleData,
@@ -212,19 +213,42 @@ export default function RightPanel({
                 className="w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               />
               <button
-                onClick={() => {
+                onClick={async () => {
                   if (
                     newLabel.trim() &&
                     !labels.find((l) => l.name === newLabel.trim())
                   ) {
-                    setLabels([
+                    const updatedLabels = [
                       ...labels,
                       {
                         name: newLabel.trim(),
                         color: generateRandomColor(),
                       },
-                    ]);
-                    setNewLabel("");
+                    ];
+
+                    try {
+                      await axios.patch(
+                        `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${datasetId}/`,
+                        {
+                          labels: updatedLabels,
+                        },
+                        {
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          withCredentials: true,
+                        },
+                      );
+
+                      setLabels(updatedLabels);
+                      setNewLabel("");
+                    } catch (error) {
+                      console.error(
+                        "Error updating labels:",
+                        error.response?.data || error.message,
+                      );
+                      // Add error handling/notification here
+                    }
                   }
                 }}
                 className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
