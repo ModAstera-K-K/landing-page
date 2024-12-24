@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import VideoControls from "./VideoControls";
 import ToolsToolbar from "./ToolsToolbar";
 import RightPanel from "./RightPanel";
+import PlatformNavigation from "@/components/PlatformNavigation";
 
 const KonvaCanvas = dynamic(() => import("./KonvaCanvas"), {
   ssr: false,
@@ -215,7 +216,10 @@ export default function AnnotationPage({ params }) {
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
-      <div className="px-4 text-xl font-bold text-gray-900 dark:text-white">
+      <div className="px-8">
+        <PlatformNavigation />
+      </div>
+      <div className="px-8 text-xl font-bold text-gray-900 dark:text-white">
         {datasetData.name}
       </div>
       {/* Top toolbar */}
