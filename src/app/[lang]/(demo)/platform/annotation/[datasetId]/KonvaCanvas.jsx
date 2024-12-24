@@ -403,18 +403,23 @@ export default function KonvaCanvas({
     const stage = e.target.getStage();
     const pos = stage.getPointerPosition();
 
+    // Ensure we have valid coordinates
+    if (!pos || typeof pos.x !== "number" || typeof pos.y !== "number") {
+      return;
+    }
+
     if (selectedTool === "box") {
-      setAnnotations([
-        ...annotations,
-        {
-          id: crypto.randomUUID(),
-          x: pos.x,
-          y: pos.y,
-          width: 0,
-          height: 0,
-          type: "box",
-        },
-      ]);
+      const newAnnotation = {
+        id: crypto.randomUUID(),
+        x: pos.x,
+        y: pos.y,
+        width: 0,
+        height: 0,
+        type: "box",
+        frame: isVideo ? currentFrame : undefined,
+      };
+
+      setAnnotations([...annotations, newAnnotation]);
       setIsDrawing(true);
     } else if (selectedTool === "polygon") {
       setPoints([pos.x, pos.y]);
@@ -432,6 +437,15 @@ export default function KonvaCanvas({
 
     if (selectedTool === "box") {
       const lastAnnotation = annotations[annotations.length - 1];
+      // Check if lastAnnotation exists and has the required properties
+      if (
+        !lastAnnotation ||
+        typeof lastAnnotation.x !== "number" ||
+        typeof lastAnnotation.y !== "number"
+      ) {
+        return;
+      }
+
       const newWidth = pos.x - lastAnnotation.x;
       const newHeight = pos.y - lastAnnotation.y;
 
@@ -448,10 +462,8 @@ export default function KonvaCanvas({
         }),
       );
     } else if (selectedTool === "polygon") {
-      // Add point to polygon every other mouse move
       setPointAddCounter((prev) => prev + 1);
       if (pointAddCounter % 2 === 0) {
-        // rate of adding points -> 1/2
         setPoints([...points, pos.x, pos.y]);
       }
     }
@@ -462,10 +474,7 @@ export default function KonvaCanvas({
     if (selectedId) return;
 
     if (isDrawing && selectedTool === "polygon" && points.length >= 6) {
-      // Close the polygon by adding the first point again
       const closedPoints = [...points, points[0], points[1]];
-
-      // Simplify points by removing points that are too close together
       const simplifiedPoints = simplifyPoints(closedPoints);
 
       setAnnotations([
@@ -474,10 +483,11 @@ export default function KonvaCanvas({
           id: crypto.randomUUID(),
           points: simplifiedPoints,
           type: "polygon",
+          frame: isVideo ? currentFrame : undefined,
         },
       ]);
       setPoints([]);
-      setPointAddCounter(0); // Reset counter
+      setPointAddCounter(0);
     }
     setIsDrawing(false);
   };

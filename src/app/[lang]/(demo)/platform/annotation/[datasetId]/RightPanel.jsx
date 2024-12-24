@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 export default function RightPanel({
@@ -20,17 +20,121 @@ export default function RightPanel({
   newLabel,
   setNewLabel,
   generateRandomColor,
+  isVideo,
+  currentFrame,
 }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [frameAnnotations, setFrameAnnotations] = useState({});
+  const [shouldPersist, setShouldPersist] = useState(false);
+
+  // Initialize frame annotations when sample data changes
+  useEffect(() => {
+    if (isVideo && sampleData?.annotations) {
+      const frameMap = {};
+      const usedIds = new Set(); // Track used IDs
+
+      sampleData.annotations.forEach((annotation) => {
+        const frame = annotation.frame || 0;
+        if (!frameMap[frame]) {
+          frameMap[frame] = [];
+        }
+
+        // Ensure unique ID for each annotation
+        let annotationWithUniqueId = { ...annotation };
+        if (
+          !annotationWithUniqueId.id ||
+          usedIds.has(annotationWithUniqueId.id)
+        ) {
+          annotationWithUniqueId.id = crypto.randomUUID();
+        }
+        usedIds.add(annotationWithUniqueId.id);
+
+        frameMap[frame].push(annotationWithUniqueId);
+      });
+
+      setFrameAnnotations(frameMap);
+      // Set initial annotations for current frame
+      setAnnotations(frameMap[currentFrame] || []);
+    } else if (!isVideo && sampleData?.annotations) {
+      // Handle non-video annotations
+      const uniqueAnnotations = sampleData.annotations.map((annotation) => ({
+        ...annotation,
+        id: annotation.id || crypto.randomUUID(),
+      }));
+      setAnnotations(uniqueAnnotations);
+    }
+  }, [isVideo, sampleData, currentFrame, setAnnotations]);
+
+  // Handle frame changes and persistence
+  useEffect(() => {
+    if (!isVideo) return;
+
+    // Store current frame's annotations with guaranteed unique IDs
+    const annotationsWithUniqueIds = annotations.map((anno) => ({
+      ...anno,
+      id: anno.id || crypto.randomUUID(),
+    }));
+
+    setFrameAnnotations((prev) => ({
+      ...prev,
+      [currentFrame]: annotationsWithUniqueIds,
+    }));
+  }, [isVideo, currentFrame, annotations]);
+
+  // Handle persistence when frame changes
+  useEffect(() => {
+    if (!isVideo || !shouldPersist) return;
+
+    // Get annotations for the current frame
+    const currentAnnotations = frameAnnotations[currentFrame];
+
+    // If current frame has no annotations but previous frame does, copy them
+    if (
+      !currentAnnotations?.length &&
+      currentFrame > 0 &&
+      frameAnnotations[currentFrame - 1]?.length
+    ) {
+      const previousAnnotations = frameAnnotations[currentFrame - 1];
+      const newAnnotations = previousAnnotations.map((anno) => ({
+        ...anno,
+        id: crypto.randomUUID(), // Always generate new ID when copying
+        frame: currentFrame,
+      }));
+
+      setFrameAnnotations((prev) => ({
+        ...prev,
+        [currentFrame]: newAnnotations,
+      }));
+      setAnnotations(newAnnotations);
+    } else {
+      // Set the current frame's annotations
+      setAnnotations(currentAnnotations || []);
+    }
+  }, [isVideo, currentFrame, shouldPersist, frameAnnotations]);
 
   const handleSave = async () => {
-    console.log("Saving annotations:", annotations);
     try {
       setIsSaving(true);
+
+      let annotationsToSave;
+      if (isVideo) {
+        // Flatten frame annotations into a single array and ensure unique IDs
+        annotationsToSave = Object.entries(frameAnnotations).flatMap(
+          ([frame, annotations]) =>
+            annotations.map((annotation) => ({
+              ...annotation,
+              frame: parseInt(frame),
+              id: annotation.id || crypto.randomUUID(), // Ensure unique ID
+            })),
+        );
+      } else {
+        annotationsToSave = annotations;
+      }
+
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/samples/${sampleData.id}/`,
         {
-          annotations: annotations,
+          annotations: annotationsToSave,
         },
         {
           headers: {
@@ -39,16 +143,36 @@ export default function RightPanel({
           withCredentials: true,
         },
       );
+
+      console.log("Save successful:", response.data);
     } catch (error) {
       console.error(
         "Error saving annotations:",
         error.response?.data || error.message,
       );
-      // You might want to add proper error handling/notification here
     } finally {
       setIsSaving(false);
     }
   };
+
+  // Handle annotation label change
+  const handleLabelChange = useCallback(
+    (annotationId, newLabel) => {
+      const selectedLabel = labels.find((l) => l.name === newLabel);
+      setAnnotations((prevAnnotations) =>
+        prevAnnotations.map((a) =>
+          a.id === annotationId
+            ? {
+                ...a,
+                label: newLabel,
+                color: selectedLabel?.color,
+              }
+            : a,
+        ),
+      );
+    },
+    [labels, setAnnotations],
+  );
 
   return (
     <div className="w-64 border-l border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -87,6 +211,7 @@ export default function RightPanel({
       <div className="p-2 text-center text-xs text-gray-500 dark:text-gray-400">
         {sampleData.name}
       </div>
+
       <div className="flex justify-between border-gray-300 p-2 dark:border-gray-700">
         <button
           onClick={handlePreviousSample}
@@ -112,9 +237,34 @@ export default function RightPanel({
           <p>Y: {Math.round(mouseCoords.y)}</p>
         </div>
       </div>
+      {isVideo && (
+        <div className="border-b border-gray-300 p-2 dark:border-gray-700">
+          <label className="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300">
+            <input
+              type="checkbox"
+              checked={shouldPersist}
+              onChange={(e) => setShouldPersist(e.target.checked)}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+            />
+            <span>Persist annotations to next frame</span>
+          </label>
+        </div>
+      )}
       <div className="p-4">
         {activeTab === "objects" && (
           <div>
+            {isVideo && (
+              <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                Frame: {currentFrame + 1}
+                {frameAnnotations[currentFrame]?.length > 0 && (
+                  <span>
+                    {" "}
+                    ({frameAnnotations[currentFrame].length} annotations)
+                  </span>
+                )}
+              </div>
+            )}
+
             {annotations.map((anno) => (
               <div
                 key={anno.id}
@@ -138,22 +288,7 @@ export default function RightPanel({
                   )}
                   <select
                     value={anno.label || ""}
-                    onChange={(e) => {
-                      const selectedLabel = labels.find(
-                        (l) => l.name === e.target.value,
-                      );
-                      setAnnotations(
-                        annotations.map((a) =>
-                          a.id === anno.id
-                            ? {
-                                ...a,
-                                label: e.target.value,
-                                color: selectedLabel?.color,
-                              }
-                            : a,
-                        ),
-                      );
-                    }}
+                    onChange={(e) => handleLabelChange(anno.id, e.target.value)}
                     className="w-full border-none focus:ring-0 dark:bg-gray-800 dark:text-white"
                     onClick={(e) => e.stopPropagation()}
                   >

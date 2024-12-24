@@ -268,6 +268,8 @@ export default function AnnotationPage({ params }) {
           newLabel={newLabel}
           setNewLabel={setNewLabel}
           generateRandomColor={generateRandomColor}
+          isVideo={isVideo}
+          currentFrame={currentFrame}
         />
       </div>
     </div>
