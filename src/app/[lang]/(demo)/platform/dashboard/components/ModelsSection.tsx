@@ -1,124 +1,102 @@
 import { useState, useEffect } from "react";
 import { ModelTrainingForm } from "./ModelTrainingForm";
-import { ModelsTable } from "./ModelsTable";
-import datasetsData from "@/app/[lang]/(demo)/platform/datasetsData";
-import modelsData from "@/app/[lang]/(demo)/platform/modelsData";
-import {
-  startModelTraining,
-  subscribeToModelUpdates,
-} from "@/app/[lang]/(demo)/platform/modelsData"; // Import the shared models data
+
+interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+  last_modified: string;
+  samples: number;
+}
+
+interface Model {
+  name: string;
+  description: string;
+  status: string;
+}
+
+const initialModels: Model[] = [
+  {
+    name: "Model 1",
+    description: "A sample model",
+    status: "Training",
+  },
+];
+
+const sampleDatasets: Dataset[] = [
+  {
+    id: "1",
+    name: "Sample Dataset",
+    description: "A sample dataset",
+    last_modified: new Date().toISOString(),
+    samples: 0,
+  },
+];
 
 export function ModelsSection() {
-  const [showUploadForm, setShowUploadForm] = useState(false);
-  const [datasetName, setDatasetName] = useState("");
+  const [isTrainingModel, setIsTrainingModel] = useState(false);
+  const [modelName, setModelName] = useState("");
   const [trainingInstructions, setTrainingInstructions] = useState("");
   const [evaluationMetric, setEvaluationMetric] = useState("Auto");
-  const [isTrainingModel, setIsTrainingModel] = useState(false); // New state to track if training model block is shown
-  const [modelName, setModelName] = useState(""); // Add new state for model name
-  const [, forceUpdate] = useState({});
-  const [filesToUpload, setFilesToUpload] = useState<
-    Array<{
-      file: File;
-      progress?: number;
-      status?: "uploading" | "completed" | "error";
-      error?: string;
-      dataType?: string;
-    }>
-  >([]);
-
-  // Subscribe to model updates
-  useEffect(() => {
-    const unsubscribe = subscribeToModelUpdates(() => {
-      forceUpdate({});
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // const handleUploadClick = () => {
-  //   setShowUploadForm(true);
-  //   setIsTrainingModel(false); // Reset training model state
-  // };
-
-  // const handleContinueClick = () => {
-  //   // Check if a file is uploaded and a dataset name is provided
-  //   if (!filesToUpload || !datasetName) {
-  //     return; // Do nothing if conditions are not met
-  //   }
-
-  //   setShowUploadForm(false);
-  //   // Reset the form fields if needed
-  //   setDatasetName("");
-  //   setTrainingInstructions("");
-  //   setEvaluationMetric("Auto");
-  //   setFilesToUpload([]);
-
-  //   // Append new dataset to datasetsData at the top
-  //   const newDataset = {
-  //     name: datasetName,
-  //     size: `${(Math.random() * 9 + 1).toFixed(1)} GB`, // Random size between 1-10 GB
-  //     lastUpdated: new Date().toISOString().split("T")[0], // Current date
-  //     annotationPath: "/platform/dashboard",
-  //   };
-  //   datasetsData.unshift(newDataset); // Update datasetsData to add at the top
-  //   // Trigger a re-render or state update if necessary
-  // };
-
-  // New function to handle training model click
-  const handleTrainModelClick = () => {
-    setIsTrainingModel(true);
-    setShowUploadForm(false); // Hide upload form
-  };
-
-  // New function to handle cancel action
-  const handleCancelClick = () => {
-    setIsTrainingModel(false); // Go back to models view
-  };
-
-  const handleTrainModelContinue = () => {
-    if (!modelName.trim() || !trainingInstructions.trim()) {
-      return;
-    }
-
-    const newModel = {
-      name: modelName,
-      status: "Training",
-      accuracy: "-",
-      lastUpdated: new Date().toISOString().split("T")[0],
-      progress: 0,
-      color: "bg-blue-500",
-      link: "/platform/training",
-      trainingInstructions: trainingInstructions,
-    };
-
-    modelsData.unshift(newModel);
-    startModelTraining(newModel);
-
-    setModelName("");
-    setTrainingInstructions("");
-    setEvaluationMetric("Auto");
-    setIsTrainingModel(false);
-  };
+  const [models, setModels] = useState<Model[]>(initialModels);
 
   return (
-    <>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Models
+        </h2>
+        <button
+          onClick={() => setIsTrainingModel(true)}
+          className="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
+        >
+          Train New Model
+        </button>
+      </div>
+
       {isTrainingModel ? (
         <ModelTrainingForm
-          datasets={datasetsData}
+          datasets={sampleDatasets}
           modelName={modelName}
           setModelName={setModelName}
           trainingInstructions={trainingInstructions}
           setTrainingInstructions={setTrainingInstructions}
           evaluationMetric={evaluationMetric}
           setEvaluationMetric={setEvaluationMetric}
-          onContinue={handleTrainModelContinue}
-          onCancel={handleCancelClick}
+          onCancel={() => {
+            setIsTrainingModel(false);
+            setModelName("");
+            setTrainingInstructions("");
+          }}
+          onContinue={async () => {
+            // Handle model training submission
+            setIsTrainingModel(false);
+            setModelName("");
+            setTrainingInstructions("");
+          }}
         />
       ) : (
-        <ModelsTable
-          models={modelsData}
-          onTrainModelClick={handleTrainModelClick}
-        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {models.map((model: Model) => (
+            <div
+              key={model.name}
+              className="rounded-lg bg-white p-4 shadow dark:bg-gray-800"
+            >
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                {model.name}
+              </h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {model.description}
+              </p>
+              <div className="mt-4">
+                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100">
+                  {model.status}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-    </>
+    </div>
   );
 }

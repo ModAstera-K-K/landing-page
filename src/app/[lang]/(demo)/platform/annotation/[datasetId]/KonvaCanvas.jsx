@@ -183,6 +183,30 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
     });
   };
 
+  const handleAnchorRightClick = (e, index) => {
+    e.evt.preventDefault(); // Prevent the default context menu
+    e.cancelBubble = true;
+
+    // Don't allow deleting if there would be less than 3 points remaining
+    if (points.length <= 6) return; // 6 coordinates = 3 points
+
+    // Remove the clicked point
+    const newPoints = [...points];
+    newPoints.splice(index * 2, 2); // Remove x and y coordinates
+
+    // If we're removing the first or last point, connect the polygon properly
+    if (index === 0 || index === points.length / 2 - 1) {
+      newPoints[newPoints.length - 2] = newPoints[0];
+      newPoints[newPoints.length - 1] = newPoints[1];
+    }
+
+    setPoints(newPoints);
+    onChange({
+      ...annotation,
+      points: newPoints,
+    });
+  };
+
   return (
     <>
       <Line
@@ -192,7 +216,6 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
         closed
         onClick={() => onSelect(annotation.id)}
         onTap={() => onSelect(annotation.id)}
-        // draggable
         onDragStart={(e) => {
           setIsDragging(true);
           const pos = e.target.getStage().getPointerPosition();
@@ -243,6 +266,7 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
             strokeWidth={1}
             draggable
             onDragMove={(e) => handleAnchorDragMove(e, i)}
+            onContextMenu={(e) => handleAnchorRightClick(e, i)}
             onMouseEnter={(e) => {
               const stage = e.target.getStage();
               stage.container().style.cursor = "pointer";
