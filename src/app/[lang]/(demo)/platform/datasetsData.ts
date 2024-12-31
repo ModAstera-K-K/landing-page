@@ -1,15 +1,17 @@
 const datasetsData = [
-  { 
-    name: "Chest X-Ray Data", 
-    size: "6.3 GB", 
-    lastUpdated: "2024-10-29",
-    annotationPath: "/platform/annotation"
+  {
+    id: "1",
+    name: "Chest X-Ray Data",
+    description: "Collection of chest X-ray images",
+    last_modified: "2024-10-29",
+    samples: 0,
   },
-  { 
-    name: "Patient Vitals Data", 
-    size: "0.5 GB", 
-    lastUpdated: "2024-10-15",
-    annotationPath: "/platform/dashboard"
+  {
+    id: "2",
+    name: "Patient Vitals Data",
+    description: "Collection of patient vital signs data",
+    last_modified: "2024-10-15",
+    samples: 0,
   },
 ];
 

@@ -19,7 +19,7 @@ const Footer = ({ lang }: { lang: string }) => {
       data-wow-delay=".15s"
     >
       <div className="border-t border-[#8890A4] border-opacity-40 py-1">
-        <div className="container">
+        <div className="px-8">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 md:w-2/3 lg:w-1/2"></div>
             <div className="w-full px-4 md:w-1/3 lg:w-1/2">
