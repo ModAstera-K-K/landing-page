@@ -12,12 +12,19 @@ import CommentsIcon from "@/components/Common/Icons/BlogIcons/CommentsIcon";
 import ViewsIcon from "@/components/Common/Icons/BlogIcons/ViewsIcon";
 
 type Props = {
-  params: { slug: string };
+  params: { slug: string; lang: string };
 };
 
+// TODO: use the right language
 export async function generateMetadata({ params }: Props) {
-  const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
-  const post = getPostBySlug(params.slug, [
+  const posts = getAllPosts(params.lang, [
+    "title",
+    "date",
+    "excerpt",
+    "coverImage",
+    "slug",
+  ]);
+  const post = getPostBySlug(params.lang, params.slug, [
     "title",
     "author",
     "content",
@@ -66,8 +73,14 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function Post({ params }: Props) {
-  const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
-  const post = getPostBySlug(params.slug, [
+  const posts = getAllPosts(params.lang, [
+    "title",
+    "date",
+    "excerpt",
+    "coverImage",
+    "slug",
+  ]);
+  const post = getPostBySlug(params.lang, params.slug, [
     "title",
     "author",
     "authorImage",

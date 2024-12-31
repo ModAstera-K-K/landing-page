@@ -9,13 +9,18 @@ export const metadata: Metadata = {
     "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.",
 };
 
-const Blog = () => {
-  const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
+const BlogListPage = ({ params }: { params: { lang: string } }) => {
+  const posts = getAllPosts(params.lang, [
+    "title",
+    "date",
+    "excerpt",
+    "coverImage",
+    "slug",
+  ]);
 
   return (
     <>
       <Breadcrumb pageName="News + Blog" />
-
       <section className="pb-10 pt-20 lg:pb-20 lg:pt-[120px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap justify-center">
@@ -31,4 +36,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default BlogListPage;

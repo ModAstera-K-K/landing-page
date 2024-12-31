@@ -4,13 +4,17 @@ import { join } from "path";
 
 const postsDirectory = join(process.cwd(), "markdown/blogs");
 
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
+export function getPostSlugs(lang: string) {
+  return fs.readdirSync(postsDirectory + "/" + lang);
 }
 
-export function getPostBySlug(slug: string, fields: string[] = []) {
+export function getPostBySlug(
+  lang: string,
+  slug: string,
+  fields: string[] = [],
+) {
   const realSlug = slug.replace(/\.mdx$/, "");
-  const fullPath = join(postsDirectory, `${realSlug}.mdx`);
+  const fullPath = join(postsDirectory, `${lang}/${realSlug}.mdx`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
@@ -50,10 +54,10 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
   return items;
 }
 
-export function getAllPosts(fields: string[] = []) {
-  const slugs = getPostSlugs();
+export function getAllPosts(lang: string, fields: string[] = []) {
+  const slugs = getPostSlugs(lang);
   const posts = slugs
-    .map((slug) => getPostBySlug(slug, fields))
+    .map((slug) => getPostBySlug(lang, slug, fields))
     // sort posts by date in descending order
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 
