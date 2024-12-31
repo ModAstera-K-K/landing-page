@@ -24,7 +24,13 @@ export default async function Home({
 }: {
   params: { lang: string };
 }) {
-  const posts = getAllPosts(["title", "date", "excerpt", "coverImage", "slug"]);
+  const posts = getAllPosts(lang, [
+    "title",
+    "date",
+    "excerpt",
+    "coverImage",
+    "slug",
+  ]);
 
   return (
     <main>
