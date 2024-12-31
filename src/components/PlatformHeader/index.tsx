@@ -65,13 +65,13 @@ const Header = ({ lang }: { lang: string }) => {
               "fixed z-[999] bg-white/80 backdrop-blur-[15px] dark:bg-dark/50"
         }`}
       >
-        <div className="container">
+        <div className="mx-auto w-full items-center justify-between px-8">
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4">
               <Link
                 href="/"
                 className={`navbar-logo block w-full ${
-                  sticky ? "py-2" : "py-5"
+                  sticky ? "py-1" : "py-2"
                 } `}
               >
                 {pathUrl !== "/" ? (
