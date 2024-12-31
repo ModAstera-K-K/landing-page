@@ -462,56 +462,53 @@ export default function WorkflowPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Add your workflows list/grid here */}
-      <div className="">
-        <div className="container mx-auto max-w-4xl p-6">
-          <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
-            {taskData.title}
-          </h1>
+      <div className="container mx-auto max-w-4xl p-6">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+          {taskData.title}
+        </h1>
 
-          <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">
-            {taskData.task_summary}
-          </p>
+        <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">
+          {taskData.task_summary}
+        </p>
 
-          <div className="mb-8 h-[640px] rounded-lg border border-gray-200 dark:border-gray-700">
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              fitView
-              fitViewOptions={{ padding: 0.2 }}
-            >
-              <Controls />
-              <Background />
-              <MiniMap style={{ height: 120, width: 120 }} />
-            </ReactFlow>
-          </div>
+        <div className="mb-8 h-[640px] rounded-lg border border-gray-200 dark:border-gray-700">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            fitView
+            fitViewOptions={{ padding: 0.2 }}
+          >
+            <Controls />
+            <Background />
+            <MiniMap style={{ height: 120, width: 120 }} />
+          </ReactFlow>
+        </div>
 
-          <div className="space-y-4">
-            {taskData.steps.map((step, index) => (
-              <StepComponent
-                key={index}
-                step={step}
-                index={index}
-                onParameterChange={handleParameterChange}
-              />
-            ))}
-          </div>
-
-          {selectedStep !== null && (
-            <NodeDialog
-              isOpen={isDialogOpen}
-              onClose={() => {
-                setIsDialogOpen(false);
-                setSelectedStep(null);
-              }}
-              step={taskData.steps[selectedStep]}
-              stepIndex={selectedStep}
+        <div className="space-y-4">
+          {taskData.steps.map((step, index) => (
+            <StepComponent
+              key={index}
+              step={step}
+              index={index}
               onParameterChange={handleParameterChange}
             />
-          )}
+          ))}
         </div>
+
+        {selectedStep !== null && (
+          <NodeDialog
+            isOpen={isDialogOpen}
+            onClose={() => {
+              setIsDialogOpen(false);
+              setSelectedStep(null);
+            }}
+            step={taskData.steps[selectedStep]}
+            stepIndex={selectedStep}
+            onParameterChange={handleParameterChange}
+          />
+        )}
       </div>
     </div>
   );
