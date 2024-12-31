@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 
 const BlogListPage = ({ params }: { params: { lang: string } }) => {
   const posts = getAllPosts(params.lang, [
-    // TODO: use the right language
     "title",
     "date",
     "excerpt",
