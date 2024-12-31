@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -260,9 +261,9 @@ const NodeDialog = ({
           ))}
         </div>
 
-        <div className="flex justify-end space-x-2 pt-4">
+        <DialogFooter>
           <Button onClick={onClose}>Close</Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
