@@ -8,6 +8,49 @@ const ANCHOR_STROKE_COLOR = "#666";
 const ANCHOR_FILL_COLOR = "#fff";
 const ANCHOR_SIZE = 8;
 
+const normalizeCoordinates = (x, y, width, height, imageWidth, imageHeight) => {
+  return {
+    x: (x / imageWidth) * 100,
+    y: (y / imageHeight) * 100,
+    width: (width / imageWidth) * 100,
+    height: (height / imageHeight) * 100,
+  };
+};
+
+const denormalizeCoordinates = (
+  x,
+  y,
+  width,
+  height,
+  imageWidth,
+  imageHeight,
+) => {
+  return {
+    x: (x * imageWidth) / 100,
+    y: (y * imageHeight) / 100,
+    width: (width * imageWidth) / 100,
+    height: (height * imageHeight) / 100,
+  };
+};
+
+const normalizePoints = (points, imageWidth, imageHeight) => {
+  return points.map(
+    (coord, index) =>
+      index % 2 === 0
+        ? (coord / imageWidth) * 100 // x coordinates
+        : (coord / imageHeight) * 100, // y coordinates
+  );
+};
+
+const denormalizePoints = (points, imageWidth, imageHeight) => {
+  return points.map(
+    (coord, index) =>
+      index % 2 === 0
+        ? (coord * imageWidth) / 100 // x coordinates
+        : (coord * imageHeight) / 100, // y coordinates
+  );
+};
+
 const getAnchors = (box) => {
   return [
     { x: box.x, y: box.y, cursor: "nw-resize", name: "top-left" },
@@ -51,16 +94,32 @@ const getAnchors = (box) => {
   ];
 };
 
-const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
+const AnnotationRect = ({
+  annotation,
+  isSelected,
+  onChange,
+  onSelect,
+  imageWidth,
+  imageHeight,
+}) => {
   const [isResizing, setIsResizing] = useState(false);
+
+  // Denormalize coordinates for display
+  const displayCoords = denormalizeCoordinates(
+    annotation.x,
+    annotation.y,
+    annotation.width,
+    annotation.height,
+    imageWidth,
+    imageHeight,
+  );
 
   const handleAnchorDragMove = (e, anchorName) => {
     e.cancelBubble = true;
     const stage = e.target.getStage();
-    const box = annotation;
     const pos = stage.getPointerPosition();
 
-    let newBox = { ...box };
+    let newBox = { ...displayCoords };
 
     switch (anchorName) {
       case "top-left":
@@ -102,26 +161,47 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
     // Ensure minimum size
     if (newBox.width < 5 || newBox.height < 5) return;
 
-    onChange(newBox);
+    // Normalize coordinates before saving
+    const normalizedBox = normalizeCoordinates(
+      newBox.x,
+      newBox.y,
+      newBox.width,
+      newBox.height,
+      imageWidth,
+      imageHeight,
+    );
+
+    onChange({
+      ...annotation,
+      ...normalizedBox,
+    });
   };
 
   return (
     <>
       <Rect
-        x={annotation.x}
-        y={annotation.y}
-        width={annotation.width}
-        height={annotation.height}
+        x={displayCoords.x}
+        y={displayCoords.y}
+        width={displayCoords.width}
+        height={displayCoords.height}
         stroke={annotation.color || "#00ff00"}
         strokeWidth={2}
         onClick={() => onSelect(annotation.id)}
         onTap={() => onSelect(annotation.id)}
         draggable
         onDragMove={(e) => {
+          const normalizedPos = normalizeCoordinates(
+            e.target.x(),
+            e.target.y(),
+            displayCoords.width,
+            displayCoords.height,
+            imageWidth,
+            imageHeight,
+          );
           onChange({
             ...annotation,
-            x: e.target.x(),
-            y: e.target.y(),
+            x: normalizedPos.x,
+            y: normalizedPos.y,
           });
         }}
       />
@@ -156,30 +236,43 @@ const AnnotationRect = ({ annotation, isSelected, onChange, onSelect }) => {
   );
 };
 
-const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
+const PolygonAnnotation = ({
+  annotation,
+  isSelected,
+  onChange,
+  onSelect,
+  imageWidth,
+  imageHeight,
+}) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
-  const [points, setPoints] = useState(annotation.points);
 
-  // Update local points when annotation changes
-  useEffect(() => {
-    setPoints(annotation.points);
-  }, [annotation.points]);
+  // Denormalize points for display
+  const displayPoints = denormalizePoints(
+    annotation.points,
+    imageWidth,
+    imageHeight,
+  );
 
   const handleAnchorDragMove = (e, index) => {
     e.cancelBubble = true;
     const stage = e.target.getStage();
     const pos = stage.getPointerPosition();
 
-    // Create new points array with updated position
-    const newPoints = [...points];
+    const newPoints = [...displayPoints];
     newPoints[index * 2] = pos.x;
     newPoints[index * 2 + 1] = pos.y;
 
-    setPoints(newPoints);
+    // Normalize points before saving
+    const normalizedPoints = normalizePoints(
+      newPoints,
+      imageWidth,
+      imageHeight,
+    );
+
     onChange({
       ...annotation,
-      points: newPoints,
+      points: normalizedPoints,
     });
   };
 
@@ -188,29 +281,35 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
     e.cancelBubble = true;
 
     // Don't allow deleting if there would be less than 3 points remaining
-    if (points.length <= 6) return; // 6 coordinates = 3 points
+    if (displayPoints.length <= 6) return; // 6 coordinates = 3 points
 
     // Remove the clicked point
-    const newPoints = [...points];
+    const newPoints = [...displayPoints];
     newPoints.splice(index * 2, 2); // Remove x and y coordinates
 
     // If we're removing the first or last point, connect the polygon properly
-    if (index === 0 || index === points.length / 2 - 1) {
+    if (index === 0 || index === displayPoints.length / 2 - 1) {
       newPoints[newPoints.length - 2] = newPoints[0];
       newPoints[newPoints.length - 1] = newPoints[1];
     }
 
-    setPoints(newPoints);
+    // Normalize points before saving
+    const normalizedPoints = normalizePoints(
+      newPoints,
+      imageWidth,
+      imageHeight,
+    );
+
     onChange({
       ...annotation,
-      points: newPoints,
+      points: normalizedPoints,
     });
   };
 
   return (
     <>
       <Line
-        points={points}
+        points={displayPoints}
         stroke={annotation.color || "#00ff00"}
         strokeWidth={2}
         closed
@@ -225,26 +324,27 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
           if (!isDragging) return;
 
           const pos = e.target.getStage().getPointerPosition();
-
-          // Calculate the movement delta
           const dx = pos.x - lastPos.x;
           const dy = pos.y - lastPos.y;
 
-          // Update all points
-          const newPoints = [...points];
+          const newPoints = [...displayPoints];
           for (let i = 0; i < newPoints.length; i += 2) {
             newPoints[i] += dx;
             newPoints[i + 1] += dy;
           }
 
-          // Update last position
           setLastPos(pos);
 
-          // Update local points and annotation
-          setPoints(newPoints);
+          // Normalize points before saving
+          const normalizedPoints = normalizePoints(
+            newPoints,
+            imageWidth,
+            imageHeight,
+          );
+
           onChange({
             ...annotation,
-            points: newPoints,
+            points: normalizedPoints,
           });
         }}
         onDragEnd={() => {
@@ -253,12 +353,12 @@ const PolygonAnnotation = ({ annotation, isSelected, onChange, onSelect }) => {
       />
 
       {isSelected &&
-        points.length >= 4 &&
-        Array.from({ length: points.length / 2 }, (_, i) => (
+        displayPoints.length >= 4 &&
+        Array.from({ length: displayPoints.length / 2 }, (_, i) => (
           <Rect
             key={i}
-            x={points[i * 2] - ANCHOR_SIZE / 2}
-            y={points[i * 2 + 1] - ANCHOR_SIZE / 2}
+            x={displayPoints[i * 2] - ANCHOR_SIZE / 2}
+            y={displayPoints[i * 2 + 1] - ANCHOR_SIZE / 2}
             width={ANCHOR_SIZE}
             height={ANCHOR_SIZE}
             fill={ANCHOR_FILL_COLOR}
@@ -433,12 +533,19 @@ export default function KonvaCanvas({
     }
 
     if (selectedTool === "box") {
+      // Normalize coordinates before saving
+      const normalizedCoords = normalizeCoordinates(
+        pos.x,
+        pos.y,
+        0,
+        0,
+        size.width,
+        size.height,
+      );
+
       const newAnnotation = {
         id: crypto.randomUUID(),
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
+        ...normalizedCoords,
         type: "box",
         frame: isVideo ? currentFrame : undefined,
       };
@@ -446,6 +553,7 @@ export default function KonvaCanvas({
       setAnnotations([...annotations, newAnnotation]);
       setIsDrawing(true);
     } else if (selectedTool === "polygon") {
+      // Use raw coordinates during drawing
       setPoints([pos.x, pos.y]);
       setIsDrawing(true);
     }
@@ -470,16 +578,37 @@ export default function KonvaCanvas({
         return;
       }
 
-      const newWidth = pos.x - lastAnnotation.x;
-      const newHeight = pos.y - lastAnnotation.y;
+      // Denormalize the last annotation's coordinates
+      const denormalizedLastAnnotation = denormalizeCoordinates(
+        lastAnnotation.x,
+        lastAnnotation.y,
+        lastAnnotation.width || 0,
+        lastAnnotation.height || 0,
+        size.width,
+        size.height,
+      );
+
+      // Calculate new width and height in pixels
+      const newWidth = pos.x - denormalizedLastAnnotation.x;
+      const newHeight = pos.y - denormalizedLastAnnotation.y;
+
+      // Normalize the new width and height
+      const normalizedDimensions = normalizeCoordinates(
+        denormalizedLastAnnotation.x,
+        denormalizedLastAnnotation.y,
+        newWidth,
+        newHeight,
+        size.width,
+        size.height,
+      );
 
       setAnnotations(
         annotations.map((anno, i) => {
           if (i === annotations.length - 1) {
             return {
               ...anno,
-              width: newWidth,
-              height: newHeight,
+              width: normalizedDimensions.width,
+              height: normalizedDimensions.height,
             };
           }
           return anno;
@@ -488,6 +617,7 @@ export default function KonvaCanvas({
     } else if (selectedTool === "polygon") {
       setPointAddCounter((prev) => prev + 1);
       if (pointAddCounter % 2 === 0) {
+        // Add points in pixel coordinates during drawing
         setPoints([...points, pos.x, pos.y]);
       }
     }
@@ -501,11 +631,18 @@ export default function KonvaCanvas({
       const closedPoints = [...points, points[0], points[1]];
       const simplifiedPoints = simplifyPoints(closedPoints);
 
+      // Only normalize points when creating the final annotation
+      const normalizedPoints = normalizePoints(
+        simplifiedPoints,
+        size.width,
+        size.height,
+      );
+
       setAnnotations([
         ...annotations,
         {
           id: crypto.randomUUID(),
-          points: simplifiedPoints,
+          points: normalizedPoints,
           type: "polygon",
           frame: isVideo ? currentFrame : undefined,
         },
@@ -577,8 +714,10 @@ export default function KonvaCanvas({
                   }}
                   onSelect={(id) => {
                     setSelectedId(id);
-                    setIsDrawing(false); // Stop drawing when selecting an annotation
+                    setIsDrawing(false);
                   }}
+                  imageWidth={size.width}
+                  imageHeight={size.height}
                 />
               );
             } else if (annotation.type === "polygon") {
@@ -596,8 +735,10 @@ export default function KonvaCanvas({
                   }}
                   onSelect={(id) => {
                     setSelectedId(id);
-                    setIsDrawing(false); // Stop drawing when selecting an annotation
+                    setIsDrawing(false);
                   }}
+                  imageWidth={size.width}
+                  imageHeight={size.height}
                 />
               );
             }
@@ -606,7 +747,7 @@ export default function KonvaCanvas({
           {/* Only show drawing preview if no annotation is selected */}
           {!selectedId && isDrawing && points.length >= 4 && (
             <Line
-              points={points}
+              points={points} // Use raw pixel coordinates for preview
               stroke="#00ff00"
               strokeWidth={2}
               closed={false}
