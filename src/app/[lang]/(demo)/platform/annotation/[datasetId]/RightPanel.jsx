@@ -143,8 +143,6 @@ export default function RightPanel({
           withCredentials: true,
         },
       );
-
-      console.log("Save successful:", response.data);
     } catch (error) {
       console.error(
         "Error saving annotations:",
@@ -196,7 +194,7 @@ export default function RightPanel({
           >
             Labels
           </button>
-          <button
+          {/* <button
             className={`flex-1 px-4 py-2 text-sm font-medium ${
               activeTab === "issues" ? "bg-gray-200 dark:bg-gray-700" : ""
             }`}
@@ -204,7 +202,7 @@ export default function RightPanel({
             title="View issues"
           >
             Issues
-          </button>
+          </button> */}
         </div>
       </div>
       {/* Navigation buttons */}
@@ -401,21 +399,53 @@ export default function RightPanel({
                     <input
                       type="color"
                       value={label.color}
-                      onChange={(e) => {
-                        setLabels(
-                          labels.map((l) =>
-                            l.name === label.name
-                              ? { ...l, color: e.target.value }
-                              : l,
-                          ),
+                      onChange={async (e) => {
+                        const updatedLabels = labels.map((l) =>
+                          l.name === label.name
+                            ? { ...l, color: e.target.value }
+                            : l,
                         );
-                        setAnnotations(
-                          annotations.map((a) =>
+
+                        try {
+                          // Update labels on server
+                          await axios.patch(
+                            `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${datasetId}/`,
+                            {
+                              labels: updatedLabels,
+                            },
+                            {
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              withCredentials: true,
+                            },
+                          );
+
+                          // Update local labels state
+                          setLabels(updatedLabels);
+
+                          // Update annotations with new color
+                          const updatedAnnotations = annotations.map((a) =>
                             a.label === label.name
                               ? { ...a, color: e.target.value }
                               : a,
-                          ),
-                        );
+                          );
+                          setAnnotations(updatedAnnotations);
+
+                          // Save updated annotations
+                          if (isVideo) {
+                            setFrameAnnotations((prev) => ({
+                              ...prev,
+                              [currentFrame]: updatedAnnotations,
+                            }));
+                          }
+                          await handleSave();
+                        } catch (error) {
+                          console.error(
+                            "Error updating label color:",
+                            error.response?.data || error.message,
+                          );
+                        }
                       }}
                       className="h-6 w-6 cursor-pointer"
                     />
@@ -424,13 +454,51 @@ export default function RightPanel({
                     </span>
                   </div>
                   <button
-                    onClick={() => {
-                      setLabels(labels.filter((l) => l.name !== label.name));
-                      setAnnotations(
-                        annotations.map((a) =>
-                          a.label === label.name ? { ...a, label: "" } : a,
-                        ),
-                      );
+                    onClick={async () => {
+                      try {
+                        const updatedLabels = labels.filter(
+                          (l) => l.name !== label.name,
+                        );
+
+                        // Update labels on server
+                        await axios.patch(
+                          `${process.env.NEXT_PUBLIC_API_BASE_URL}datasets/datasets/${datasetId}/`,
+                          {
+                            labels: updatedLabels,
+                          },
+                          {
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            withCredentials: true,
+                          },
+                        );
+
+                        // Update local labels state
+                        setLabels(updatedLabels);
+
+                        // Update annotations to remove the deleted label
+                        const updatedAnnotations = annotations.map((a) =>
+                          a.label === label.name
+                            ? { ...a, label: "", color: "#00ff00" }
+                            : a,
+                        );
+                        setAnnotations(updatedAnnotations);
+
+                        // Save updated annotations
+                        if (isVideo) {
+                          setFrameAnnotations((prev) => ({
+                            ...prev,
+                            [currentFrame]: updatedAnnotations,
+                          }));
+                        }
+                        await handleSave();
+                      } catch (error) {
+                        console.error(
+                          "Error deleting label:",
+                          error.response?.data || error.message,
+                        );
+                      }
                     }}
                     className="text-red-500"
                   >

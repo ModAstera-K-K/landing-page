@@ -51,43 +51,58 @@ const denormalizePoints = (points, imageWidth, imageHeight) => {
   );
 };
 
-const getAnchors = (box) => {
+const getAnchors = (box, imageWidth, imageHeight) => {
+  // Denormalize the box coordinates for display
+  const displayBox = denormalizeCoordinates(
+    box.x,
+    box.y,
+    box.width,
+    box.height,
+    imageWidth,
+    imageHeight,
+  );
+
   return [
-    { x: box.x, y: box.y, cursor: "nw-resize", name: "top-left" },
-    { x: box.x + box.width, y: box.y, cursor: "ne-resize", name: "top-right" },
+    { x: displayBox.x, y: displayBox.y, cursor: "nw-resize", name: "top-left" },
     {
-      x: box.x,
-      y: box.y + box.height,
+      x: displayBox.x + displayBox.width,
+      y: displayBox.y,
+      cursor: "ne-resize",
+      name: "top-right",
+    },
+    {
+      x: displayBox.x,
+      y: displayBox.y + displayBox.height,
       cursor: "sw-resize",
       name: "bottom-left",
     },
     {
-      x: box.x + box.width,
-      y: box.y + box.height,
+      x: displayBox.x + displayBox.width,
+      y: displayBox.y + displayBox.height,
       cursor: "se-resize",
       name: "bottom-right",
     },
     {
-      x: box.x + box.width / 2,
-      y: box.y,
+      x: displayBox.x + displayBox.width / 2,
+      y: displayBox.y,
       cursor: "n-resize",
       name: "top-center",
     },
     {
-      x: box.x + box.width / 2,
-      y: box.y + box.height,
+      x: displayBox.x + displayBox.width / 2,
+      y: displayBox.y + displayBox.height,
       cursor: "s-resize",
       name: "bottom-center",
     },
     {
-      x: box.x,
-      y: box.y + box.height / 2,
+      x: displayBox.x,
+      y: displayBox.y + displayBox.height / 2,
       cursor: "w-resize",
       name: "middle-left",
     },
     {
-      x: box.x + box.width,
-      y: box.y + box.height / 2,
+      x: displayBox.x + displayBox.width,
+      y: displayBox.y + displayBox.height / 2,
       cursor: "e-resize",
       name: "middle-right",
     },
@@ -208,7 +223,7 @@ const AnnotationRect = ({
 
       {/* Render anchors only for selected annotation */}
       {isSelected &&
-        getAnchors(annotation).map((anchor, index) => (
+        getAnchors(annotation, imageWidth, imageHeight).map((anchor, index) => (
           <Rect
             key={index}
             x={anchor.x - ANCHOR_SIZE / 2}
