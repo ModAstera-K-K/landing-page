@@ -216,6 +216,14 @@ const Header = ({ lang }: { lang: string }) => {
                       ),
                     )}
                   </ul>
+                  <div className="flex items-center">
+                    <div className="lg:hidden">
+                      <LanguageSwitcher currentLang={lang} />
+                    </div>
+                    <div className="lg:hidden">
+                      <ThemeToggler sticky={sticky} isHome={pathUrl === "/"} />
+                    </div>
+                  </div>
                 </nav>
               </div>
               <div className="flex items-center justify-end">
