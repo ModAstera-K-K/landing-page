@@ -15,7 +15,6 @@ type Props = {
   params: { slug: string; lang: string };
 };
 
-// TODO: use the right language
 export async function generateMetadata({ params }: Props) {
   const posts = getAllPosts(params.lang, [
     "title",
