@@ -198,6 +198,11 @@ export default function DatasetView({ params }: { params: { id: string } }) {
 
       {/* Action Buttons */}
       <div className="mt-8 flex space-x-4">
+        <Link href={`/platform/annotation/${params.id}`}>
+          <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+            Edit Annotations
+          </button>
+        </Link>
         <button
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
           onClick={() => setShowAddSamplesForm(true)}
