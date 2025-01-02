@@ -137,8 +137,7 @@ export default async function Post({ params }: Props) {
                         </span>
                         {format(new Date(post.date), "dd MMM yyyy")}
                       </p>
-
-                      <p className="mr-5 flex items-center text-sm font-medium text-white md:mr-6">
+                      {/* <p className="mr-5 flex items-center text-sm font-medium text-white md:mr-6">
                         <span className="mr-3">
                           <CommentsIcon />
                         </span>
@@ -149,7 +148,7 @@ export default async function Post({ params }: Props) {
                           <ViewsIcon />
                         </span>
                         35
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

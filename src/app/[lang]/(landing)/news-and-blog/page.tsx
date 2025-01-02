@@ -4,7 +4,7 @@ import { getAllPosts } from "@/utils/markdown";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog Grids | ModAstera - Save 90% on Medical AI Development Costs",
+  title: "News + Blog | ModAstera - Save 90% on Medical AI Development Costs",
   description:
     "Save 90% on Medical AI Development Costs: Integrated and AI-automated workflow. From data preprocessing and annotation to model building and deployment in days.",
 };

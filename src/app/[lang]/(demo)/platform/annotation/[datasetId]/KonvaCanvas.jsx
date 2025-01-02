@@ -433,6 +433,7 @@ export default function KonvaCanvas({
   };
 
   useEffect(() => {
+    console.log("currentFrame: ", currentFrame);
     if (isVideo) {
       const video = document.createElement("video");
       video.src = mediaUrl;
