@@ -82,6 +82,7 @@ export default async function Post({ params }: Props) {
   const post = getPostBySlug(params.lang, params.slug, [
     "title",
     "author",
+    "excerpt",
     "authorImage",
     "content",
     "coverImage",
@@ -92,7 +93,11 @@ export default async function Post({ params }: Props) {
 
   return (
     <>
-      <Breadcrumb pageName="Blog Details" />
+      <Breadcrumb
+        pageName={post.title}
+        pageDescription={post.excerpt}
+        showPath={false}
+      />
       <section className="pb-10 pt-20 dark:bg-dark lg:pb-20 lg:pt-[120px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap justify-center">

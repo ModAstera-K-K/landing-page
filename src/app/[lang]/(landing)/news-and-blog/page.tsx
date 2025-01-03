@@ -20,7 +20,11 @@ const BlogListPage = ({ params }: { params: { lang: string } }) => {
 
   return (
     <>
-      <Breadcrumb pageName="News + Blog" />
+      <Breadcrumb
+        pageName="News + Blog"
+        showPath={false}
+        pageDescription="Stay up-to-date with the latest news and insights from ModAstera."
+      />
       <section className="pb-10 pt-20 lg:pb-20 lg:pt-[120px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap justify-center">
